@@ -1,0 +1,5 @@
+# Kişisel yayınlama ve yerel geliştirme betikleri
+scripts/publish_to_github.sh
+.DS_Store
+__pycache__/
+*.pyc
