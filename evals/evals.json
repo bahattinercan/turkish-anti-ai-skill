@@ -8,7 +8,7 @@
       "mode": "rewrite",
       "register": "blog-deneme",
       "input_ai": "Günümüzün hızla değişen iş dünyasında, uzaktan çalışma modeli sadece geçici bir trend değil, aynı zamanda kurumsal kültürün temel bir yapı taşı haline gelmiştir — ve bu durumun önemi yadsınamaz. Şirketler tarafından gerçekleştirilen araştırmalar göstermektedir ki, çalışanlara esneklik sağlamak verimlilik üzerinde kritik bir rol oynamaktadır. Bununla birlikte, iletişim kopukluklarını önlemek adına bütüncül bir yaklaşım benimsenmelidir. Sonuç olarak, 2026 yılında başarılı olmak isteyen kurumlar bu dönüşüme ayak uydurmak zorundadır.",
-      "output_human": "Uzaktan çalışma artık geçici bir heves değil, şirket kültürünün kalıcı bir parçası. Araştırmalar da bunu doğruluyor. Çalışanlara esneklik tanıdığınızda verimlilik doğrudan artarken, aynı ofisi paylaşmayan ekiplerde iletişimi canlı tutmak için 2026 çalışma düzenini tek tek araçlarla değil baştan sona yeniden kurgulamak gerekiyor işte.",
+      "output_human": "Uzaktan çalışma artık şirket kültürünün kalıcı bir parçası. Araştırmalar da bunu doğruluyor. Çalışanlara esneklik tanıdığınızda verimlilik artarken, aynı ofisi paylaşmayan ekiplerde iletişimi canlı tutmak için 2026 çalışma düzenini baştan sona bu yeni ritme göre kurgulamak gerekiyor işte.",
       "must_preserve_tokens": [
         "2026"
       ],
@@ -22,7 +22,7 @@
       "mode": "rewrite",
       "register": "teknik",
       "input_ai": "Bir önbellek (cache'ı) anahtarının süresi saat 14:30'da dolduğunda, aynı anda gelen bir çok istek veritabanına yönlendirilir ve bu durum sistemde adeta bir darboğaz yaratmaktadır. Bu sorun özellikle yüksek bir trafiğe sahip olan uç noktalarda (endpoints) ve SQL'da kritik bir öneme sahiptir, ama Redis dağıtık kilidi ile kusursuz bir şekilde çözülebilir. Öte yandan, JSON'de veri boyutu 64 KB sınırını aşmamalıdır.",
-      "output_human": "Çok okunan bir cache'in süresi saat 14.30'da dolunca yüzlerce istek aynı anda veritabanına yüklenip yüksek trafikli endpoint'lerde ve SQL'de doğrudan kesintiye yol açar. Çözüm aslında basit. Redis dağıtık kilidiyle veritabanına tek bir isteğin gitmesini sağlayabilirsiniz ama JSON'da veri boyutu 64 KB sınırını aşmamalı.",
+      "output_human": "Çok okunan bir cache'in süresi saat 14.30'da dolunca yüzlerce istek aynı anda veritabanına yüklenip yüksek trafikli endpoint'lerde ve SQL'de kesintiye yol açar. Çözüm aslında basit. Redis dağıtık kilidiyle veritabanına tek bir isteğin gitmesini sağlayabilirsiniz ama JSON'da veri boyutu 64 KB sınırını aşmamalı.",
       "must_preserve_tokens": [
         "14.30'da",
         "endpoint",
@@ -59,7 +59,7 @@
       "mode": "rewrite",
       "register": "akademik-resmi",
       "input_ai": "Türkiye'de 2020–2024 yılları arasında yenilenebilir enerji yatırımları sadece artış göstermekle kalmamış, aynı zamanda enerji arz güvenliğinde de çığır açan bir dönüm noktası olmuştur. Enerji Bakanlığı tarafından paylaşılan verilere göre, güneş enerjisi kurulu gücü %112.5 oranında büyük bir büyüme gerçekleştirmiştir — ki bu durum sektörün dinamik yapısının en büyük kanıtıdır. Belirtmek gerekir ki, bu doğrultuda şebeke altyapısının güçlendirilmesi hayati bir öneme sahiptir.",
-      "output_human": "Türkiye'de 2020-2024 döneminde hız kazanan yenilenebilir enerji yatırımları, Enerji Bakanlığının yayımladığı resmi verilere göre güneş enerjisi kurulu gücünü %112,5 büyüterek ulusal enerji arz güvenliğinin yapısını doğrudan dönüştürmüştür. Artan bu kapasitenin kayıpsız iletimi ise şebeke altyapısının eşzamanlı güçlendirilmesine dayanmaktadır. Dönüşüm kalıcıdır.",
+      "output_human": "Türkiye'de 2020-2024 döneminde hız kazanan yenilenebilir enerji yatırımları, Enerji Bakanlığının yayımladığı resmi verilere göre güneş enerjisi kurulu gücünü %112,5 büyüterek ulusal enerji arz güvenliğinin yapısını dönüştürmüştür. Artan bu kapasitenin kayıpsız iletimi ise şebeke altyapısının eşzamanlı güçlendirilmesine dayanmaktadır. Dönüşüm kalıcıdır.",
       "must_preserve_tokens": [
         "Türkiye",
         "2020-2024",

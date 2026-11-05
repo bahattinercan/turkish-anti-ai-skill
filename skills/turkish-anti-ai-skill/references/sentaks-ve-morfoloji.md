@@ -4,7 +4,7 @@
 
 ## 1. Dallanma Yönü: Sağa Dallanmadan Sola Dallanmaya (Left-Branching)
 
-İngilizce niteleyicileri ve yan cümleleri baş ismin (head noun) sağına dizer (`We built a system that scans and reports data every night`). LLM bu iskeleti Türkçeye iki yapay yolla kopyalar: ya cümleyi bölüp zamirle tekrarlar ya da Hint-Avrupa tipi `ki` bağlacı kullanır. Türkçe ise **sola dallanır**; tüm niteleyiciler sıfat-fiil (`-An`, `-DIk`, `-AcAk`) alarak baş ismin önüne yerleşir.
+İngilizce niteleyicileri ve yan cümleleri baş ismin (head noun) sağına dizer (`We built a system that scans and reports data every night`). LLM bu iskeleti Türkçeye iki yapay yolla kopyalar: ya cümleyi bölüp zamirle tekrarlar ya da Hint-Avrupa tipi `ki` bağlacı kullanır. Türkçe ise **sola dallanır** ve tüm niteleyiciler sıfat-fiil (`-An`, `-DIk`, `-AcAk`) alarak baş ismin önüne yerleşir.
 
 | Kusur Türü | Makine Türkçesi (Sağa Dallanan / Calque) | İnsan Türkçesi (Sola Dallanan Doğal Yapı) |
 | :--- | :--- | :--- |
@@ -24,16 +24,16 @@
 | **Yöntem / Araç** | Maliyetleri düşürdük ve bu sayede karlılığı artırdık. | Maliyetleri düşürerek karlılığı artırdık. | `-ArAk` |
 | **Zıtlık / Eşzamanlılık** | Birinci grup hızlı ilerler ve ikinci grup daha yavaş kalır. | Birinci grup hızlı ilerlerken ikincisi daha yavaş kalıyor. | `-ken` |
 
-- **Sınır Kuralı (Sadakat Uyarıcısı):** Ulaç eklemek iki olay arasında zamansal veya nedensel bir bağ kurar. Kaynak metinde iki cümle arasında böyle bir bağ yoksa ve yalnızca yan yana duruyorlarsa, zorla ulaç ekleyip yeni bir nedensellik uydurma; virgülle veya ayrı cümle olarak bırak.
+- **Sınır Kuralı (Sadakat Uyarıcısı):** Ulaç eklemek iki olay arasında zamansal veya nedensel bir bağ kurar. Kaynak metinde iki cümle arasında böyle bir bağ yoksa ve yalnızca yan yana duruyorlarsa, zorla ulaç ekleyip yeni bir nedensellik uydurma, virgülle veya ayrı cümle olarak bırak.
 
 ## 3. Koşulaç (Copula) Şişmesi: `-DIr` ve `-mAktAdIr` Salgını
 
-İngilizcede geniş zamanlı her isim cümlesinde `is / are` zorunludur (`This method is effective`). LLM'ler bu `is/are` yapısını Türkçeye refleks olarak **`-DIr`** ve şimdiki/geniş zamanı **`-mAktAdIr`** olarak çevirir. Oysa doğal Türkçede geniş zaman isim cümlesinde koşulaç sıfırdır (ek almaz); `-DIr` yalnızca resmi/akademik kesinlik veya olasılık (`Eve varmıştır`) bildirir.
+İngilizcede geniş zamanlı her isim cümlesinde `is / are` zorunludur (`This method is effective`). LLM'ler bu `is/are` yapısını Türkçeye refleks olarak **`-DIr`** ve şimdiki/geniş zamanı **`-mAktAdIr`** olarak çevirir. Oysa doğal Türkçede geniş zaman isim cümlesinde koşulaç sıfırdır (ek almaz). `-DIr` yalnızca resmi/akademik kesinlik veya olasılık (`Eve varmıştır`) bildirir.
 
 - **Akademik / Hukuki Register Dışında `-DIr` ve `-mAktAdIr` Temizliği:**
   - **Makine:** *"Bu yöntem oldukça etkilidir ve geliştiricilere büyük kolaylık sağlamaktadır. Burası sistemin en kritik parçasıdır."*
-  - **İnsan (Teknik):** *"Bu yöntem oldukça etkili; geliştiricilerin işini de ciddi ölçüde kolaylaştırıyor. Burası sistemin en kritik parçası."*
-  - **İnsan (Akademik - Kalibre Edilmiş Doz):** 2015-2019 arası insan yazımı hakemli Türkçe makalelerde `-mAktAdIr` yoğunluğu 100 kelimede `0,4 - 2,3`, `-DIr` yoğunluğu ise `2,3 - 4,0` aralığındadır. Akademik metinlerde bile her cümleyi `-mektedir` ile bitirme; geniş zaman (`-Ir/-Ar`) ile nöbetleşe kullan.
+  - **İnsan (Teknik):** *"Bu yöntem oldukça etkili, geliştiricilerin işini de kolaylaştırıyor. Burası sistemin en kritik parçası."*
+  - **İnsan (Akademik - Kalibre Edilmiş Doz):** 2015-2019 arası insan yazımı hakemli Türkçe makalelerde `-mAktAdIr` yoğunluğu 100 kelimede `0,4 - 2,3`, `-DIr` yoğunluğu ise `2,3 - 4,0` aralığındadır. Akademik metinlerde bile her cümleyi `-mektedir` ile bitirme, geniş zaman (`-Ir/-Ar`) ile nöbetleşe kullan.
 
 ## 4. Vurgu Yuvası (Pre-Verbal Focus) ve Devrik Cümle Ritmi
 
@@ -51,21 +51,21 @@ Günlük, edebi ve blog/deneme Türkçesinde yüklemin cümle sonundan öne çek
 
 - **Makine:** *"Kimse bu uzun hata raporlarını sonuna kadar okumuyor."*
 - **İnsan (Blog/Deneme):** *"Kimse sonuna kadar okumuyor bu uzun hata raporlarını."*
-- **Kota Yasağı:** Teknik, kurumsal ve akademik register'larda devrik cümle kullanma. Blog/deneme register'ında ise 400 kelimelik bir metinde en fazla 2-3 doğal devrik cümle kullan; her cümleyi devrik yapmak yeni bir yapay tike dönüşür.
+- **Kota Yasağı:** Teknik, kurumsal ve akademik register'larda devrik cümle kullanma. Blog/deneme register'ında ise 400 kelimelik bir metinde en fazla 2-3 doğal devrik cümle kullan. Her cümleyi devrik yapmak yeni bir yapay tike dönüşür.
 
 ## 5. Zamir Düşürme (Pro-Drop) ve Gereksiz `"Bir"` / `"Kendi"` Temizliği
 
 ### A. Kişi ve İşaret Zamiri Düşürme
 Türkçe yüklemdeki şahıs ekleriyle (`-Im, -sIn, -Iz, -lAr`) ve isimdeki iyelik ekleriyle özneyi zaten kodlar. İngilizcedeki zorunlu `I, we, they, it, this` zamirlerini her cümlede Türkçeye taşımak metni ağırlaştırır:
 
-- **Makine:** *"Biz önce veritabanını yedekledik, sonra biz göç betiğini çalıştırdık. O sorunsuz tamamlandı."*
-- **İnsan:** *"Önce veritabanını yedekledik, ardından göç betiğini çalıştırdık. İşlem sorunsuz tamamlandı."*
+- **Makine:** *"Biz önce veritabanını yedekledik, sonra biz migration script'ini çalıştırdık. O sorunsuz tamamlandı."*
+- **İnsan:** *"Önce veritabanını yedekledik, ardından migration script'ini çalıştırdık. İşlem sorunsuz tamamlandı."*
 
 ### B. İngilizce `a / an` Çevirisi Olan Gereksiz `"Bir"` Sıfatı
 Çeviri kokan Türkçenin bir numaralı imzası, her sıfat-isim tamlamasının ortasına İngilizce `a/an` karşılığı olarak `"bir"` sıkıştırmaktır:
 
 - **Makine:** *"Bu güncelleme **büyük bir önem** taşıyor ve **yüksek bir performans** ile **iyi bir kullanıcı deneyimi** sunuyor."*
-- **İnsan:** *"Bu güncelleme **büyük önem** taşıyor; **yüksek performans** ve **iyi kullanıcı deneyimi** sunuyor."*
+- **İnsan:** *"Bu güncelleme **büyük önem** taşıyor, **yüksek performans** ve **iyi kullanıcı deneyimi** sunuyor."*
 - **Kural:** `"Bir"` sözcüğü sayıca teklik vurgulanmıyorsa soyut kavramların (`büyük önem`, `ciddi artış`, `geniş kapsam`, `derin etki`, `yüksek hız`) önünden silinir.
 
 ### C. İngilizce `his/her/its own` Çevirisi Olan Gereksiz `"Kendi"` ve İyelik Zamirleri
@@ -91,7 +91,7 @@ LLM'ler tek bir Türkçe fiille anlatılabilecek eylemleri isim + yardımcı fii
 | **katkıda bulunmak / yardımcı olmak** | katkı sunmak, desteklemek, yararı dokunmak | *"Büyümesine katkıda bulunur"* -> *"Büyümesini destekler"* |
 | **sahip olmak** (`have / has` çevirisi) | `-lI` eki, `var`, `barındırmak`, `içermek`, `taşımak` | *"Yüksek hıza sahiptir"* -> *"Çok hızlıdır"* / *"Üç katmana sahiptir"* -> *"Üç katmandan oluşur"* |
 | **ev sahipliği yapmak** (`host / feature`) | barındırmak, ağırlamak, yer almak | *"Bölge birçok tarihi yapıya ev sahipliği yapmaktadır"* -> *"Bölgede pek çok tarihi yapı var"* |
-| **rol oynamak** (`play a role`) | belirlemek, etkilemek, işe yaramak | *"Kritik bir rol oynamaktadır"* -> *"Doğrudan belirler / belkemiğini oluşturur"* |
+| **rol oynamak** (`play a role`) | belirlemek, etkilemek, işe yaramak | *"Kritik bir rol oynamaktadır"* -> *"Belirler / belkemiğini oluşturur"* |
 | **olarak** (aşırı edat kullanımı) | `-cA`, hâl ekleri veya doğrudan yüklem | *"İlk adım olarak veriyi sildik"* -> *"İlk adımda veriyi sildik"* / *"Sonuç olarak"* -> *"Sonuçta"* |
 
 ## 7. Kanıtsallık Kipi (`-mIş`) ve Geniş Zaman / Şimdiki Zaman Ayrımı
@@ -105,7 +105,7 @@ LLM'ler tek bir Türkçe fiille anlatılabilecek eylemleri isim + yardımcı fii
 
 ## 8. Ad Tamlaması Zincirlerini Kırma (Maksimum 3 İsim Kuralı)
 
-İngilizce teknik ve kurumsal tamlamaları (`customer segmentation module performance optimization process`) Türkçeye eklerle üst üste yığmak okunabilirliği yok eder. Bir tamlamada en fazla 3 isim yan yana gelebilir; fazlasını sıfat-fiil veya hâl ekleriyle çöz:
+İngilizce teknik ve kurumsal tamlamaları (`customer segmentation module performance optimization process`) Türkçeye eklerle üst üste yığmak okunabilirliği yok eder. Bir tamlamada en fazla 3 isim yan yana gelebilir, fazlasını sıfat-fiil veya hâl ekleriyle çöz:
 
 - **Makine:** *"Müşteri segmentasyon modülü performans iyileştirme çalışması sonuç raporu"*
 - **İnsan:** *"Müşteri segmentasyon modülünde yaptığımız performans çalışmasının sonuçları"*
@@ -115,6 +115,6 @@ LLM'ler tek bir Türkçe fiille anlatılabilecek eylemleri isim + yardımcı fii
 Makine Türkçesi her şeyi baştan mutlak bir kesinlikle biliyormuş gibi yazar. İnsan yazar ise düşünürken cümleyi daraltır, çekince koyar ve Türkçenin doğal söylem parçacıklarını (`işte`, `ise`, `zaten`, `hani`, `yani`, `bir de`, `tabii`, `daha doğrusu`) yerli yerinde kullanır:
 
 - **Makine:** *"Silme işlemi idempotenttir, bu nedenle dağıtık sistemlerde tercih edilir."*
-- **İnsan:** *"Silme işlemi idempotent olduğu için tercih ediliyor. Daha doğrusu, güncellemek de çalışır ama bir şey ters gittiğinde sessizce bozulur."*
+- **İnsan:** *"Silme işlemi idempotent olduğu için tercih ediliyor. Güncellemek de çalışır tabii ama bir şey ters gittiğinde sessizce bozulur."*
 - **Makine:** *"Birinci yöntem hızlıdır, ikinci yöntem yavaştır."*
 - **İnsan:** *"Birinci yöntem hızlı, ikincisi ise yavaş."*

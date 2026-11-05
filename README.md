@@ -14,7 +14,7 @@
 
 Büyük Dil Modelleri (LLM) ağırlıklı olarak İngilizce veriyle eğitildiği ve RLHF aşamasında İngilizce retorik kalıplarıyla ödüllendirildiği için, Türkçe metin üretirken **"kelimeleri Türkçe ama cümle iskeleti İngilizce"** olan mekanik bir dil (*Translationese / Yapay Zeka Türkçesi*) üretir.
 
-Piyasadaki İngilizce *humanizer* araçları yalnızca yüzeydeki kelimeleri değiştirir. Oysa Türkçede sorun sadece *"yadsınamaz"*, *"adeta"* veya *"kritik bir rol oynamaktadır"* kelimeleri değildir; **niteleyicilerin baş ismin arkasına takılması (sağa dallanma), ulaç (`-Ip, -IncA, -dIkçA`) gereken yere mekanik `ve` bağlacının girmesi, her cümlenin `-DIr / -mAktAdIr` ile bitmesi ve tüm cümlelerin 18-22 kelimelik tekdüze bir banda sıkışmasıdır.**
+Piyasadaki İngilizce *humanizer* araçları yalnızca yüzeydeki kelimeleri değiştirir. Oysa Türkçede sorun sadece *"yadsınamaz"*, *"adeta"* veya *"kritik bir rol oynamaktadır"* kelimeleri değildir. Asıl sorun **niteleyicilerin baş ismin arkasına takılması (sağa dallanma), ulaç (`-Ip, -IncA, -dIkçA`) gereken yere mekanik `ve` bağlacının girmesi, her cümlenin `-DIr / -mAktAdIr` ile bitmesi ve tüm cümlelerin 18-22 kelimelik tekdüze bir banda sıkışmasıdır.**
 
 `turkish-anti-ai-skill`, kelimelerin altındaki **Türkçe cümle mimarisini**, **TDK Yazım Kılavuzu kurallarını** ve **insan nefes ritmini (burstiness)** yeniden kurar.
 
@@ -24,14 +24,14 @@ Piyasadaki İngilizce *humanizer* araçları yalnızca yüzeydeki kelimeleri de�
 > Günümüzün hızla değişen iş dünyasında, uzaktan çalışma modeli sadece geçici bir trend değil, aynı zamanda kurumsal kültürün temel bir yapı taşı haline gelmiştir — ve bu durumun önemi yadsınamaz. Şirketler tarafından gerçekleştirilen araştırmalar göstermektedir ki, çalışanlara esneklik sağlamak verimlilik üzerinde kritik bir rol oynamaktadır. Bununla birlikte, iletişim kopukluklarını önlemek adına bütüncül bir yaklaşım benimsenmelidir. Sonuç olarak, geleceğin çalışma dünyasında başarılı olmak isteyen kurumlar bu dönüşüme ayak uydurmak zorundadır.
 
 ### Çıktı (`turkish-anti-ai-skill` Onarım Modu · *Blog/Deneme Register*)
-> Uzaktan çalışma artık geçici bir heves olmaktan çıkıp şirket kültürünün kalıcı bir parçasına dönüştü. Araştırmalar da aynı şeyi söylüyor: Çalışanlara esneklik tanıdığınızda verimlilik doğrudan artıyor. İşin zor kısmı, ekip aynı ofiste değilken iletişimi koparmamak. Bunu da tek tek araçlarla değil, çalışma düzenini baştan sona buna göre kurgulayarak çözebiliyorsunuz.
+> Uzaktan çalışma artık şirket kültürünün kalıcı bir parçası. Araştırmalar da aynı şeyi söylüyor: Çalışanlara esneklik tanıdığınızda verimlilik artıyor. İşin zor kısmı, ekip aynı ofisi paylaşmazken iletişimi koparmamak. Kalıcı çözüm ise çalışma düzenini baştan sona bu yeni ritme göre kurgulamaktan geçiyor.
 
 **Neleri Yakaladı ve Onardı?**
 1. **Sahneleme Girişi (P0):** *"Günümüzün hızla değişen iş dünyasında"* boş girişi silindi, doğrudan konuya girildi.
 2. **Negatif Paralellik (P0):** *"sadece X değil, aynı zamanda Y"* kalıbı `-Ip` ulacıyla (*"heves olmaktan çıkıp..."*) doğal akışa çevrildi.
 3. **Noktalama & Tier-1 Klişe (P0/P2):** TDK'da diyalog dışında bulunmayan uzun çizgi (`—`) ve *"önemi yadsınamaz"* klişesi kaldırıldı.
 4. **Edilgen Çatı & Hint-Avrupa `ki` Bağlacı (P1):** *"Şirketler tarafından gerçekleştirilen araştırmalar göstermektedir ki"* yapısı etken ve doğrudan cümleye çevrildi.
-5. **Kof Yardımcı Fiil & `-mAktAdIr` Salgını (P1):** *"esneklik sağlamak ... kritik bir rol oynamaktadır"* yerine *"esneklik tanıdığınızda verimlilik doğrudan artıyor"* kuruldu.
+5. **Kof Yardımcı Fiil & `-mAktAdIr` Salgını (P1):** *"esneklik sağlamak ... kritik bir rol oynamaktadır"* yerine *"esneklik tanıdığınızda verimlilik artıyor"* kuruldu.
 6. **Vaaz Veren Kapanış (P0):** *"Sonuç olarak ... ayak uydurmak zorundadır"* ders verme cümlesi tamamen kesildi.
 7. **Olgusal Sadakat Kilidi:** Kaynak metinde olmayan hiçbir istatistik, tarih veya uydurma kişisel anekdot eklenmedi.
 

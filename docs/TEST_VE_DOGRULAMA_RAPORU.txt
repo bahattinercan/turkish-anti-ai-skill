@@ -4,11 +4,11 @@ TURKISH-ANTI-AI-SKILL KAPSAMLI TEST VE DOĞRULAMA PAKETİ
 
 [BÖLÜM 1] PAKET VE MİMARİ BÜTÜNLÜK TESTLERİ
   [GEÇTİ] | SKILL.md Agent Skills v1.0 Spesifikasyon Uyumu (<500 satır, YAML, tire yasağı)
-           -> 102 satır | Frontmatter: True | Em/En-Dash: Yok
+           -> 104 satır | Frontmatter: True | Em/En-Dash: Yok
   [GEÇTİ] | Progressive Disclosure Referans Dosyaları (references/*.md) Bütünlüğü
            -> 4/4 referans dosyası mevcut ve SKILL.md içinden bağlı
   [GEÇTİ] | Single-Source-of-Truth Senkronizasyonu (dist/ ve skills/ Zero-Drift)
-           -> dist boyutu: 50989 byte | skills/ senkron: True
+           -> dist boyutu: 51510 byte | skills/ senkron: True
   [GEÇTİ] | Çoklu Ajan Adaptörleri (Cursor .mdc, Claude plugin.json, AGENTS.md, CLAUDE.md)
            -> Cursor .mdc: True | Claude plugin.json: True | AGENTS.md: True
 
@@ -16,13 +16,13 @@ TURKISH-ANTI-AI-SKILL KAPSAMLI TEST VE DOĞRULAMA PAKETİ
   [GEÇTİ] | [TC-01-blog-deneme] Blog & Deneme Register (Sahneleme, Negatif Paralellik, Em-Dash ve Edilgen Çatı)
            -> AI Bayrakları (Önce -> Sonra): 10 -> 0
            -> '-mAktAdIr' Yoğunluğu (Önce -> Sonra): 3.03 -> 0.0 / 100 kelime
-           -> Cümle Ritmi / Burstiness CoV (Önce -> Sonra): 0.44 -> 0.67
+           -> Cümle Ritmi / Burstiness CoV (Önce -> Sonra): 0.44 -> 0.74
            -> Olgusal Sadakat (Sayı/Terim Korunumu): %100 Korundu
            -> Yakalanan Örnek Sinyaller: 'yadsınamaz', 'kritik bir rol oyna', 'sadece geçici bir trend değil, aynı zamanda', 'Günümüzün hızla değişen', 'Bununla birlikte', 'bütüncül bir yaklaşım'
   [GEÇTİ] | [TC-02-teknik-muhendislik] Teknik & Mühendislik Register (Fonetik Ek Uyumu, Zorlama Çeviri ve Noktalama)
            -> AI Bayrakları (Önce -> Sonra): 11 -> 0
            -> '-mAktAdIr' Yoğunluğu (Önce -> Sonra): 1.56 -> 0.0 / 100 kelime
-           -> Cümle Ritmi / Burstiness CoV (Önce -> Sonra): 0.39 -> 0.58
+           -> Cümle Ritmi / Burstiness CoV (Önce -> Sonra): 0.39 -> 0.57
            -> Olgusal Sadakat (Sayı/Terim Korunumu): %100 Korundu
            -> Yakalanan Örnek Sinyaller: 'adeta', 'kritik bir öneme sahip', 'kusursuz bir şekilde', 'Öte yandan', 'uç noktalarda', ', ama'
   [GEÇTİ] | [TC-03-kurumsal-saas] Kurumsal & SaaS Ürün Metni (Lokalizasyon Calque'ları, Kof Fiiller ve Sayı Sadakati)
@@ -33,8 +33,8 @@ TURKISH-ANTI-AI-SKILL KAPSAMLI TEST VE DOĞRULAMA PAKETİ
            -> Yakalanan Örnek Sinyaller: 'geniş bir yelpaze', 'potansiyelini ortaya çıkar', 'bir üst seviyeye taşı', 'Bu bağlamda', 'söz konusu', 'tarafından geliştiril'
   [GEÇTİ] | [TC-04-akademik-resmi] Akademik & Resmi Register (Kalibre Edilmiş -mAktAdIr Dozajı ve TDK Aralık/Ondalık Kuralları)
            -> AI Bayrakları (Önce -> Sonra): 12 -> 0
-           -> '-mAktAdIr' Yoğunluğu (Önce -> Sonra): 0.0 -> 2.33 / 100 kelime
-           -> Cümle Ritmi / Burstiness CoV (Önce -> Sonra): 0.3 -> 0.78
+           -> '-mAktAdIr' Yoğunluğu (Önce -> Sonra): 0.0 -> 2.38 / 100 kelime
+           -> Cümle Ritmi / Burstiness CoV (Önce -> Sonra): 0.3 -> 0.76
            -> Olgusal Sadakat (Sayı/Terim Korunumu): %100 Korundu
            -> Yakalanan Örnek Sinyaller: 'hayati bir öneme sahip', 'sadece artış göstermekle kalma', 'çığır açan', 'dönüm noktası', 'en büyük kanıtıdır', 'Belirtmek gerekir ki'
   [GEÇTİ] | [TC-05-edebi-anlati] Edebi & Anlatı Register (Nefes Ritmi, Ulaç Akışı ve Tier-1 Süs Temizliği)
