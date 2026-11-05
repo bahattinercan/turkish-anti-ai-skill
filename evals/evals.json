@@ -1,43 +1,144 @@
 {
   "skill_name": "turkish-anti-ai-skill",
   "version": "1.0.0",
-  "evals": [
+  "test_cases": [
     {
-      "id": "tr-blog-rewrite-01",
+      "id": "TC-01-blog-deneme",
+      "title": "Blog & Deneme Register (Sahneleme, Negatif Paralellik, Em-Dash ve Edilgen Çatı)",
       "mode": "rewrite",
       "register": "blog-deneme",
-      "prompt": "Şu metni doğal ve insani Türkçeye çevir, AI kokusunu sil: 'Günümüzün hızla değişen iş dünyasında, uzaktan çalışma modeli sadece geçici bir trend değil, aynı zamanda kurumsal kültürün temel bir yapı taşı haline gelmiştir — ve bu durumun önemi yadsınamaz. Şirketler tarafından gerçekleştirilen araştırmalar göstermektedir ki, çalışanlara esneklik sağlamak verimlilik üzerinde kritik bir rol oynamaktadır.'",
-      "assertions": [
-        "Çıktıda 'Günümüzün hızla değişen', 'yadsınamaz', 'kritik bir rol oynamaktadır' ve 'sadece ... değil, aynı zamanda' ifadeleri yer almamalıdır.",
-        "Çıktıda uzun çizgi ('—') bulunmamalıdır.",
-        "Kaynak metinde yer almayan hiçbir uydurma istatistik, tarih veya özel isim eklenmemelidir (Olgusal Sadakat Kilidi).",
-        "Çıktının başında 'Elbette!' veya sonunda açıklama özeti yer almamalı, yalnızca onarılmış metin döndürülmelidir."
-      ]
+      "input_ai": "Günümüzün hızla değişen iş dünyasında, uzaktan çalışma modeli sadece geçici bir trend değil, aynı zamanda kurumsal kültürün temel bir yapı taşı haline gelmiştir — ve bu durumun önemi yadsınamaz. Şirketler tarafından gerçekleştirilen araştırmalar göstermektedir ki, çalışanlara esneklik sağlamak verimlilik üzerinde kritik bir rol oynamaktadır. Bununla birlikte, iletişim kopukluklarını önlemek adına bütüncül bir yaklaşım benimsenmelidir. Sonuç olarak, 2026 yılında başarılı olmak isteyen kurumlar bu dönüşüme ayak uydurmak zorundadır.",
+      "output_human": "Uzaktan çalışma artık geçici bir heves değil, şirket kültürünün kalıcı bir parçası. Araştırmalar da bunu doğruluyor. Çalışanlara esneklik tanıdığınızda verimlilik doğrudan artarken, aynı ofisi paylaşmayan ekiplerde iletişimi canlı tutmak için 2026 çalışma düzenini tek tek araçlarla değil baştan sona yeniden kurgulamak gerekiyor işte.",
+      "must_preserve_tokens": [
+        "2026"
+      ],
+      "expected_min_before_flags": 8,
+      "max_after_mektedir": 0.0,
+      "min_after_cov": 0.4
     },
     {
-      "id": "tr-tech-rewrite-02",
+      "id": "TC-02-teknik-muhendislik",
+      "title": "Teknik & Mühendislik Register (Fonetik Ek Uyumu, Zorlama Çeviri ve Noktalama)",
       "mode": "rewrite",
       "register": "teknik",
-      "prompt": "Bu teknik paragrafı onar: 'Bir önbellek (cache) anahtarının süresi dolduğunda, aynı anda gelen bir çok istek veritabanına yönlendirilir ve bu durum sistemde adeta bir darboğaz yaratmaktadır. Bu sorun özellikle yüksek bir trafiğe sahip olan uç noktalarda (endpoints) ve SQL'da kritik bir öneme sahiptir, ama dağıtık kilit ile çözülebilir.'",
-      "assertions": [
-        "'endpoints' terimi 'uç noktalar' olarak zorla çevrilmemeli, 'endpoint' olarak korunmalıdır.",
-        "'SQL'da' hatası Türkçe okunuşa ('es-kü-el') uygun şekilde 'SQL'de' olarak düzeltilmelidir.",
-        "'bir çok' yazım hatası TDK kuralına göre 'birçok' (veya doğal karşılığı) olarak düzeltilmelidir.",
-        "', ama' şeklindeki bağlaç öncesi virgül kaldırılmalıdır.",
-        "'-mAktAdIr' eki ve 'adeta', 'kritik bir öneme sahiptir' klişeleri temizlenmelidir."
-      ]
+      "input_ai": "Bir önbellek (cache'ı) anahtarının süresi saat 14:30'da dolduğunda, aynı anda gelen bir çok istek veritabanına yönlendirilir ve bu durum sistemde adeta bir darboğaz yaratmaktadır. Bu sorun özellikle yüksek bir trafiğe sahip olan uç noktalarda (endpoints) ve SQL'da kritik bir öneme sahiptir, ama Redis dağıtık kilidi ile kusursuz bir şekilde çözülebilir. Öte yandan, JSON'de veri boyutu 64 KB sınırını aşmamalıdır.",
+      "output_human": "Çok okunan bir cache'in süresi saat 14.30'da dolunca yüzlerce istek aynı anda veritabanına yüklenip yüksek trafikli endpoint'lerde ve SQL'de doğrudan kesintiye yol açar. Çözüm aslında basit. Redis dağıtık kilidiyle veritabanına tek bir isteğin gitmesini sağlayabilirsiniz ama JSON'da veri boyutu 64 KB sınırını aşmamalı.",
+      "must_preserve_tokens": [
+        "14.30'da",
+        "endpoint",
+        "SQL'de",
+        "Redis",
+        "JSON'da",
+        "64",
+        "KB"
+      ],
+      "expected_min_before_flags": 10,
+      "max_after_mektedir": 0.0,
+      "min_after_cov": 0.4
     },
     {
-      "id": "tr-academic-fidelity-03",
+      "id": "TC-03-kurumsal-saas",
+      "title": "Kurumsal & SaaS Ürün Metni (Lokalizasyon Calque'ları, Kof Fiiller ve Sayı Sadakati)",
+      "mode": "rewrite",
+      "register": "kurumsal",
+      "input_ai": "İstanbul'un kalbinde yer alan 42 kişilik ekibimiz tarafından geliştirilen yeni analitik platformumuz, işletmenizin potansiyelini ortaya çıkarmak ve iş akışlarınızı bir üst seviyeye taşımak için geniş bir yelpazede çözümler sunmaktadır — üstelik saat 13.00'da başlayan canlı demomuz için kredi kartı istenmez! Bu bağlamda, söz konusu sistemimizle raporlama sürelerinde %38.4 oranında büyük bir artış gerçekleştirilmiştir.",
+      "output_human": "İstanbul merkezli 42 kişilik ekibimizin geliştirdiği yeni analitik platform, iş akışlarınızı hızlandırıp raporlama yükünü azaltır. Saat 13.00'te başlayan canlı demoya kredi kartı gerekmeden katılabilirsiniz. Raporlama hızı %38,4 arttı.",
+      "must_preserve_tokens": [
+        "İstanbul",
+        "42",
+        "13.00'te",
+        "38,4"
+      ],
+      "expected_min_before_flags": 8,
+      "max_after_mektedir": 0.0,
+      "min_after_cov": 0.4
+    },
+    {
+      "id": "TC-04-akademik-resmi",
+      "title": "Akademik & Resmi Register (Kalibre Edilmiş -mAktAdIr Dozajı ve TDK Aralık/Ondalık Kuralları)",
       "mode": "rewrite",
       "register": "akademik-resmi",
-      "prompt": "Akademik register'ı koruyarak AI klişelerini temizle: 'Türkiye'de 2020–2024 yılları arasında yenilenebilir enerji yatırımları sadece artış göstermekle kalmamış, aynı zamanda enerji arz güvenliğinde de çığır açan bir dönüm noktası olmuştur. Enerji Bakanlığı tarafından paylaşılan verilere göre, güneş enerjisi kurulu gücü %112.5 oranında bir büyüme gerçekleştirmiştir — ki bu durum sektörün dinamik yapısının en büyük kanıtıdır.'",
-      "assertions": [
-        "2020-2024 tarih aralığındaki orta çizgi ('–') TDK kuralına uygun kısa çizgiye ('-') dönüştürülmelidir.",
-        "'%112.5' ondalık nokta kullanımı TDK standardı olan virgüle ('%112,5') çevrilmeli ve sayısal değer kesinlikle değiştirilmemelidir.",
-        "Akademik register korunduğu için devrik cümle veya konuşma dili parçacığı ('işte', 'hani') eklenmemelidir.",
-        "'çığır açan bir dönüm noktası' ve 'en büyük kanıtıdır' abartıları temizlenmelidir."
-      ]
+      "input_ai": "Türkiye'de 2020–2024 yılları arasında yenilenebilir enerji yatırımları sadece artış göstermekle kalmamış, aynı zamanda enerji arz güvenliğinde de çığır açan bir dönüm noktası olmuştur. Enerji Bakanlığı tarafından paylaşılan verilere göre, güneş enerjisi kurulu gücü %112.5 oranında büyük bir büyüme gerçekleştirmiştir — ki bu durum sektörün dinamik yapısının en büyük kanıtıdır. Belirtmek gerekir ki, bu doğrultuda şebeke altyapısının güçlendirilmesi hayati bir öneme sahiptir.",
+      "output_human": "Türkiye'de 2020-2024 döneminde hız kazanan yenilenebilir enerji yatırımları, Enerji Bakanlığının yayımladığı resmi verilere göre güneş enerjisi kurulu gücünü %112,5 büyüterek ulusal enerji arz güvenliğinin yapısını doğrudan dönüştürmüştür. Artan bu kapasitenin kayıpsız iletimi ise şebeke altyapısının eşzamanlı güçlendirilmesine dayanmaktadır. Dönüşüm kalıcıdır.",
+      "must_preserve_tokens": [
+        "Türkiye",
+        "2020-2024",
+        "Enerji",
+        "112,5"
+      ],
+      "expected_min_before_flags": 8,
+      "max_after_mektedir": 2.5,
+      "min_after_cov": 0.4
+    },
+    {
+      "id": "TC-05-edebi-anlati",
+      "title": "Edebi & Anlatı Register (Nefes Ritmi, Ulaç Akışı ve Tier-1 Süs Temizliği)",
+      "mode": "rewrite",
+      "register": "edebi-anlati",
+      "input_ai": "Kapadokya, Türkiye'nin en çok ziyaret edilen bölgelerinden biridir ve pek çok tarihi yapıya ev sahipliği yapmaktadır. Sabah saatlerinde gökyüzüne yükselen balonlar adeta görsel bir şölen sunmaktadır ve ziyaretçilere zengin bir doku yaşatmaktadır. Sonuç olarak, bu büyüleyici coğrafyada tek başına seyahat etmenin bireye kattığı derin etki yadsınamaz.",
+      "output_human": "Sabahın dördünde uyanmak ilk başta insana işkence gibi geliyor. Ama Kapadokya'da balonlar yavaşça gökyüzüne yükselirken Türkiye'nin o kadim taş vadilerine yukarıdan bakınca bütün uykusuzluğu bir anda unutuyorsunuz. Tek başına yürümenin tadı bambaşka.",
+      "must_preserve_tokens": [
+        "Kapadokya",
+        "Türkiye"
+      ],
+      "expected_min_before_flags": 5,
+      "max_after_mektedir": 0.0,
+      "min_after_cov": 0.4
+    },
+    {
+      "id": "TC-06-false-positive-guard",
+      "title": "Yanlış Pozitif (False-Positive) ve Aşırı Düzeltme Koruması Kontrolü",
+      "mode": "control",
+      "register": "teknik",
+      "input_ai": "Bir dalda çalışırken ana dal ilerlemeye devam eder. Sen satışa bak, gerisini biz hallederiz. Popüler bir cache'i temizleyip SQL'de sorguyu yeniden çalıştırdık ve JSON'ı doğruladık. Toplantı 13.00'te başlayıp 14.30'da tamamlandı. Birçok geliştirici herhangi bir ek ayar yapmadan sistemi canlı ortama taşıdı.",
+      "output_human": "Bir dalda çalışırken ana dal ilerlemeye devam eder. Sen satışa bak, gerisini biz hallederiz. Popüler bir cache'i temizleyip SQL'de sorguyu yeniden çalıştırdık ve JSON'ı doğruladık. Toplantı 13.00'te başlayıp 14.30'da tamamlandı. Birçok geliştirici herhangi bir ek ayar yapmadan sistemi canlı ortama taşıdı.",
+      "must_preserve_tokens": [
+        "cache'i",
+        "SQL'de",
+        "JSON'ı",
+        "13.00'te",
+        "14.30'da"
+      ],
+      "expected_min_before_flags": 0,
+      "max_after_mektedir": 0.0,
+      "min_after_cov": 0.2
+    },
+    {
+      "id": "TC-07-write-mode-sifirdan",
+      "title": "Üretim Modu (Write Mode - Sıfırdan Türkçe Cümle Mimarisi ile Yazım)",
+      "mode": "rewrite",
+      "register": "teknik",
+      "input_ai": "Dağıtık sistemlerde idempotency kavramı kritik bir rol oynamaktadır — çünkü ağ hataları nedeniyle bir istek birden fazla kez gönderilebilir ve bu durum veritabanında mükerrer kayıtlara yol açmaktadır. Bununla birlikte, her isteğe tekil bir anahtar (idempotency key) atamak bu sorunu kusursuz bir şekilde çözer, ama anahtarların süresi doğru yönetilmelidir.",
+      "output_human": "Ağ kopukluklarında istemci aynı isteği arka arkaya gönderebildiği için dağıtık sistemlerde idempotent tasarım şarttır. Yoksa veritabanında mükerrer kayıt oluşur. Her isteğe tekil bir idempotency key vererek bu riski kapatabilirsiniz ama anahtarların saklanma süresini doğru ayarlamak gerekir.",
+      "must_preserve_tokens": [
+        "idempotent",
+        "veritabanında"
+      ],
+      "expected_min_before_flags": 5,
+      "max_after_mektedir": 0.0,
+      "min_after_cov": 0.4
+    },
+    {
+      "id": "TC-08-tdk-imla-stres-testi",
+      "title": "TDK İmla, Birleşik/Ayrı Kelimeler ve Noktalama Stres Testi",
+      "mode": "rewrite",
+      "register": "kurumsal",
+      "input_ai": "Toplantıda ard arda gündeme gelen bir çok konunun yanısıra, hiç bir paydaşın önyargı ile yaklaşmaması gerektiği farkedildi — oysa ki saat 09:30'da başlayan oturumda herşey yada pekçok detay açıkça konuşulmuştu.",
+      "output_human": "Sabah 09.30'da başlayan oturumda pek çok detayı açıkça konuşmuştuk. Buna rağmen toplantıda art arda gündeme gelen birçok başlığın yanı sıra hiçbir paydaşın ön yargıyla yaklaşmaması gerektiğini de fark ettik. Her şey netleşti.",
+      "must_preserve_tokens": [
+        "09.30'da",
+        "pek çok",
+        "art arda",
+        "birçok",
+        "yanı sıra",
+        "hiçbir",
+        "ön yargıyla",
+        "fark ettik",
+        "Her şey"
+      ],
+      "expected_min_before_flags": 10,
+      "max_after_mektedir": 0.0,
+      "min_after_cov": 0.4
     }
   ],
   "trigger_queries": {
