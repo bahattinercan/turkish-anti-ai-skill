@@ -121,14 +121,14 @@ def test_eval_scenarios() -> list:
 
 def main():
     print("=" * 78)
-    print("🇹🇷 TURKISH-ANTI-AI-SKILL KAPSAMLI TEST VE DOĞRULAMA PAKETİ")
+    print("TURKISH-ANTI-AI-SKILL KAPSAMLI TEST VE DOĞRULAMA PAKETİ")
     print("=" * 78)
 
     pkg_results = test_package_integrity()
     print("\n[BÖLÜM 1] PAKET VE MİMARİ BÜTÜNLÜK TESTLERİ")
     all_passed = True
     for item in pkg_results:
-        status = "✅ GEÇTİ" if item["passed"] else "❌ KALDI"
+        status = "[GEÇTİ]" if item["passed"] else "[KALDI]"
         if not item["passed"]:
             all_passed = False
         print(f"  {status} | {item['check']}\n           -> {item['detail']}")
@@ -136,7 +136,7 @@ def main():
     eval_results = test_eval_scenarios()
     print("\n[BÖLÜM 2] 5 REGISTER + YANLIŞ POZİTİF & OLGUSAL SADAKAT TESTLERİ")
     for res in eval_results:
-        status = "✅ GEÇTİ" if res["passed"] else "❌ KALDI"
+        status = "[GEÇTİ]" if res["passed"] else "[KALDI]"
         if not res["passed"]:
             all_passed = False
         print(f"  {status} | [{res['id']}] {res['title']}")

@@ -1,4 +1,4 @@
-# 🇹🇷 turkish-anti-ai-skill
+# turkish-anti-ai-skill
 
 **Türkçeyi çevrilmiş İngilizce gibi değil, insan eliyle yazılmış doğal Türkçe gibi yaz ve onar.**  
 *An open-source Agent Skill & Turkish Humanizer that removes AI writing patterns ("Yapay Zeka Türkçesi" / Translationese) and rebuilds authentic Turkish sentence architecture.*
@@ -10,7 +10,7 @@
 
 **Kurulum** · **Öncesi / Sonrası Demo** · **Neden Sadece Bir Prompt Değil?** · **3 Katmanlı Mimari** · **Register Matrisi** · **CLI Dedektörü**
 
-## 🎯 Sorun Nedir?
+## Sorun Nedir?
 
 Büyük Dil Modelleri (LLM) ağırlıklı olarak İngilizce veriyle eğitildiği ve RLHF aşamasında İngilizce retorik kalıplarıyla ödüllendirildiği için, Türkçe metin üretirken **"kelimeleri Türkçe ama cümle iskeleti İngilizce"** olan mekanik bir dil (*Translationese / Yapay Zeka Türkçesi*) üretir.
 
@@ -18,12 +18,12 @@ Piyasadaki İngilizce *humanizer* araçları yalnızca yüzeydeki kelimeleri de�
 
 `turkish-anti-ai-skill`, kelimelerin altındaki **Türkçe cümle mimarisini**, **TDK Yazım Kılavuzu kurallarını** ve **insan nefes ritmini (burstiness)** yeniden kurar.
 
-## ⚡ Hızlı Demo (Öncesi / Sonrası)
+## Hızlı Demo (Öncesi / Sonrası)
 
-### ❌ Girdi (Tipik Yapay Zeka Türkçesi)
+### Girdi (Tipik Yapay Zeka Türkçesi)
 > Günümüzün hızla değişen iş dünyasında, uzaktan çalışma modeli sadece geçici bir trend değil, aynı zamanda kurumsal kültürün temel bir yapı taşı haline gelmiştir — ve bu durumun önemi yadsınamaz. Şirketler tarafından gerçekleştirilen araştırmalar göstermektedir ki, çalışanlara esneklik sağlamak verimlilik üzerinde kritik bir rol oynamaktadır. Bununla birlikte, iletişim kopukluklarını önlemek adına bütüncül bir yaklaşım benimsenmelidir. Sonuç olarak, geleceğin çalışma dünyasında başarılı olmak isteyen kurumlar bu dönüşüme ayak uydurmak zorundadır.
 
-### ✅ Çıktı (`turkish-anti-ai-skill` Onarım Modu · *Blog/Deneme Register*)
+### Çıktı (`turkish-anti-ai-skill` Onarım Modu · *Blog/Deneme Register*)
 > Uzaktan çalışma artık geçici bir heves olmaktan çıkıp şirket kültürünün kalıcı bir parçasına dönüştü. Araştırmalar da aynı şeyi söylüyor: Çalışanlara esneklik tanıdığınızda verimlilik doğrudan artıyor. İşin zor kısmı, ekip aynı ofiste değilken iletişimi koparmamak. Bunu da tek tek araçlarla değil, çalışma düzenini baştan sona buna göre kurgulayarak çözebiliyorsunuz.
 
 **Neleri Yakaladı ve Onardı?**
@@ -35,7 +35,7 @@ Piyasadaki İngilizce *humanizer* araçları yalnızca yüzeydeki kelimeleri de�
 6. **Vaaz Veren Kapanış (P0):** *"Sonuç olarak ... ayak uydurmak zorundadır"* ders verme cümlesi tamamen kesildi.
 7. **Olgusal Sadakat Kilidi:** Kaynak metinde olmayan hiçbir istatistik, tarih veya uydurma kişisel anekdot eklenmedi.
 
-## 🧠 Neden Sadece Bir Prompt Değil de Bir Skill?
+## Neden Sadece Bir Prompt Değil de Bir Skill?
 
 Tek satırlık *"Bunu insani ve doğal bir Türkçeyle yaz"* komutu yalnızca en bariz birkaç kelimeyi değiştirir ve çoğu zaman modelin "insan gibi görünmek" adına **kaynakta olmayan veriler/anekdotlar uydurmasına** yol açar. `turkish-anti-ai-skill` ise deterministik bir mühendislik mimarisi sunar:
 
@@ -46,7 +46,7 @@ Tek satırlık *"Bunu insani ve doğal bir Türkçeyle yaz"* komutu yalnızca en
 - **TDK Yazım Kılavuzu ve Fonetik Ek Denetimi:** Yabancı teknik terimleri (`endpoint`, `deploy`, `middleware`, `queue`) *"uç nokta, ara katman"* diye zorla çevirmez; ekleri kelimenin yazılışına göre değil **Türkçe okunuşuna (fonetiğine)** göre getirir (`cache'i`, `queue'yu`, `SQL'i`, `JSON'ı`).
 - **Deterministik Python CLI Dedektörü (`scripts/detect_tr_ai.py`):** Harici kütüphane gerektirmeden Türkçe metinlerdeki AI klişelerini, TDK hatalarını, `-mAktAdIr` yoğunluğunu ve cümle uzunluğu varyasyonunu (**Burstiness CoV**) ölçer.
 
-## 🚀 Kurulum (Installation)
+## Kurulum (Installation)
 
 ### 1. Evrensel Agent Skills CLI (`npx skills` & `gh skill`)
 Claude Code, Cursor, OpenAI Codex, Gemini CLI, Windsurf ve OpenCode için tek komutla kurulum:
@@ -94,7 +94,7 @@ git clone https://github.com/yucezerey/turkish-anti-ai-skill.git ~/.gemini/skill
 ### 5. ChatGPT (Custom GPT), Claude Projects ve Google AI Studio (Web)
 Klasör yüklenemeyen web arayüzleri için tüm referans tablolarının tek dosyada birleştirildiği `dist/turkish-anti-ai-skill.full.md` dosyasını kopyalayıp **Project Instructions / System Prompt** veya **Knowledge** alanına yapıştırabilirsin.
 
-## 🛠️ Kullanım
+## Kullanım
 
 Kurulumdan sonra ajanına doğal dilde seslenmen yeterlidir; yetenek kendi açıklamasıyla (`description`) otomatik tetiklenir:
 
@@ -102,7 +102,7 @@ Kurulumdan sonra ajanına doğal dilde seslenmen yeterlidir; yetenek kendi açı
 - **Üretim (`write`):** *"Dağıtık sistemlerde cache invalidation konusunu teknik register'da, doğal Türkçeyle yaz."*
 - **Denetim (`audit`):** *"Bu kurumsal metni değiştirme, sadece içindeki AI-Türkçesi ve TDK hatalarını raporla (audit modu)."*
 
-## 📐 Üç Katmanlı Mimari Özeti
+## Üç Katmanlı Mimari Özeti
 
 | Katman | Odak Noktası | Yakalanan Yapay Zeka İzi (Makine Türkçesi) | Uygulanan Doğal Türkçe Dönüşümü |
 | :--- | :--- | :--- | :--- |
@@ -110,7 +110,7 @@ Kurulumdan sonra ajanına doğal dilde seslenmen yeterlidir; yetenek kendi açı
 | **Katman 2: Cümle Mimarisi (P1)** | Sentaks ve morfoloji (`references/sentaks-ve-morfoloji.md`) | Sağa dallanan yan cümleler, Hint-Avrupa `ki` bağlacı, refleks `ve`, `-DIr / -mAktAdIr` şişmesi, gereksiz `"bir"` ve `"tarafından"` | Sıfat-fiille sola dallanma, ulaç sistemi (`-Ip, -IncA, -dIkçA`), yüklem önü vurgu yuvası, zamir düşürme (pro-drop), delil kipi (`-mIş`) |
 | **Katman 3: TDK ve Yüzey (P2)** | Noktalama, imla ve terimler (`references/tdk-ve-noktalama.md`) | Uzun çizgi (`—`), orta çizgi (`–`), `..., ama` virgülü, `"uç nokta"` gibi zorlama çeviriler, `"cache'ı, SQL'ı"` ek hataları | 5 mutlak noktalama yasağı, TDK birleşik/ayrı kelime kuralları, terimlerin Türkçe okunuşa göre çekimlenmesi (`cache'i, SQL'i`) |
 
-## 🔍 Deterministik CLI Dedektörü (`detect_tr_ai.py`)
+## Deterministik CLI Dedektörü (`detect_tr_ai.py`)
 
 Repodaki Python betiği ile herhangi bir Markdown veya metin dosyasını terminalden ya da CI/CD (GitHub Actions) üzerinden tarayabilirsin:
 
@@ -126,7 +126,7 @@ Tek parça `dist/turkish-anti-ai-skill.full.md` dosyasını yeniden derlemek iç
 python3 scripts/build_dist.py
 ```
 
-## 📂 Repo Klasör Yapısı
+## Repo Klasör Yapısı
 
 ```text
 turkish-anti-ai-skill/
@@ -157,10 +157,10 @@ turkish-anti-ai-skill/
 └── LICENSE                            # MIT Lisansı
 ```
 
-## 🤝 Katkıda Bulunma (Contributing)
+## Katkıda Bulunma (Contributing)
 
 Yeni bir "Yapay Zeka Türkçesi" kalıbı, çeviri kokan SaaS ifadesi veya TDK sınır durumu fark ettiysen Issue veya Pull Request açabilirsin. Kurallar ve şablon için [CONTRIBUTING.md](CONTRIBUTING.md) dosyasına göz at.
 
-## 📄 Lisans
+## Lisans
 
 Bu proje [MIT Lisansı](LICENSE) altında açık kaynak olarak sunulmaktadır.
