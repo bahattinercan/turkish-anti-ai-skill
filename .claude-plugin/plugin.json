@@ -1,0 +1,25 @@
+{
+  "name": "turkish-anti-ai-skill",
+  "version": "1.0.0",
+  "description": "Türkçe metinlerdeki yapay zeka izlerini (AI slop, translationese, çeviri kokan cümle mimarisi ve TDK hatalarını) temizleyen Agent Skill ve Humanizer paketi.",
+  "author": {
+    "name": "Yüce Zerey",
+    "url": "https://github.com/yucezerey"
+  },
+  "license": "MIT",
+  "repository": "https://github.com/yucezerey/turkish-anti-ai-skill",
+  "keywords": [
+    "turkish",
+    "humanizer",
+    "anti-ai",
+    "ai-writing",
+    "de-slop",
+    "tdk",
+    "agent-skills",
+    "claude-code",
+    "cursor"
+  ],
+  "skills": [
+    "skills/turkish-anti-ai-skill"
+  ]
+}

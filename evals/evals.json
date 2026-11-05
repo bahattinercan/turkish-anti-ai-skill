@@ -1,0 +1,59 @@
+{
+  "skill_name": "turkish-anti-ai-skill",
+  "version": "1.0.0",
+  "evals": [
+    {
+      "id": "tr-blog-rewrite-01",
+      "mode": "rewrite",
+      "register": "blog-deneme",
+      "prompt": "Şu metni doğal ve insani Türkçeye çevir, AI kokusunu sil: 'Günümüzün hızla değişen iş dünyasında, uzaktan çalışma modeli sadece geçici bir trend değil, aynı zamanda kurumsal kültürün temel bir yapı taşı haline gelmiştir — ve bu durumun önemi yadsınamaz. Şirketler tarafından gerçekleştirilen araştırmalar göstermektedir ki, çalışanlara esneklik sağlamak verimlilik üzerinde kritik bir rol oynamaktadır.'",
+      "assertions": [
+        "Çıktıda 'Günümüzün hızla değişen', 'yadsınamaz', 'kritik bir rol oynamaktadır' ve 'sadece ... değil, aynı zamanda' ifadeleri yer almamalıdır.",
+        "Çıktıda uzun çizgi ('—') bulunmamalıdır.",
+        "Kaynak metinde yer almayan hiçbir uydurma istatistik, tarih veya özel isim eklenmemelidir (Olgusal Sadakat Kilidi).",
+        "Çıktının başında 'Elbette!' veya sonunda açıklama özeti yer almamalı, yalnızca onarılmış metin döndürülmelidir."
+      ]
+    },
+    {
+      "id": "tr-tech-rewrite-02",
+      "mode": "rewrite",
+      "register": "teknik",
+      "prompt": "Bu teknik paragrafı onar: 'Bir önbellek (cache) anahtarının süresi dolduğunda, aynı anda gelen bir çok istek veritabanına yönlendirilir ve bu durum sistemde adeta bir darboğaz yaratmaktadır. Bu sorun özellikle yüksek bir trafiğe sahip olan uç noktalarda (endpoints) ve SQL'da kritik bir öneme sahiptir, ama dağıtık kilit ile çözülebilir.'",
+      "assertions": [
+        "'endpoints' terimi 'uç noktalar' olarak zorla çevrilmemeli, 'endpoint' olarak korunmalıdır.",
+        "'SQL'da' hatası Türkçe okunuşa ('es-kü-el') uygun şekilde 'SQL'de' olarak düzeltilmelidir.",
+        "'bir çok' yazım hatası TDK kuralına göre 'birçok' (veya doğal karşılığı) olarak düzeltilmelidir.",
+        "', ama' şeklindeki bağlaç öncesi virgül kaldırılmalıdır.",
+        "'-mAktAdIr' eki ve 'adeta', 'kritik bir öneme sahiptir' klişeleri temizlenmelidir."
+      ]
+    },
+    {
+      "id": "tr-academic-fidelity-03",
+      "mode": "rewrite",
+      "register": "akademik-resmi",
+      "prompt": "Akademik register'ı koruyarak AI klişelerini temizle: 'Türkiye'de 2020–2024 yılları arasında yenilenebilir enerji yatırımları sadece artış göstermekle kalmamış, aynı zamanda enerji arz güvenliğinde de çığır açan bir dönüm noktası olmuştur. Enerji Bakanlığı tarafından paylaşılan verilere göre, güneş enerjisi kurulu gücü %112.5 oranında bir büyüme gerçekleştirmiştir — ki bu durum sektörün dinamik yapısının en büyük kanıtıdır.'",
+      "assertions": [
+        "2020-2024 tarih aralığındaki orta çizgi ('–') TDK kuralına uygun kısa çizgiye ('-') dönüştürülmelidir.",
+        "'%112.5' ondalık nokta kullanımı TDK standardı olan virgüle ('%112,5') çevrilmeli ve sayısal değer kesinlikle değiştirilmemelidir.",
+        "Akademik register korunduğu için devrik cümle veya konuşma dili parçacığı ('işte', 'hani') eklenmemelidir.",
+        "'çığır açan bir dönüm noktası' ve 'en büyük kanıtıdır' abartıları temizlenmelidir."
+      ]
+    }
+  ],
+  "trigger_queries": {
+    "should_trigger": [
+      "Şu Türkçe blog yazısını humanize et ve AI kokusunu sil",
+      "Bu metin çok yapay zeka gibi duruyor, doğal Türkçeye çevirir misin?",
+      "LinkedIn paylaşımımı çeviri kokmayan, akıcı bir Türkçeyle yeniden yaz",
+      "Metindeki TDK noktalama hatalarını ve -mektedir şişmesini temizle",
+      "Kurumsal duyuru metnimizi daha insani ve doğrudan bir dille düzenle"
+    ],
+    "should_not_trigger": [
+      "Bu Python kodundaki IndexError hatasını düzelt",
+      "Bana React ile bir login formu bileşeni yaz",
+      "SQL sorgusunun çalışma süresini nasıl optimize ederim?",
+      "Yarın saat 14.00 için takvimime toplantı ekle",
+      "Write an English cold email to a SaaS prospect"
+    ]
+  }
+}

@@ -1,0 +1,18 @@
+---
+description: Türkçe metinlerdeki yapay zeka izlerini (AI slop, translationese, çeviri kokan cümle mimarisi, -mektedir/-dır şişmesi, yapay bağlaçlar ve TDK uyumsuzlukları) temizler; doğal, insani ve akıcı Türkçe metin üretir veya mevcut metinleri onarır.
+globs: ["**/*.md", "**/*.mdx", "**/*.txt"]
+alwaysApply: false
+---
+
+# Turkish Anti-AI Skill (Cursor Kural Adaptörü)
+
+Türkçe metin yazarken veya düzenlerken Büyük Dil Modellerinin (LLM) İngilizce eğitim verisinden kopyaladığı "Yapay Zeka Türkçesi" (Translationese) kalıplarını kullanma. Aşağıdaki kuralları ve depodaki `SKILL.md` ile `references/` dosyalarını uygula:
+
+1. **Olgusal Sadakat Kilidi:** Onarım modunda kaynak metinde bulunmayan hiçbir sayı, tarih, isim veya kişisel deneyim uydurma.
+2. **Sola Dallanma ve Ulaç Sistemi:** Yan cümleleri baş ismin arkasına veya Hint-Avrupa tipi `ki` bağlacıyla cümle sonuna takma; sıfat-fiillerle (`-An, -DIk, -AcAk`) ismin önüne al. İki eylemi refleks `ve` ile bağlamak yerine Türkçenin ulaç eklerini (`-Ip, -IncA, -dIkçA, -ArAk`) kullan.
+3. **`-DIr` ve `-mAktAdIr` Salgınını Durdur:** Akademik/hukuki register dışında geniş zaman isim cümlelerinde `-DIr` ve fiillerde `-mAktAdIr` eklerini sil.
+4. **Tier-1 Klişeleri ve Sahnelemeyi Sil:** `yadsınamaz`, `adeta`, `derinlemesine inmek`, `kritik bir rol oynamaktadır`, `geniş bir yelpaze`, `dönüm noktası`, `günümüzün hızla değişen dünyasında`, `sadece X değil, aynı zamanda Y`, `bununla birlikte`, `söz konusu`, `bu bağlamda` kalıplarını kullanma.
+5. **Beş Mutlak Noktalama ve TDK Kuralı:**
+   - Diyalog dışında **uzun çizgi (`—`)** ve sayı aralıklarında **orta çizgi (`–`)** kullanma; aralıkları kısa çizgiyle (`14.00-15.30`, `2024-2026`) yaz.
+   - `ama, fakat, lakin, ve, veya, ya da` bağlaçlarından önce virgül koyma; zarf-fiillerden (`-Ip, -ArAk`) sonra virgül koyma.
+   - Yabancı teknik terimleri (`endpoint, deploy, middleware, queue, cache`) *"uç nokta, ara katman"* diye zorla çevirme; kesme işaretiyle gelen ekleri **Türkçe okunuşa** göre getir (`cache'i`, `queue'yu`, `SQL'i`, `JSON'ı`).
