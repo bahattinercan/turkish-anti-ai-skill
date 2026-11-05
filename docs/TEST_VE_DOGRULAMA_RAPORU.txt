@@ -8,7 +8,7 @@
   ✅ GEÇTİ | Progressive Disclosure Referans Dosyaları (references/*.md) Bütünlüğü
            -> 4/4 referans dosyası mevcut ve SKILL.md içinden bağlı
   ✅ GEÇTİ | Single-Source-of-Truth Senkronizasyonu (dist/ ve skills/ Zero-Drift)
-           -> dist boyutu: 50868 byte | skills/ senkron: True
+           -> dist boyutu: 50989 byte | skills/ senkron: True
   ✅ GEÇTİ | Çoklu Ajan Adaptörleri (Cursor .mdc, Claude plugin.json, AGENTS.md, CLAUDE.md)
            -> Cursor .mdc: True | Claude plugin.json: True | AGENTS.md: True
 
