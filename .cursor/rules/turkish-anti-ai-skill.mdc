@@ -6,13 +6,14 @@ alwaysApply: false
 
 # Turkish Anti-AI Skill (Cursor Kural Adaptörü)
 
-Türkçe metin yazarken veya düzenlerken Büyük Dil Modellerinin (LLM) İngilizce eğitim verisinden kopyaladığı "Yapay Zeka Türkçesi" (Translationese) kalıplarını kullanma. Aşağıdaki kuralları ve depodaki `SKILL.md` ile `references/` dosyalarını uygula:
+Türkçe metin yazarken veya düzenlerken Büyük Dil Modellerinin (LLM) İngilizce eğitim verisinden kopyaladığı "Yapay Zekâ Türkçesi" (Translationese) kalıplarını kullanma. Aşağıdaki kuralları ve depodaki `SKILL.md` ile `references/` dosyalarını uygula:
 
-1. **Olgusal Sadakat Kilidi:** Onarım modunda kaynak metinde bulunmayan hiçbir sayı, tarih, isim veya kişisel deneyim uydurma.
+1. **Olgusal Sadakat Kilidi:** Onarım modunda kaynak metinde bulunmayan hiçbir sayı, tarih, isim veya kişisel deneyim uydurma. Klişeyi silince somut bilgi gerekiyorsa ve kaynakta yoksa `[somut veri: ...]` yer tutucusu bırak.
 2. **Sola Dallanma ve Ulaç Sistemi:** Yan cümleleri baş ismin arkasına veya Hint-Avrupa tipi `ki` bağlacıyla cümle sonuna takma, sıfat-fiillerle (`-An, -DIk, -AcAk`) ismin önüne al. İki eylemi refleks `ve` ile bağlamak yerine Türkçenin ulaç eklerini (`-Ip, -IncA, -dIkçA, -ArAk`) kullan.
 3. **`-DIr` ve `-mAktAdIr` Salgınını Durdur:** Akademik/hukuki register dışında geniş zaman isim cümlelerinde `-DIr` ve fiillerde `-mAktAdIr` eklerini sil.
-4. **Tier-1 Klişeleri ve Sahnelemeyi Sil:** `yadsınamaz`, `adeta`, `derinlemesine inmek`, `kritik bir rol oynamaktadır`, `geniş bir yelpaze`, `dönüm noktası`, `günümüzün hızla değişen dünyasında`, `sadece X değil, aynı zamanda Y`, `bununla birlikte`, `söz konusu`, `bu bağlamda` kalıplarını kullanma.
-5. **Beş Mutlak Noktalama ve TDK Kuralı:**
-   - Diyalog dışında **uzun çizgi (`—`)** ve sayı aralıklarında **orta çizgi (`–`)** kullanma, aralıkları kısa çizgiyle (`14.00-15.30`, `2024-2026`) yaz.
-   - `ama, fakat, lakin, ve, veya, ya da` bağlaçlarından önce virgül koyma ve zarf-fiillerden (`-Ip, -ArAk`) sonra virgül koyma.
-   - Yabancı teknik terimleri (`endpoint, deploy, middleware, queue, cache`) *"uç nokta, ara katman"* diye zorla çevirme, kesme işaretiyle gelen ekleri **Türkçe okunuşa** göre getir (`cache'i`, `queue'yu`, `SQL'i`, `JSON'ı`).
+4. **Tier-1 Klişeleri ve Sahnelemeyi Sil:** `yadsınamaz`, `âdeta`, `derinlemesine inmek`, `kritik bir rol oynamaktadır`, `geniş bir yelpaze`, `dönüm noktası`, `günümüzün hızla değişen dünyasında`, `sadece X değil, aynı zamanda Y`, `bununla birlikte`, `söz konusu`, `bu bağlamda` kalıplarını kullanma.
+5. **Noktalama ve TDK Kuralları** (`[TDK]` kılavuzda yazan kural, `[Üslup]` çeviri kokusunu azaltan tercih):
+   - `[TDK]` Uzun çizgiyi (`—`) yalnızca satır başındaki konuşma çizgisi olarak kullan. Sayı aralıklarında orta çizgi (`–`) değil kısa çizgi kullan (`14.00-15.30`, `2024-2026`).
+   - `[TDK]` `ve, veya, yahut` bağlaçlarından önce ve sonra virgül koyma. Zarf-fiillerden (`-Ip, -ArAk`) sonra virgül koyma (art arda gelen zarf-fiiller hariç). `[Üslup]` `ama, fakat` öncesine refleks virgül koyma.
+   - `[Üslup]` İç virgülü olmayan iki bağımsız cümleyi noktalı virgülle yapıştırma. TDK'nın tanımladığı noktalı virgül kullanımları doğrudur.
+   - Yabancı teknik terimleri (`endpoint, deploy, middleware, queue, cache`) *"uç nokta, ara katman"* diye zorla çevirme. `[TDK]` Kısaltmalara gelen ekler okunuşa uyar (`TDK'nin`, `TV'ye`). `[Üslup]` Yabancı cins isimlere kesmeyle ek getiriyorsan eki de **Türkçe okunuşa** göre getir (`cache'i`, `queue'yu`, `SQL'i`, `JSON'ı`).
