@@ -1,6 +1,6 @@
-# CLAUDE.md — Claude Code Geliştirici ve Kullanım Rehberi
+# CLAUDE.md: Claude Code Geliştirici ve Kullanım Rehberi
 
-Bu repo, Türkçe metinlerdeki yapay zeka izlerini (*AI slop & Translationese*) temizleyen `turkish-anti-ai-skill` yeteneğini içerir.
+Bu repo, Türkçe metinlerdeki yapay zekâ izlerini (*AI slop & Translationese*) temizleyen `turkish-anti-ai-skill` yeteneğini içerir.
 
 - Ana yetenek tanımı: `SKILL.md`
 - Dilbilimi, sentaks, sözlük ve TDK referansları: `references/`
