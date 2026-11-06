@@ -13,7 +13,7 @@ from pathlib import Path
 
 TIER1_PATTERNS = [
     (r"\byadsınamaz\b|\binkar\s+edilemez\b", "Tier-1 Klişe: 'yadsınamaz / inkar edilemez' (undeniable calque)"),
-    (r"\badeta\b", "Tier-1 Klişe: 'adeta' (aşırı benzetme zarfı)"),
+    (r"\b[aâ]deta\b", "Tier-1 Klişe: 'âdeta / adeta' (aşırı benzetme zarfı)"),
     (r"\bderinlemesine\s+(?:inmek|incelemek|bakmak|ele\s+almak|analiz)\b|\bmercek\s+altına\s+al", "Tier-1 Klişe: 'derinlemesine inmek / mercek altına almak' (delve into calque)"),
     (r"\bkritik\s+(?:bir\s+)?(?:rol\s+oyna|öneme\s+sahip)|\bhayati\s+(?:bir\s+)?öneme\s+sahip", "Tier-1 Klişe: 'kritik bir rol oynamak / öneme sahip olmak'"),
     (r"\bgeniş\s+bir\s+yelpaze|\bzengin\s+bir\s+(?:doku|mozaik)\b", "Tier-1 Klişe: 'geniş bir yelpaze / zengin bir doku-mozaik'"),
@@ -32,19 +32,22 @@ TIER2_AND_SYNTAX_PATTERNS = [
     (r"\bsöz\s+konusu\b|\bbu\s+bağlamda\b|\bbu\s+doğrultuda\b|\bbahsi\s+geçen\b", "Tier-2 Bürokratik: 'söz konusu / bu bağlamda / bu doğrultuda'"),
     (r"\bbütüncül\s+(?:bir\s+)?yaklaşım\b|\bparadigma\s+değişimi\b|\bsinerji\s+yarat", "Tier-2 Jargon: 'bütüncül yaklaşım / paradigma değişimi / sinerji'"),
     (r"\bsonuç\s+olarak\b|\bözetlemek\s+gerekirse\b|\bson\s+tahlilde\b", "Tier-2 Kapanış: 'sonuç olarak / özetlemek gerekirse'"),
-    (r"\btarafından\s+(?:gerçekleştiril|yapıl|sağlan|paylaşıl|test\s+edil|geliştiril)", "P1 Sentaks: Edilgen çatı ('tarafından') + yardımcı fiil"),
+    # 'tarafından' tek başına doğru Türkçedir ("Köprü Mimar Sinan tarafından yapıldı"). Yalnızca kof eylemle
+    # ya da yazarın kendi kurumu eyleyen olduğunda bayraklanır.
+    (r"\btarafından\s+(?:gerçekleştiril|sağlan|icra\s+edil)|\b(?:ekibimiz|şirketimiz|kurumumuz|tarafımız)\s+tarafından\b", "P1 Sentaks: Edilgen çatı ('tarafından') + kof eylem ya da yazarın kendi kurumu"),
     (r"\b(?:göstermektedir|belirtmektedir|kanıtlamaktadır|ortaya\s+koymaktadır)\s+ki\b", "P1 Sentaks: Hint-Avrupa tipi '...-mektedir ki' yan cümle kopyası"),
-    (r"\b(?:büyük|yüksek|kritik|ciddi|derin)\s+bir\s+(?:önem|performans|etki|artış|büyüme|hız|başarı)\b", "P1 Sentaks: Soyut kavram önünde gereksiz 'bir' (a/an calque)"),
+    # 'Sıfat + bir + ad' tek başına doğaldır ("derin bir iz bıraktı"). Yalnızca kalıplaşmış birleşik eylemin içindeki 'bir' bayraklanır.
+    (r"\b(?:büyük|yüksek|kritik|ciddi|önemli|hayati)\s+bir\s+(?:önem\s+taşı|artış\s+göster|rol\s+oyna|ivme\s+kazan|önem\s+arz)", "P1 Sentaks: Kalıplaşmış birleşik eylemde gereksiz 'bir' (a/an calque)"),
     (r"\b(?:uç\s+nokta(?:lar|larda|lara|ları)?|olay\s+güdümlü|ara\s+katman|çekme\s+isteği)\b", "P2 Terminoloji: Zorlama teknik terim çevirisi ('uç nokta / olay güdümlü / ara katman')"),
-    (r"\bev\s+sahipliği\s+yapmakta|\bkatkıda\s+bulunmakta", "P1 Kof Fiil: 'ev sahipliği yapmak / katkıda bulunmak'"),
+    (r"\bev\s+sahipliği\s+yapmakta|\bkatkıda\s+bulunmakta", "P1 Kof Fiil: '-mAktAdIr' ile şişirilmiş 'ev sahipliği yapmak / katkıda bulunmak'"),
 ]
 
 PUNCTUATION_AND_TDK_PATTERNS = [
     (r"—", "P2 Noktalama: Uzun çizgi (em-dash '—') kullanımı (TDK diyalog dışında yasaklar)"),
     (r"\w+[–]\w+", "P2 Noktalama: Aralıkta orta çizgi (en-dash '–') kullanımı (TDK kısa çizgi '-' şart koşar)"),
-    (r",\s*(?:ama|fakat|lakin|veya|ya da)\b", "P2 Noktalama: Bağlaçtan ('ama/fakat/veya/ya da') önce virgül"),
+    (r",\s*(?:ve|veya|yahut)\b|\b(?:ve|veya|yahut),", "P2 TDK Noktalama: 've / veya / yahut' bağlacından önce veya sonra virgül (TDK: konmaz)"),
+    (r",\s*(?:ama|fakat|lakin|ya da)\b", "P2 Üslup: 'ama / fakat / lakin / ya da' öncesi refleks virgül (TDK kuralı değil, İngilizce ', but' alışkanlığı)"),
     (r"\b(?:[01]?\d|2[0-3]):[0-5]\d\b", "P2 TDK Saat Hatası: Saat arasında iki nokta (':') kullanımı (TDK tek nokta '.' şart koşar, örn: 14.30)"),
-    (r"\b\d{1,2}\.00'da\b", "P2 TDK Saat Eki Hatası: Tam saatlerde '00' okunmaz ('13.00'da' değil, '13.00'te' veya '14.00'te')"),
     (r"%\d+\.\d+", "P2 TDK Sayı Hatası: Yüzde ondalık ayracı olarak nokta kullanımı (TDK virgül şart koşar, örn: %112,5)"),
     (r"\b(?:birşey|herşey|hiçbirşey|yada|bir çok|bir kaç|pekçok|ard arda|yanısıra|önsöz|önyargı|işbirliği|farketmek|terketmek|halbu ki|oysa ki)\b", "P2 TDK İmla Hatası: Birleşik/ayrı yazılan kelime hatası"),
 ]
@@ -55,14 +58,54 @@ CASE_SENSITIVE_PATTERNS = [
 ]
 
 
+# Saate gelen ek, saatin Türkçe okunuşunun son sözcüğüne uyar (TDK örnekleri: 13.00'te, 11.00'de, 17.30'da, 09.15'te).
+_UNITS = {1: "bir", 2: "iki", 3: "üç", 4: "dört", 5: "beş", 6: "altı", 7: "yedi", 8: "sekiz", 9: "dokuz"}
+_TENS = {1: "on", 2: "yirmi", 3: "otuz", 4: "kırk", 5: "elli"}
+_BACK_VOWELS = set("aıou")
+_FRONT_VOWELS = set("eiöü")
+_HARD_CONSONANTS = set("fstkçşhp")
+TIME_SUFFIX_RE = re.compile(r"\b(\d{1,2})\.(\d{2})'(d[ae]n?|t[ae]n?)\b")
+
+
+def _last_word_of_number(n: int) -> str:
+    if n == 0:
+        return "sıfır"
+    return _UNITS[n % 10] if n % 10 else _TENS[n // 10]
+
+
+def expected_time_suffix(hour: int, minute: int, ablative: bool) -> str:
+    """'14.30' + bulunma -> 'da' (otuzda). Dakika 00 ise saat okunur."""
+    word = _last_word_of_number(minute if minute else hour)
+    last_vowel = next(ch for ch in reversed(word) if ch in _BACK_VOWELS | _FRONT_VOWELS)
+    vowel = "a" if last_vowel in _BACK_VOWELS else "e"
+    consonant = "t" if word[-1] in _HARD_CONSONANTS else "d"
+    return consonant + vowel + ("n" if ablative else "")
+
+
+def time_suffix_findings(text: str) -> list:
+    findings = []
+    for m in TIME_SUFFIX_RE.finditer(text):
+        hour, minute, suffix = int(m.group(1)), int(m.group(2)), m.group(3)
+        if hour > 24 or minute > 59:
+            continue
+        expected = expected_time_suffix(hour, minute, suffix.endswith("n"))
+        if suffix != expected:
+            findings.append({
+                "rule": f"P2 TDK Saat Eki Hatası: Ek, saatin okunuşuna uymalı ('{m.group(1)}.{m.group(2)}'{expected}')",
+                "match": m.group(0),
+                "position": m.start(),
+            })
+    return findings
+
+
 # Register'a göre '-mAktAdIr' hedef aralıkları (100 kelimede). Değerler SKILL.md register
 # tablosundaki dozajın sayısal karşılığıdır. Korpus ölçümüyle kalibre edilmemiş başlangıç değerleridir.
 REGISTER_PROFILES = {
     "blog-deneme": {"label": "Blog / Deneme / Sosyal Medya", "mektedir_min": 0.0, "mektedir_max": 0.5},
     "teknik": {"label": "Teknik / Mühendislik", "mektedir_min": 0.0, "mektedir_max": 1.0},
     "kurumsal": {"label": "Kurumsal / SaaS / İş İletişimi", "mektedir_min": 0.0, "mektedir_max": 1.0},
-    "akademik-resmi": {"label": "Akademik / Resmi / Hukuki", "mektedir_min": 0.5, "mektedir_max": 2.5},
-    "edebi-anlati": {"label": "Edebi / Anlatı", "mektedir_min": 0.0, "mektedir_max": 0.5},
+    "akademik-resmi": {"label": "Akademik / Resmî / Hukuki", "mektedir_min": 0.5, "mektedir_max": 2.5},
+    "edebi-anlati": {"label": "Edebî / Anlatı", "mektedir_min": 0.0, "mektedir_max": 0.5},
 }
 DEFAULT_PROFILE = {"label": "Register belirtilmedi (genel eşik)", "mektedir_min": 0.0, "mektedir_max": 2.5}
 REGISTER_ALIASES = {"blog": "blog-deneme", "deneme": "blog-deneme", "akademik": "akademik-resmi",
@@ -140,6 +183,8 @@ def analyze_text(text: str, register: str = None) -> dict:
                 "match": match.group(0),
                 "position": match.start(),
             })
+
+    findings.extend(time_suffix_findings(text))
 
     words = re.findall(r"\b\w+\b", text)
     word_count = max(len(words), 1)
