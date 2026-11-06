@@ -6,30 +6,32 @@ Doğal Türkçe tek bir kalıptan oluşmaz. Bir sözleşmedeki devrik cümle öz
 
 Kullanıcı özel bir yazar örneği (few-shot) vermediğinde aşağıdaki 5 profilden uygun olanı seç:
 
-| Boyut | 1. Blog / Deneme / Sosyal Medya | 2. Teknik / Mühendislik | 3. Kurumsal / SaaS / İş İletişimi | 4. Akademik / Resmi / Hukuki | 5. Edebi / Anlatı |
+| Boyut | 1. Blog / Deneme / Sosyal Medya | 2. Teknik / Mühendislik | 3. Kurumsal / SaaS / İş İletişimi | 4. Akademik / Resmî / Hukuki | 5. Edebî / Anlatı |
 | :--- | :--- | :--- | :--- | :--- | :--- |
-| **Anlatıcı Kimliği** | Masanın karşısından anlatan deneyimli dost | Gece 2'de o hatayı çözmüş kıdemli mühendis | Müşteriye bizzat yazan net ve dürüst kurucu | Konuya hakim, soğukkanlı araştırmacı/uzman | Düşüncesini yazarken inşa eden usta yazar |
+| **Anlatıcı Kimliği** | Masanın karşısından anlatan deneyimli dost | Gece 2'de o hatayı çözmüş kıdemli mühendis | Müşteriye bizzat yazan net ve dürüst kurucu | Konuya hâkim, soğukkanlı araştırmacı/uzman | Düşüncesini yazarken inşa eden usta yazar |
 | **Hitap** | Sen veya Siz (tutarlı) | Sen veya nötr 2. çoğul | Siz | 3. şahıs / nötr | Bağlama göre 1. veya 3. şahıs |
 | **Cümle Uzunluğu & Burstiness** | Yüksek dalgalanma (4 kelime ile 28 kelime bir arada) | Orta-Yüksek (Kısa net yargılar + ulaçlı açıklamalar) | Orta (10-20 kelime, net ve taranabilir) | Orta-Uzun (15-30 kelime, sola dallanan yan cümleler) | Çok yüksek dalgalanma (nefes ritmine odaklı) |
 | **Cümlecik Bağlama** | Ulaçlar (`-Ip, -IncA`) + nokta/virgül | Ulaçlar (`-Ip, -dIkçA, -ArAk`) + iki nokta | Ulaçlar + net sebep-sonuç bağlaçları | Sıfat-fiiller (`-An, -DIk`) + ulaçlar | Ulaçlar + ritmik tekrarlar ve virgül |
 | **Kip Dağılımı** | `-yor`, `-DI`, `-mIş` (delil), geniş zaman | Geniş zaman (`-Ir/-Ar` kurallar için), `-DI`, `-mIş` | Geniş zaman, `-yor`, `-DI` | Geniş zaman, `-mAktAdIr` (100 kelimede yaklaşık 0,5-2,5), `-DIr` | Tüm kipler serbest |
 | **Söylem Parçacıkları** | `işte, zaten, ise, hani, tabii, daha doğrusu` | `ise, aslında, daha doğrusu, örneğin` | `ise, özellikle, doğrudan` | Yalnızca `ise, nitekim, dolayısıyla` | Doğal akışa göre serbest |
 | **Devrik Cümle Oranı** | 400 kelimede 2-3 adet | Sıfır (0) | Sıfır (0) | Sıfır (0) | Anlatı ritmine göre doğal |
-| **Terim Tercihi** | Günlük karşılıklar veya okunuşa göre çekimli terim | Yerleşik İngilizce terim olduğu gibi (`endpoint'e`) | Sektör standardı, jargonsuz sade Türkçe | TDK ve alan terimleri (`veri tabanı, alanyazın`) | Türkçe duygu ve imge değeri yüksek sözcükler |
+| **Terim Tercihi** | Günlük karşılıklar veya okunuşa göre çekimli terim | Yerleşik İngilizce terim olduğu gibi (`endpoint'e`) | Sektör standardı, jargonsuz sade Türkçe | TDK ve alan terimleri (`veri tabanı, alan yazını`) | Türkçe duygu ve imge değeri yüksek sözcükler |
 | **Açılış Hamlesi** | Sahne, somut gözlem veya doğrudan soru | Doğrudan problem veya mimari karar | Temel değer önermesi veya ana mesaj | Araştırma problemi veya olgusal çerçeve | Atmosfer, detay veya iç ses |
 
 ## 2. Aynı İddianın 4 Farklı Register'daki Doğal Yazımı
 
 - **Ham AI Çıktısı (Makine Türkçesi):**
   > *"Cache stratejisinin doğru bir şekilde belirlenmesi, sistem performansı açısından kritik bir öneme sahiptir ve gecikme sürelerinin azaltılmasında yadsınamaz bir rol oynamaktadır."*
-- **Akademik / Resmi Register:**
-  > *"Önbellekleme stratejisinin doğru kurgulanması, sistem performansını ve yanıt sürelerini belirlemektedir."*
+- **Akademik / Resmî Register:**
+  > *"Önbellekleme stratejisinin doğru belirlenmesi, sistem performansını ve yanıt sürelerini belirlemektedir."*
 - **Teknik / Mühendislik Register:**
-  > *"Cache stratejisini doğru kurgulamak performansı artırır ve gecikmeyi düşürür."*
+  > *"Cache stratejisini doğru kurmak performansı artırır ve gecikmeyi düşürür."*
 - **Kurumsal / Ürün Register:**
-  > *"Doğru önbellek kurgusu, sisteminizi hızlandırırken yanıt sürelerini kısaltır."*
+  > *"Doğru önbellek stratejisi, sisteminizi hızlandırırken yanıt sürelerini kısaltır."*
 - **Blog / Deneme Register:**
-  > *"Performansı belirleyen asıl şey cache stratejisi işte. Doğru kurduğunuzda gecikme yarı yarıya düşüyor."*
+  > *"Performansı belirleyen şeylerden biri cache stratejisi. Doğru kurarsanız gecikme de azalıyor."*
+  >
+  > (Kaynak "yarı yarıya", "%40" gibi bir miktar vermediği için çıktı da vermez.)
 
 ## 3. Uçtan Uca (Before / After) Dönüşüm Örnekleri
 
@@ -48,7 +50,7 @@ Kullanıcı özel bir yazar örneği (few-shot) vermediğinde aşağıdaki 5 pro
 7. *"Sonuç olarak ... ayak uydurmak zorundadır"* (Vaaz veren özet kapanış - P0)
 
 **Sonra (Doğal İnsan Türkçesi - Blog/Deneme Register):**
-> Uzaktan çalışma artık şirket kültürünün kalıcı bir parçası. Araştırmalar da aynı şeyi söylüyor: Çalışanlara esneklik tanıdığınızda verimlilik artıyor. İşin zor kısmı, ekip aynı ofisi paylaşmazken iletişimi koparmamak. Kalıcı çözüm ise çalışma düzenini baştan sona bu yeni ritme göre kurgulamaktan geçiyor.
+> Uzaktan çalışma artık şirket kültürünün kalıcı bir parçası. Araştırmalar da aynı şeyi söylüyor: Çalışanlara esneklik tanıdığınızda verimlilik artıyor. İşin zor kısmı, ekip aynı ofisi paylaşmazken iletişimi koparmamak. Kalıcı çözüm ise çalışma düzenini baştan sona bu yeni ritme göre kurmak.
 
 ### Örnek 2: Teknik / Yazılım Mühendisliği Dokümanı
 
@@ -63,8 +65,10 @@ Kullanıcı özel bir yazar örneği (few-shot) vermediğinde aşağıdaki 5 pro
 4. `..., ama` (Karşıtlık bağlacı öncesi virgül - P2)
 
 **Sonra (Doğal İnsan Türkçesi - Teknik Register):**
-> ## Popüler bir cache key'in süresi dolduğunda ne olur?
-> Çok okunan bir `cache` anahtarının süresi dolduğu anda gelen yüzlerce istek aynı anda veritabanına yüklenir ve sistemi kilitler. Özellikle yüksek trafikli `endpoint`'lerde bu durum kesintiye yol açar. Dağıtık kilit (`distributed lock`) kullanarak veritabanına yalnızca tek bir isteğin gitmesini sağlayabilirsiniz ama bu yöntem diğer isteklerin bekleme süresini uzatır.
+> ## Cache stampede sorunu ve çözümü
+> Bir `cache` anahtarının süresi dolduğu anda gelen istekler hep birlikte veritabanına yönelip darboğaz oluşturur. Bu sorun özellikle yüksek trafikli `endpoint`'lerde önem kazanır. Dağıtık kilit (`distributed lock`) kullanabilirsiniz ama bu yöntem gecikmeyi artırabilir.
+
+**Sadakat notu:** Kaynak "birçok istek" diyor, çıktı "yüzlerce" demez. Kaynak "artırabilir" diyor, çıktı ihtiyatı silip "artırır" demez. Kaynakta "kesinti" veya "kilitlenme" yok, çıktı bunları eklemez. Terim tutarlılığı için başlıkta ve gövdede aynı terim (`cache`) kullanılır.
 
 ### Örnek 3: Akademik / Analitik Metin (Olgusal Sadakat ve Dozaj Korunarak)
 
