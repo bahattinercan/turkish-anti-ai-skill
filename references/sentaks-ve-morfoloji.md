@@ -71,7 +71,7 @@ Türkçe yüklemdeki şahıs ekleriyle (`-Im, -sIn, -Iz, -lAr`) ve isimdeki iyel
 ### C. İngilizce `his/her/its own` Çevirisi Olan Gereksiz `"Kendi"` ve İyelik Zamirleri
 
 - **Makine:** *"Her servis **kendi veritabanına** bağlanır ve **onun kendi** yapılandırmasını okur."*
-- **İnsan:** *"Her servis kendi veritabanına bağlanıp yapılandırmasını okur."* (İyelik eki `-sI` zaten aitliği verir; zıtlık yoksa `kendi` tekrarlanmaz).
+- **İnsan:** *"Her servis kendi veritabanına bağlanıp yapılandırmasını okur."* (İyelik eki `-sI` zaten aitliği verir, zıtlık yoksa `kendi` tekrarlanmaz).
 
 ## 6. Edilgen Çatı (`tarafından`) ve Kof Yardımcı Fiil Temizliği
 

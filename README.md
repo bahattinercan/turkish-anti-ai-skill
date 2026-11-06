@@ -28,7 +28,7 @@ Piyasadaki İngilizce *humanizer* araçları yalnızca yüzeydeki kelimeleri de�
 
 **Neleri Yakaladı ve Onardı?**
 1. **Sahneleme Girişi (P0):** *"Günümüzün hızla değişen iş dünyasında"* boş girişi silindi, doğrudan konuya girildi.
-2. **Negatif Paralellik (P0):** *"sadece X değil, aynı zamanda Y"* kalıbı `-Ip` ulacıyla (*"heves olmaktan çıkıp..."*) doğal akışa çevrildi.
+2. **Negatif Paralellik (P0):** *"sadece X değil, aynı zamanda Y"* kalıbı tamamen silindi, yerine tek bir olumlu yargı geldi (*"şirket kültürünün kalıcı bir parçası"*).
 3. **Noktalama & Tier-1 Klişe (P0/P2):** TDK'da diyalog dışında bulunmayan uzun çizgi (`—`) ve *"önemi yadsınamaz"* klişesi kaldırıldı.
 4. **Edilgen Çatı & Hint-Avrupa `ki` Bağlacı (P1):** *"Şirketler tarafından gerçekleştirilen araştırmalar göstermektedir ki"* yapısı etken ve doğrudan cümleye çevrildi.
 5. **Kof Yardımcı Fiil & `-mAktAdIr` Salgını (P1):** *"esneklik sağlamak ... kritik bir rol oynamaktadır"* yerine *"esneklik tanıdığınızda verimlilik artıyor"* kuruldu.
@@ -37,14 +37,14 @@ Piyasadaki İngilizce *humanizer* araçları yalnızca yüzeydeki kelimeleri de�
 
 ## Neden Sadece Bir Prompt Değil de Bir Skill?
 
-Tek satırlık *"Bunu insani ve doğal bir Türkçeyle yaz"* komutu yalnızca en bariz birkaç kelimeyi değiştirir ve çoğu zaman modelin "insan gibi görünmek" adına **kaynakta olmayan veriler/anekdotlar uydurmasına** yol açar. `turkish-anti-ai-skill` ise deterministik bir mühendislik mimarisi sunar:
+Tek satırlık *"Bunu insani ve doğal bir Türkçeyle yaz"* komutu yalnızca en bariz birkaç kelimeyi değiştirir ve çoğu zaman modelin "insan gibi görünmek" adına **kaynakta olmayan veriler/anekdotlar uydurmasına** yol açar. `turkish-anti-ai-skill` ise modele kurallı bir çalışma düzeni verir. Yeniden yazımı model `SKILL.md` ve referans dosyalarındaki kurallara göre yapar. Deterministik olan tek parça ise bu çıktıyı denetleyen CLI dedektörüdür:
 
 - **3 Çalışma Modu (`rewrite`, `write`, `audit`):** Mevcut metni olgusal sadakatle onarır (`rewrite`), sıfırdan Türkçe düşünerek metin kurar (`write`) veya metne dokunmadan AI/TDK kusurlarını raporlar (`audit`).
 - **Olgusal Sadakat Kilidi (Anti-Fabrication Lock):** Onarım modunda kaynakta bulunmayan hiçbir sayı, tarih, isim, iddia veya nedensellik bağı eklenemez.
-- **5 Register × 9 Üslup Boyutu Kalibrasyonu:** KVKK metnine devrik cümle sokmaz; blog yazısına `-mAktAdIr` eki dayatmaz (*Blog/Deneme, Teknik/Mühendislik, Kurumsal/SaaS, Akademik/Resmi, Edebi/Anlatı*).
+- **5 Register × 9 Üslup Boyutu Kalibrasyonu:** KVKK metnine devrik cümle sokmaz, blog yazısına `-mAktAdIr` eki dayatmaz (*Blog/Deneme, Teknik/Mühendislik, Kurumsal/SaaS, Akademik/Resmi, Edebi/Anlatı*).
 - **60+ Kalıplık 3 Katmanlı "Yapay Zeka Türkçesi" Sözlüğü:** Tier-1 (kesin ifşalar), Tier-2 (bürokratik bağlaçlar) ve Tier-3 (SaaS/pazarlama çeviri kokuları) tabloları.
-- **TDK Yazım Kılavuzu ve Fonetik Ek Denetimi:** Yabancı teknik terimleri (`endpoint`, `deploy`, `middleware`, `queue`) *"uç nokta, ara katman"* diye zorla çevirmez; ekleri kelimenin yazılışına göre değil **Türkçe okunuşuna (fonetiğine)** göre getirir (`cache'i`, `queue'yu`, `SQL'i`, `JSON'ı`).
-- **Deterministik Python CLI Dedektörü (`scripts/detect_tr_ai.py`):** Harici kütüphane gerektirmeden Türkçe metinlerdeki AI klişelerini, TDK hatalarını, `-mAktAdIr` yoğunluğunu ve cümle uzunluğu varyasyonunu (**Burstiness CoV**) ölçer.
+- **TDK Yazım Kılavuzu ve Fonetik Ek Denetimi:** Yabancı teknik terimleri (`endpoint`, `deploy`, `middleware`, `queue`) *"uç nokta, ara katman"* diye zorla çevirmez. Ekleri kelimenin yazılışına göre değil **Türkçe okunuşuna (fonetiğine)** göre getirir (`cache'i`, `queue'yu`, `SQL'i`, `JSON'ı`).
+- **Deterministik Python CLI Dedektörü (`scripts/detect_tr_ai.py`):** Harici kütüphane gerektirmeden Türkçe metinlerdeki AI klişelerini, TDK hatalarını, `-mAktAdIr` yoğunluğunu ve cümle uzunluğu varyasyonunu (**Burstiness CoV**) ölçer. Regex ve basit istatistikle çalışır, yalnızca yüzeydeki izleri yakalar. Sola dallanma, ulaç kullanımı veya register uyumu gibi cümle mimarisi kararlarını ölçmez, bunlar modelin işidir.
 
 ## Kurulum (Installation)
 
@@ -62,13 +62,13 @@ gh skill install yucezerey/turkish-anti-ai-skill
 ```
 
 ### 2. Claude Code & Claude Cowork
-**Seçenek A — Plugin Marketplace olarak kurulum (Önerilen):**
+**Seçenek A: Plugin Marketplace olarak kurulum (Önerilen):**
 ```text
 /plugin marketplace add yucezerey/turkish-anti-ai-skill
 /plugin install turkish-anti-ai-skill@yucezerey
 ```
 
-**Seçenek B — Doğrudan `~/.claude/skills/` dizinine klonlama:**
+**Seçenek B: Doğrudan `~/.claude/skills/` dizinine klonlama:**
 ```bash
 git clone https://github.com/yucezerey/turkish-anti-ai-skill.git ~/.claude/skills/turkish-anti-ai-skill
 ```
@@ -96,7 +96,7 @@ Klasör yüklenemeyen web arayüzleri için tüm referans tablolarının tek dos
 
 ## Kullanım
 
-Kurulumdan sonra ajanına doğal dilde seslenmen yeterlidir; yetenek kendi açıklamasıyla (`description`) otomatik tetiklenir:
+Kurulumdan sonra ajanına doğal dilde seslenmen yeterlidir. Yetenek kendi açıklamasıyla (`description`) otomatik tetiklenir:
 
 - **Onarım (`rewrite`):** *"Şu blog yazısını insanlaştır ve AI kokusunu sil: `<metin>`"*
 - **Üretim (`write`):** *"Dağıtık sistemlerde cache invalidation konusunu teknik register'da, doğal Türkçeyle yaz."*

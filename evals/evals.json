@@ -8,7 +8,7 @@
       "mode": "rewrite",
       "register": "blog-deneme",
       "input_ai": "Günümüzün hızla değişen iş dünyasında, uzaktan çalışma modeli sadece geçici bir trend değil, aynı zamanda kurumsal kültürün temel bir yapı taşı haline gelmiştir — ve bu durumun önemi yadsınamaz. Şirketler tarafından gerçekleştirilen araştırmalar göstermektedir ki, çalışanlara esneklik sağlamak verimlilik üzerinde kritik bir rol oynamaktadır. Bununla birlikte, iletişim kopukluklarını önlemek adına bütüncül bir yaklaşım benimsenmelidir. Sonuç olarak, 2026 yılında başarılı olmak isteyen kurumlar bu dönüşüme ayak uydurmak zorundadır.",
-      "output_human": "Uzaktan çalışma artık şirket kültürünün kalıcı bir parçası. Araştırmalar da bunu doğruluyor. Çalışanlara esneklik tanıdığınızda verimlilik artarken, aynı ofisi paylaşmayan ekiplerde iletişimi canlı tutmak için 2026 çalışma düzenini baştan sona bu yeni ritme göre kurgulamak gerekiyor işte.",
+      "output_human": "Uzaktan çalışma artık şirket kültürünün kalıcı bir parçası. Araştırmalar da bunu doğruluyor. Çalışanlara esneklik tanıdığınızda verimlilik artıyor, zor olan ise aynı ofisi paylaşmayan ekiplerde iletişimi koparmamak. 2026'da başarılı olmak isteyen kurumların çalışma düzenini bu yeni ritme göre baştan kurması gerekecek.",
       "must_preserve_tokens": [
         "2026"
       ],

@@ -1,6 +1,6 @@
 ---
 name: turkish-anti-ai-skill
-description: Türkçe metinlerdeki yapay zeka izlerini (AI slop, translationese, çeviri kokan cümle mimarisi, -mektedir/-dır şişmesi, yapay bağlaçlar ve TDK uyumsuzlukları) temizler; sıfırdan doğal, insani ve akıcı Türkçe metin üretir veya mevcut metinleri onarır. Kullanıcı Türkçe bir metni "insanlaştır", "humanize et", "AI kokusunu sil", "doğal Türkçeye çevir", "daha insani/akıcı yaz" dediğinde veya Türkçe blog, makale, kurumsal yazı, sosyal medya içeriği ve teknik doküman yazarken/düzenlerken bu yeteneği kullan.
+description: Türkçe metinlerdeki yapay zeka izlerini (AI slop, translationese, çeviri kokan cümle mimarisi, -mektedir/-dır şişmesi, yapay bağlaçlar ve TDK uyumsuzlukları) temizler. Sıfırdan doğal, insani ve akıcı Türkçe metin üretir veya mevcut metinleri onarır. Kullanıcı Türkçe bir metni "insanlaştır", "humanize et", "AI kokusunu sil", "doğal Türkçeye çevir", "daha insani/akıcı yaz" dediğinde veya Türkçe blog, makale, kurumsal yazı, sosyal medya içeriği ve teknik doküman yazarken/düzenlerken bu yeteneği kullan.
 license: MIT
 metadata:
   author: yucezerey
@@ -31,7 +31,7 @@ Kullanıcı isteğine göre aşağıdaki üç moddan birini seç:
 
 - **Onarım Modu (`rewrite` - Varsayılan):** Mevcut bir Türkçe metni veya çeviriyi alır, olgusal sadakati %100 koruyarak AI kalıplarını temizler ve cümle mimarisini Türkçeleştirir.
 - **Üretim Modu (`write`):** Verilen bir konu veya taslaktan sıfırdan Türkçe metin üretir. Kompozisyon ve cümle kararlarını ilk cümleden itibaren İngilizce düşünmeden, doğrudan Türkçe kurar.
-- **Denetim Modu (`audit`):** Metni yeniden yazmaz; metindeki P0 (Kesin AI İfşası), P1 (Yapısal Çeviri Kokusu) ve P2 (Ritim/Noktalama Kusuru) sinyallerini alıntılayarak raporlar.
+- **Denetim Modu (`audit`):** Metni yeniden yazmaz. Metindeki P0 (Kesin AI İfşası), P1 (Yapısal Çeviri Kokusu) ve P2 (Ritim/Noktalama Kusuru) sinyallerini alıntılayarak raporlar.
 
 ## Adım Adım İş Akışı (Mark -> Draft -> Audit -> Deletion Test)
 
@@ -54,7 +54,7 @@ Kullanıcı kendi yazısından örnek verdiyse (few-shot referans), cümle uzunl
 - **Sahneleme Yerine Doğrudan Söyle:** "Bu yazıda X konusunu ele alacağız", "Günümüzün hızla değişen dünyasında" gibi sahneleme girişlerini silip konunun kendisine gir.
 - **Negatif Paralellikleri Kaldır:** "Sadece X değil, aynı zamanda Y", "Bu bir A değil, bir B'dir" ve "X ile değil, Y ile" gibi tüm negatif paralellik kalıplarını olumlu ve net bir yargıya dönüştür (detaylar: `references/ai-turkcesi-sozlugu.md`).
 - **Tek Satırlık Dramatik Kapanışları ve Özet Kuyruklarını Sil:** Paragraf sonlarındaki "İşte asıl fark burada ortaya çıkıyor.", "Sonuç olarak X'in önemi yadsınamaz." gibi ders veren kapanışları kes.
-- **Üçlü Liste (Rule of Three) Otomatizmini Kır:** Fikirleri sürekli üçlü sıfat veya üçlü örnek grupları ("hızlı, güvenilir ve ölçeklenebilir") halinde dizme; gerçekten kaç öğe varsa o kadarını sırala.
+- **Üçlü Liste (Rule of Three) Otomatizmini Kır:** Fikirleri sürekli üçlü sıfat veya üçlü örnek grupları ("hızlı, güvenilir ve ölçeklenebilir") halinde dizme. Gerçekten kaç öğe varsa o kadarını sırala.
 - **Kalın Etiketli Madde İmlerini (`**Başlık:** Açıklama`) Çöz:** Gerekmedikçe her paragrafı madde imine çevirme. Liste şartsa kalın etiket + iki nokta şablonu yerine yalın cümle kur.
 
 #### Katman 2: Türkçe Cümle Mimarisi ve Sentaks (P1 Sinyalleri)
@@ -66,7 +66,7 @@ Detaylı kurallar ve örnekler için `references/sentaks-ve-morfoloji.md` dosyas
 - **`-DIr` ve `-mAktAdIr` Salgınını Durdur:** İngilizcedeki `is/are` koşulacını her cümlede `-DIr` veya `-mektedir` olarak çevirme. Akademik/hukuki register dışında *"Bu yöntem etkilidir ve hız sağlamaktadır"* yerine *"Bu yöntem etkili, sistemi de hızlandırıyor"* de.
 - **Vurgu Yuvasını (Yüklem Önü) Kullan:** Türkçede vurgu kalın yazıyla veya *"Tam da bu noktada"* dolgusuyla değil, vurgulanacak öğeyi yüklemin hemen önüne çekerek verilir (*"Dün İzmir'e ben gittim"* vs. *"Ben İzmir'e dün gittim"*).
 - **Zamir Düşürme (Pro-Drop) ve Gereksiz `"Bir"` / `"Kendi"` Temizliği:** Yüklemdeki şahıs eki özneyi zaten taşıyorsa `ben, sen, o, biz` zamirlerini düşür. İngilizce `a/an` karşılığı olarak her sıfat tamlamasına sokulan gereksiz `"bir"` kelimesini (*"iyi bir performans"* -> *"iyi performans"*) ve `own` çevirisi olan gereksiz `"kendi"` zamirini sil.
-- **Edilgen Çatı (`tarafından`) ve Kof Yardımcı Fiilleri Temizle:** *"Ekibimiz tarafından gerçekleştirilmiştir"* yerine *"Ekibimiz yaptı"*; *"artış sağlamak / katkıda bulunmak / sahip olmak"* yerine doğrudan *"artırmak / katkı sunmak / barındırmak"* fiillerini kullan.
+- **Edilgen Çatı (`tarafından`) ve Kof Yardımcı Fiilleri Temizle:** *"Ekibimiz tarafından gerçekleştirilmiştir"* yerine *"Ekibimiz yaptı"* de. *"Artış sağlamak / katkıda bulunmak / sahip olmak"* yerine doğrudan *"artırmak / katkı sunmak / barındırmak"* fiillerini kullan.
 - **Kanıtsallık Kipi (`-mIş`):** Dolaylı öğrenilen, log kaydından okunan veya sonradan fark edilen durumlarda kesin geçmiş zaman (`-DI`) yerine Türkçenin delil kipini (`-mIş`) kullan (*"Sunucu gece yeniden başlamış"*).
 
 #### Katman 3: TDK Yazım Kılavuzu, Noktalama ve Terminoloji (P2 Sinyalleri)
@@ -74,11 +74,11 @@ Detaylı kurallar ve örnekler için `references/sentaks-ve-morfoloji.md` dosyas
 Detaylı kurallar için `references/tdk-ve-noktalama.md` dosyasını oku:
 
 - **Beş Mutlak Noktalama ve Bağlaç Yasağı:**
-  1. Diyalog dışında ara söz veya vurgu için **uzun çizgi (em-dash)** kullanma; yerine virgül veya nokta koy.
+  1. Diyalog dışında ara söz veya vurgu için **uzun çizgi (em-dash)** kullanma, yerine virgül veya nokta koy.
   2. Sayı ve tarih aralıklarında orta çizgi (en-dash) değil, TDK standardı olan **kısa çizgi (`-`)** kullan (`04.30-05.00`, `2024-2026`).
   3. İki bağımsız cümleyi İngilizce tarzı **noktalı virgül köprüsüyle** birbirine yapıştırma, cümleyi noktayla bitir.
   4. **`ama`, `fakat`, `lakin`, `ancak`, `ve`, `veya`, `ya da`** bağlaçlarından önce veya sonra virgül koyma.
-  5. Başlıklarda İngilizce *Title Case* (her kelimenin ilk harfi büyük, `Ve / İle` dahil) yapma; tümce düzeni kullan veya TDK kuralına göre bağlaçları küçük yaz (`ve`, `ile`, `ya da`).
+  5. Başlıklarda İngilizce *Title Case* (her kelimenin ilk harfi büyük, `Ve / İle` dahil) yapma. Tümce düzeni kullan veya TDK kuralına göre bağlaçları küçük yaz (`ve`, `ile`, `ya da`).
 - **Teknik Terimleri Zorla Çevirme, Okunuşuna Göre Ek Getir:** Sektörde yerleşik Türkçe karşılığı olmayan teknik terimleri (`endpoint`, `deploy`, `middleware`, `queue`, `cache`, `idempotent`) *"uç nokta, olay güdümlü, ara katman"* diye zorla çevirme. Kesme işaretiyle gelen ekleri yazılışa göre değil, **Türkçe okunuşa (fonetiğe)** göre getir: `cache'i` (keş), `queue'yu` (kü), `SQL'i` (es-kü-el), `JSON'ı` (ceyson).
 - **TDK Bağlaç ve Birleşik Kelime Denetimi:** Bulunma durumu eki `-da/-de` (bitişik) ile bağlaç olan `da/de`'yi (ayrı), ilgi/sıfat eki `-ki` ile bağlaç olan `ki`'yi (`halbuki`, `oysaki`, `çünkü`, `mademki` kalıplaşmış bitişikler hariç ayrı) ve `birçok`, `birkaç`, `hiçbir`, `herhangi bir`, `pek çok`, `art arda`, `yanı sıra` yazımlarını denetle.
 

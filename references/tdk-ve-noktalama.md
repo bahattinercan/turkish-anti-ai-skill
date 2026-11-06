@@ -8,11 +8,11 @@ LLM'ler İngilizce eğitim korpusundaki noktalama alışkanlıklarını Türkçe
 
 | Kural | Makine Türkçesi (Yanlış / Yapay) | İnsan Türkçesi (Doğru / TDK Uyumlu) | Gerekçe ve TDK Karşılığı |
 | :--- | :--- | :--- | :--- |
-| **1. Uzun Çizgi (Em-dash) Yasağı** | Kurulum sihirbazı projelerinizi aktarır; böylece ilk günden başlarsınız yerine ara sözlerde uzun çizgi kullanımı. | Kurulum sihirbazı projelerinizi aktarır, böylece ilk günden başlarsınız. | TDK'da uzun çizgi yalnızca satır başında konuşma (diyalog) çizgisidir. Ara sözlerde virgül veya kısa çizgi kullanılır. |
+| **1. Uzun Çizgi (Em-dash) Yasağı** | Kurulum sihirbazı projelerinizi aktarır `[uzun çizgi]` böylece ilk günden başlarsınız. | Kurulum sihirbazı projelerinizi aktarır, böylece ilk günden başlarsınız. | TDK'da uzun çizgi yalnızca satır başında konuşma (diyalog) çizgisidir. Ara sözlerde virgül veya kısa çizgi kullanılır. |
 | **2. Orta Çizgi (En-dash) Yasağı** | Toplantı 14.00 ile 15.30 arasında, 2024 ile 2026 yıllarında yapıldı (orta çizgi ile). | Toplantı 14.00-15.30 arasında, 2024-2026 dönemini kapsıyor. | Türkçede en-dash yoktur. TDK sayı, saat ve tarih aralıklarında boşluksuz **kısa çizgi (`-`)** kullanır. |
 | **3. `ama / fakat` Öncesi Virgül** | Sistem hızlı çalışıyor, ama bellek tüketimi yüksek. | Sistem hızlı çalışıyor ama bellek tüketimi yüksek. | İngilizce `..., but` kuralının kopyasıdır. TDK kuralına göre Türkçede bağlaçlardan (`ama, fakat, lakin, ve, veya, ya da`) önce de sonra da virgül konmaz. |
 | **4. Zorlama Noktalı Virgül Köprüsü** | Model veriyi analiz eder; bu süreç yaklaşık iki saniye sürer. | Model veriyi analiz eder. Bu süreç yaklaşık iki saniye sürer. | AI bağlaç seçmekten kaçınmak için iki cümleyi `;` ile yapıştırır. Doğal Türkçede cümle noktayla biter veya ulaçla bağlanır. |
-| **5. İngilizce Title Case Başlıklar** | `## Yapay Zeka Ve Doğal Dil İşleme Sistemlerinde Yeni Yaklaşımlar` | `## Yapay zeka ve doğal dil işleme sistemlerinde yeni yaklaşımlar` | Türkçede ara başlıklarda tümce düzeni (yalnızca ilk harf büyük) tercih edilir; her kelimenin ilk harfi büyük yazılırsa bile TDK kuralına göre `ve, ile, ya da, ki, de` bağlaçları her zaman küçük yazılır. |
+| **5. İngilizce Title Case Başlıklar** | `## Yapay Zeka Ve Doğal Dil İşleme Sistemlerinde Yeni Yaklaşımlar` | `## Yapay zeka ve doğal dil işleme sistemlerinde yeni yaklaşımlar` | Türkçede ara başlıklarda tümce düzeni (yalnızca ilk harf büyük) tercih edilir. Her kelimenin ilk harfi büyük yazılırsa bile TDK kuralına göre `ve, ile, ya da, ki, de` bağlaçları her zaman küçük yazılır. |
 
 ## 2. Saat, Sayı ve Yüzde Yazımı (TDK Standartları)
 
