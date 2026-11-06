@@ -130,6 +130,20 @@ Tek parça `dist/turkish-anti-ai-skill.full.md` dosyasını yeniden derlemek iç
 python3 scripts/build_dist.py
 ```
 
+## Güvenlik
+
+Skill, modele verilen Markdown talimatlarından ve üç yerel Python betiğinden oluşur. Betikler ağa çıkmaz, komut çalıştırmaz, harici kütüphane kullanmaz.
+
+| Betik | Ne yapar | Dosya yazar mı |
+| :--- | :--- | :--- |
+| `scripts/detect_tr_ai.py` | Verilen metin dosyasını okur, raporu ekrana basar | Hayır |
+| `scripts/run_tests.py` | Repo dosyalarını ve `evals/evals.json` senaryolarını dedektörden geçirir | Hayır |
+| `scripts/build_dist.py` | `dist/` dosyasını üretir, `skills/turkish-anti-ai-skill/` klasörünü kaynakla eşler | Evet, yalnızca repo içinde |
+
+`build_dist.py`, eşleme sırasında `skills/turkish-anti-ai-skill/references/` klasörünü silip yeniden kopyalar. Güvenlik tarayıcıları (Socket, Snyk) bu satırı dosya silme işlemi olarak işaretleyebilir. Silme bir kilitle korunur: hedef bu tek klasör değilse veya symlink ise betik durur, hiçbir şey silinmez.
+
+`npx skills` veya `gh skill` ile kurulumda yalnızca `skills/turkish-anti-ai-skill/` klasörü iner. Bu klasörde betik yoktur, yalnızca `SKILL.md` ve `references/` vardır.
+
 ## Repo Klasör Yapısı
 
 ```text

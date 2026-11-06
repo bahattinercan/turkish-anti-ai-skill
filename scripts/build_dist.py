@@ -35,8 +35,16 @@ def main():
     pkg_dir = ROOT / "skills" / "turkish-anti-ai-skill"
     pkg_dir.mkdir(parents=True, exist_ok=True)
     shutil.copy2(ROOT / "SKILL.md", pkg_dir / "SKILL.md")
-    if (pkg_dir / "references").exists():
-        shutil.rmtree(pkg_dir / "references")
+    target = (pkg_dir / "references").resolve()
+    allowed = (ROOT / "skills" / "turkish-anti-ai-skill" / "references").resolve()
+    # Güvenlik kilidi: silme yalnızca repo içindeki bu tek klasörde çalışır.
+    # Yol başka bir yere çözümlenirse (symlink, yanlış ROOT) derleme durur, hiçbir şey silinmez.
+    if target != allowed or ROOT.resolve() not in target.parents:
+        raise SystemExit(f"Güvenlik kilidi: beklenmeyen silme hedefi reddedildi: {target}")
+    if target.is_symlink():
+        raise SystemExit(f"Güvenlik kilidi: hedef bir symlink, silme reddedildi: {target}")
+    if target.exists():
+        shutil.rmtree(target)
     shutil.copytree(ROOT / "references", pkg_dir / "references")
 
     print(f"Derleme tamamlandı: {full_path} ({full_path.stat().st_size} byte)")

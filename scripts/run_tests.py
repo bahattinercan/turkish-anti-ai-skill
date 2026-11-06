@@ -50,11 +50,16 @@ def test_package_integrity() -> list:
     # 3. dist/ ve skills/turkish-anti-ai-skill/ senkronizasyon (Zero Drift) kontrolü
     dist_file = ROOT / "dist" / "turkish-anti-ai-skill.full.md"
     pkg_skill = ROOT / "skills" / "turkish-anti-ai-skill" / "SKILL.md"
-    drift_ok = dist_file.exists() and pkg_skill.exists() and pkg_skill.read_text(encoding="utf-8") == skill_text
+    src_refs = {p.name: p.read_bytes() for p in (ROOT / "references").glob("*.md")}
+    pkg_refs_dir = ROOT / "skills" / "turkish-anti-ai-skill" / "references"
+    pkg_refs = {p.name: p.read_bytes() for p in pkg_refs_dir.glob("*")} if pkg_refs_dir.exists() else {}
+    refs_synced = src_refs == pkg_refs
+    drift_ok = (dist_file.exists() and pkg_skill.exists()
+                and pkg_skill.read_text(encoding="utf-8") == skill_text and refs_synced)
     results.append({
         "check": "Single-Source-of-Truth Senkronizasyonu (dist/ ve skills/ Zero-Drift)",
         "passed": drift_ok,
-        "detail": f"dist boyutu: {dist_file.stat().st_size if dist_file.exists() else 0} byte | skills/ senkron: {drift_ok}",
+        "detail": f"dist boyutu: {dist_file.stat().st_size if dist_file.exists() else 0} byte | SKILL.md + references/ ({len(src_refs)} dosya) skills/ ile birebir: {drift_ok}",
     })
 
     # 4. Çoklu ajan adaptörleri (.cursor/rules/*.mdc, plugin.json, AGENTS.md, CLAUDE.md)
