@@ -20,6 +20,6 @@
     "cursor"
   ],
   "skills": [
-    "skills/turkish-anti-ai-skill"
+    "./skills/turkish-anti-ai-skill"
   ]
 }

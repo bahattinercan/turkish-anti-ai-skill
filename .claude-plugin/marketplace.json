@@ -1,0 +1,14 @@
+{
+  "name": "yucezerey",
+  "owner": {
+    "name": "Yüce Zerey",
+    "url": "https://github.com/yucezerey"
+  },
+  "plugins": [
+    {
+      "name": "turkish-anti-ai-skill",
+      "source": "./",
+      "description": "Türkçe metinlerdeki yapay zeka izlerini (AI slop, translationese, çeviri kokan cümle mimarisi ve TDK hatalarını) temizleyen Agent Skill ve Humanizer paketi."
+    }
+  ]
+}
