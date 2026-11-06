@@ -55,11 +55,11 @@
     },
     {
       "id": "TC-04-akademik-resmi",
-      "title": "Akademik & Resmi Register (Kalibre Edilmiş -mAktAdIr Dozajı ve TDK Aralık/Ondalık Kuralları)",
+      "title": "Akademik & Resmi Register (-mAktAdIr Korunur, Tekrarı Azaltılır, TDK Aralık/Ondalık Kuralları)",
       "mode": "rewrite",
       "register": "akademik-resmi",
-      "input_ai": "Türkiye'de 2020–2024 yılları arasında yenilenebilir enerji yatırımları sadece artış göstermekle kalmamış, aynı zamanda enerji arz güvenliğinde de çığır açan bir dönüm noktası olmuştur. Enerji Bakanlığı tarafından paylaşılan verilere göre, güneş enerjisi kurulu gücü %112.5 oranında büyük bir büyüme gerçekleştirmiştir — ki bu durum sektörün dinamik yapısının en büyük kanıtıdır. Belirtmek gerekir ki, bu doğrultuda şebeke altyapısının güçlendirilmesi hayati bir öneme sahiptir.",
-      "output_human": "Türkiye'de 2020-2024 döneminde hız kazanan yenilenebilir enerji yatırımları, Enerji Bakanlığının yayımladığı resmi verilere göre güneş enerjisi kurulu gücünü %112,5 büyüterek ulusal enerji arz güvenliğinin yapısını dönüştürmüştür. Artan bu kapasitenin kayıpsız iletimi ise şebeke altyapısının eşzamanlı güçlendirilmesine dayanmaktadır. Dönüşüm kalıcıdır.",
+      "input_ai": "Türkiye'de 2020–2024 yılları arasında yenilenebilir enerji yatırımları sadece artış göstermekle kalmamakta, enerji arz güvenliğinde çığır açan bir dönüm noktası oluşturmaktadır. Enerji Bakanlığı tarafından paylaşılan verilere göre güneş enerjisi kurulu gücü %112.5 oranında büyük bir büyüme göstermektedir. Bu durum sektörün dinamik yapısının en büyük kanıtıdır ve yatırımcı ilgisini artırmaktadır. Belirtmek gerekir ki, bu doğrultuda şebeke altyapısının güçlendirilmesi hayati bir öneme sahip olmaktadır. Söz konusu güçlendirme, iletim kayıplarının azaltılmasında kritik bir rol oynamaktadır.",
+      "output_human": "2020-2024 döneminde Türkiye'de hızla artan yenilenebilir enerji yatırımları, Enerji Bakanlığının paylaştığı verilere göre güneş enerjisi kurulu gücünü %112,5 büyüterek ülkenin enerji arz güvenliğini de güçlendirmiştir. Sektörün dinamik yapısını gösteren bu büyüme, yatırımcıların ilgisini de artırmaktadır. Şebeke altyapısının güçlendirilmesi bu nedenle öncelik taşır. İletim kayıplarını azaltmanın başlıca yolu budur.",
       "must_preserve_tokens": [
         "Türkiye",
         "2020-2024",

@@ -118,7 +118,11 @@ Repodaki Python betiği ile herhangi bir Markdown veya metin dosyasını termina
 python3 scripts/detect_tr_ai.py ornek-metin.md
 # JSON çıktısı için:
 python3 scripts/detect_tr_ai.py ornek-metin.md --json
+# Register'a göre '-mAktAdIr' hedefiyle denetim için:
+python3 scripts/detect_tr_ai.py makale.md --register akademik-resmi
 ```
+
+`--register` değerleri: `blog-deneme`, `teknik`, `kurumsal`, `akademik-resmi`, `edebi-anlati`. Register verildiğinde dedektör `-mAktAdIr` yoğunluğunu o metin türünün hedef aralığıyla karşılaştırır. Akademik register'da ek korunur, hedef 100 kelimede yaklaşık 0,5-2,5'tir. Blog ve edebi metinde hedef sıfıra yakındır. Ayrıca art arda üç veya daha fazla cümlenin aynı ekle (`-mektedir`, `-mıştır`, `-dır`) bitip bitmediğini ölçer. Bu aralıklar korpusla kalibre edilmiş değerler değil, `scripts/detect_tr_ai.py` içinden değiştirilebilen başlangıç değerleridir.
 
 Tek parça `dist/turkish-anti-ai-skill.full.md` dosyasını yeniden derlemek için:
 

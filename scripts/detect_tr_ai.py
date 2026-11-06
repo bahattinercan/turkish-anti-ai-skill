@@ -55,6 +55,64 @@ CASE_SENSITIVE_PATTERNS = [
 ]
 
 
+# Register'a göre '-mAktAdIr' hedef aralıkları (100 kelimede). Değerler SKILL.md register
+# tablosundaki dozajın sayısal karşılığıdır. Korpus ölçümüyle kalibre edilmemiş başlangıç değerleridir.
+REGISTER_PROFILES = {
+    "blog-deneme": {"label": "Blog / Deneme / Sosyal Medya", "mektedir_min": 0.0, "mektedir_max": 0.5},
+    "teknik": {"label": "Teknik / Mühendislik", "mektedir_min": 0.0, "mektedir_max": 1.0},
+    "kurumsal": {"label": "Kurumsal / SaaS / İş İletişimi", "mektedir_min": 0.0, "mektedir_max": 1.0},
+    "akademik-resmi": {"label": "Akademik / Resmi / Hukuki", "mektedir_min": 0.5, "mektedir_max": 2.5},
+    "edebi-anlati": {"label": "Edebi / Anlatı", "mektedir_min": 0.0, "mektedir_max": 0.5},
+}
+DEFAULT_PROFILE = {"label": "Register belirtilmedi (genel eşik)", "mektedir_min": 0.0, "mektedir_max": 2.5}
+REGISTER_ALIASES = {"blog": "blog-deneme", "deneme": "blog-deneme", "akademik": "akademik-resmi",
+                    "resmi": "akademik-resmi", "hukuki": "akademik-resmi", "edebi": "edebi-anlati",
+                    "anlati": "edebi-anlati", "saas": "kurumsal"}
+
+# Art arda aynı cümle sonu: bu sayıda ve üstünde ardışık cümle aynı ek ailesiyle biterse uyarı ver.
+REPEATED_ENDING_LIMIT = 3
+
+
+def resolve_register(register):
+    if not register:
+        return None
+    key = REGISTER_ALIASES.get(register.lower(), register.lower())
+    if key not in REGISTER_PROFILES:
+        raise ValueError(f"Bilinmeyen register: {register}. Seçenekler: {', '.join(REGISTER_PROFILES)}")
+    return key
+
+
+def sentence_ending_class(sentence: str) -> str:
+    """Cümlenin son kelimesini koşulaç ailesine göre sınıflar."""
+    words = re.findall(r"\w+", sentence)
+    if not words:
+        return "diger"
+    last = words[-1].lower()
+    if re.search(r"m[ae]kt[ae]d[ıi]r$", last):
+        return "-mAktAdIr"
+    if re.search(r"m[ıiuü]şt[ıiuü]r$", last):
+        return "-mIştIr"
+    if re.search(r"[dt][ıiuü]r$", last):
+        return "-DIr"
+    return "diger"
+
+
+def max_repeated_ending_run(sentences: list) -> tuple:
+    best_run, best_class, run, prev = 0, None, 0, None
+    for sent in sentences:
+        cls = sentence_ending_class(sent)
+        if cls != "diger" and cls == prev:
+            run += 1
+        elif cls != "diger":
+            run = 1
+        else:
+            run = 0
+        prev = cls
+        if run > best_run:
+            best_run, best_class = run, cls
+    return best_run, best_class
+
+
 def split_turkish_sentences(text: str) -> list:
     """Saat (14.30), ondalık sayı (3.14) ve teknik terim (Node.js) noktalarını bölmeden cümleleri ayırır."""
     protected = re.sub(r"(\d)\.(\d)", r"\1<DOT>\2", text)
@@ -63,7 +121,9 @@ def split_turkish_sentences(text: str) -> list:
     return [s.replace("<DOT>", ".").strip() for s in raw_sentences if len(s.strip().split()) > 1]
 
 
-def analyze_text(text: str) -> dict:
+def analyze_text(text: str, register: str = None) -> dict:
+    register_key = resolve_register(register)
+    profile = REGISTER_PROFILES[register_key] if register_key else DEFAULT_PROFILE
     findings = []
     for pattern, label in TIER1_PATTERNS + TIER2_AND_SYNTAX_PATTERNS + PUNCTUATION_AND_TDK_PATTERNS:
         for match in re.finditer(pattern, text, flags=re.IGNORECASE):
@@ -95,14 +155,24 @@ def analyze_text(text: str) -> dict:
     else:
         cov = 0.5
 
+    run_len, run_class = max_repeated_ending_run(sentences)
+    mektedir_in_range = profile["mektedir_min"] <= mektedir_per_100 <= profile["mektedir_max"]
+
     return {
+        "register": register_key,
+        "register_label": profile["label"],
+        "mektedir_target_range": [profile["mektedir_min"], profile["mektedir_max"]],
+        "mektedir_in_range": mektedir_in_range,
+        "repeated_ending_max_run": run_len,
+        "repeated_ending_class": run_class,
+        "repeated_ending_warning": run_len >= REPEATED_ENDING_LIMIT,
         "word_count": len(words),
         "sentence_count": len(sentences),
         "sentence_lengths": sent_lengths,
         "sentence_length_cov": cov,
         "low_burstiness_warning": cov < 0.35 and len(sentences) >= 3,
         "mektedir_per_100_words": mektedir_per_100,
-        "high_mektedir_warning": mektedir_per_100 > 2.5,
+        "high_mektedir_warning": mektedir_per_100 > profile["mektedir_max"],
         "total_flags": len(findings),
         "findings": findings,
     }
@@ -112,6 +182,7 @@ def main():
     parser = argparse.ArgumentParser(description="Türkçe AI Yazım İzi (AI Slop) Tarayıcısı")
     parser.add_argument("file", help="Taranacak metin veya Markdown dosyası")
     parser.add_argument("--json", action="store_true", help="Çıktıyı JSON formatında ver")
+    parser.add_argument("--register", help=f"Metin türü: {', '.join(REGISTER_PROFILES)}. Verilirse '-mAktAdIr' hedefi buna göre seçilir.")
     args = parser.parse_args()
 
     path = Path(args.file)
@@ -119,14 +190,22 @@ def main():
         print(f"Hata: {args.file} bulunamadı.", file=sys.stderr)
         sys.exit(2)
 
-    report = analyze_text(path.read_text(encoding="utf-8"))
+    try:
+        report = analyze_text(path.read_text(encoding="utf-8"), args.register)
+    except ValueError as exc:
+        print(f"Hata: {exc}", file=sys.stderr)
+        sys.exit(2)
     if args.json:
         print(json.dumps(report, ensure_ascii=False, indent=2))
     else:
         print(f"=== Turkish Anti-AI Denetim Raporu: {path.name} ===")
         print(f"Kelime Sayısı: {report['word_count']} | Cümle Sayısı: {report['sentence_count']}")
         print(f"Cümle Uzunluğu Değişim Katsayısı (Burstiness CoV): {report['sentence_length_cov']} (İnsan hedefi: >= 0.40)")
-        print(f"'-mAktAdIr' Yoğunluğu (100 kelimede): {report['mektedir_per_100_words']}")
+        lo, hi = report["mektedir_target_range"]
+        print(f"Register: {report['register_label']}")
+        print(f"'-mAktAdIr' Yoğunluğu (100 kelimede): {report['mektedir_per_100_words']} | Hedef: {lo}-{hi} | {'Uygun' if report['mektedir_in_range'] else 'Hedef dışı'}")
+        run_note = f" ({report['repeated_ending_class']})" if report["repeated_ending_class"] else ""
+        print(f"Art Arda Aynı Cümle Sonu (en uzun seri): {report['repeated_ending_max_run']}{run_note} | Sınır: {REPEATED_ENDING_LIMIT} altı | {'Uyarı' if report['repeated_ending_warning'] else 'Uygun'}")
         print(f"Toplam Yakalanan AI/TDK Sinyali: {report['total_flags']}")
         for item in report["findings"]:
             print(f"  - [{item['rule']}] -> \"{item['match']}\"")

@@ -83,8 +83,8 @@ def test_eval_scenarios() -> list:
     scenario_results = []
 
     for case in evals_data["test_cases"]:
-        before_stats = analyze_text(case["input_ai"])
-        after_stats = analyze_text(case["output_human"])
+        before_stats = analyze_text(case["input_ai"], case["register"])
+        after_stats = analyze_text(case["output_human"], case["register"])
 
         if case["mode"] == "control":
             # False-positive kontrolü: Doğal metinde 0 bayrak çıkmalı
@@ -96,7 +96,10 @@ def test_eval_scenarios() -> list:
             cov_ok = after_stats["sentence_length_cov"] >= case["min_after_cov"]
             missing_tokens = [tok for tok in case["must_preserve_tokens"] if tok not in case["output_human"]]
             fidelity_ok = len(missing_tokens) == 0
-            passed = flags_caught and after_clean and mektedir_ok and cov_ok and fidelity_ok
+            register_dose_ok = after_stats["mektedir_in_range"]
+            no_repeated_endings = not after_stats["repeated_ending_warning"]
+            passed = (flags_caught and after_clean and mektedir_ok and cov_ok and fidelity_ok
+                      and register_dose_ok and no_repeated_endings)
 
         missing_tokens = [tok for tok in case["must_preserve_tokens"] if tok not in case["output_human"]]
         scenario_results.append({
@@ -109,6 +112,9 @@ def test_eval_scenarios() -> list:
             "before_mektedir": before_stats["mektedir_per_100_words"],
             "after_mektedir": after_stats["mektedir_per_100_words"],
             "before_cov": before_stats["sentence_length_cov"],
+            "before_run": before_stats["repeated_ending_max_run"],
+            "after_run": after_stats["repeated_ending_max_run"],
+            "target_range": after_stats["mektedir_target_range"],
             "after_cov": after_stats["sentence_length_cov"],
             "fidelity_preserved": len(missing_tokens) == 0,
             "missing_tokens": missing_tokens,
@@ -141,7 +147,9 @@ def main():
             all_passed = False
         print(f"  {status} | [{res['id']}] {res['title']}")
         print(f"           -> AI Bayrakları (Önce -> Sonra): {res['before_flags']} -> {res['after_flags']}")
-        print(f"           -> '-mAktAdIr' Yoğunluğu (Önce -> Sonra): {res['before_mektedir']} -> {res['after_mektedir']} / 100 kelime")
+        lo, hi = res["target_range"]
+        print(f"           -> '-mAktAdIr' Yoğunluğu (Önce -> Sonra): {res['before_mektedir']} -> {res['after_mektedir']} / 100 kelime (register hedefi: {lo}-{hi})")
+        print(f"           -> Art Arda Aynı Cümle Sonu (Önce -> Sonra): {res['before_run']} -> {res['after_run']} (sınır: 3 altı)")
         print(f"           -> Cümle Ritmi / Burstiness CoV (Önce -> Sonra): {res['before_cov']} -> {res['after_cov']}")
         print(f"           -> Olgusal Sadakat (Sayı/Terim Korunumu): {'%100 Korundu' if res['fidelity_preserved'] else res['missing_tokens']}")
         if res["caught_examples"]:

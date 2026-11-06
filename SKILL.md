@@ -44,7 +44,7 @@ Kullanıcı kendi yazısından örnek verdiyse (few-shot referans), cümle uzunl
 | **Blog / Deneme / Sosyal Medya** | Tam (Sahne ile başla, ilan etme) | Tam (Ulaç, özne düşürme, `-mIş`) | Tamamen sil | Serbest (400 kelimede maks. 2-3 devrik) |
 | **Teknik Doküman / Mühendislik** | Orta (Doğrudan probleme gir) | Tam (Sola dallanma, ulaç, net yüklem) | Sil (Geniş zaman `-Ir/-Ar` kullan) | Devrik yok, parçacık çok az |
 | **Kurumsal / İş İletişimi / SaaS** | Orta (Tezi ilk cümlede söyle) | Tam (Edilgeni etkene çevir, kof fiili at) | Yalnızca resmi tanımlarda | Devrik yok, doğal ve doğrudan |
-| **Akademik / Resmi / Hukuki** | Kapalı (Belge iskeletini koru) | Sola dallanma, ulaç ve vurgu yuvası | Korunur (100 kelimede 1-3 arası) | Kesinlikle yasak |
+| **Akademik / Resmi / Hukuki** | Kapalı (Belge iskeletini koru) | Sola dallanma, ulaç ve vurgu yuvası | Korunur, tekrarı azaltılır (100 kelimede yaklaşık 0,5-2,5, art arda 3 cümle aynı ekle bitmez) | Kesinlikle yasak |
 | **Edebi / Anlatı** | Tam (Ritim ve imge odaklı) | Tam (Nefes uzunluğu varyasyonu yüksek) | Tamamen sil | Anlatı ritmine göre doğal |
 
 ### Adım 2: Üç Katmanlı Dönüşüm

@@ -33,7 +33,7 @@
 - **Akademik / Hukuki Register Dışında `-DIr` ve `-mAktAdIr` Temizliği:**
   - **Makine:** *"Bu yöntem oldukça etkilidir ve geliştiricilere büyük kolaylık sağlamaktadır. Burası sistemin en kritik parçasıdır."*
   - **İnsan (Teknik):** *"Bu yöntem oldukça etkili, geliştiricilerin işini de kolaylaştırıyor. Burası sistemin en kritik parçası."*
-  - **İnsan (Akademik - Kalibre Edilmiş Doz):** 2015-2019 arası insan yazımı hakemli Türkçe makalelerde `-mAktAdIr` yoğunluğu 100 kelimede `0,4 - 2,3`, `-DIr` yoğunluğu ise `2,3 - 4,0` aralığındadır. Akademik metinlerde bile her cümleyi `-mektedir` ile bitirme, geniş zaman (`-Ir/-Ar`) ile nöbetleşe kullan.
+  - **İnsan (Akademik - Kalibre Edilmiş Doz):** Akademik metinde `-mAktAdIr` korunur, sorun ekin kendisi değil tekrarıdır. Başlangıç hedefi olarak 100 kelimede yaklaşık `0,5 - 2,5` kullan. Bu aralık bir korpus ölçümüne dayanmaz, dedektörün kalibre edilebilir varsayılan değeridir. Art arda üç cümleyi aynı ekle (`-mektedir`, `-mıştır`, `-dır`) bitirme, geniş zaman (`-Ir/-Ar`) ve `-mIştIr` ile nöbetleşe kullan.
 
 ## 4. Vurgu Yuvası (Pre-Verbal Focus) ve Devrik Cümle Ritmi
 

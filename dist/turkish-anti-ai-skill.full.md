@@ -44,7 +44,7 @@ Kullanıcı kendi yazısından örnek verdiyse (few-shot referans), cümle uzunl
 | **Blog / Deneme / Sosyal Medya** | Tam (Sahne ile başla, ilan etme) | Tam (Ulaç, özne düşürme, `-mIş`) | Tamamen sil | Serbest (400 kelimede maks. 2-3 devrik) |
 | **Teknik Doküman / Mühendislik** | Orta (Doğrudan probleme gir) | Tam (Sola dallanma, ulaç, net yüklem) | Sil (Geniş zaman `-Ir/-Ar` kullan) | Devrik yok, parçacık çok az |
 | **Kurumsal / İş İletişimi / SaaS** | Orta (Tezi ilk cümlede söyle) | Tam (Edilgeni etkene çevir, kof fiili at) | Yalnızca resmi tanımlarda | Devrik yok, doğal ve doğrudan |
-| **Akademik / Resmi / Hukuki** | Kapalı (Belge iskeletini koru) | Sola dallanma, ulaç ve vurgu yuvası | Korunur (100 kelimede 1-3 arası) | Kesinlikle yasak |
+| **Akademik / Resmi / Hukuki** | Kapalı (Belge iskeletini koru) | Sola dallanma, ulaç ve vurgu yuvası | Korunur, tekrarı azaltılır (100 kelimede yaklaşık 0,5-2,5, art arda 3 cümle aynı ekle bitmez) | Kesinlikle yasak |
 | **Edebi / Anlatı** | Tam (Ritim ve imge odaklı) | Tam (Nefes uzunluğu varyasyonu yüksek) | Tamamen sil | Anlatı ritmine göre doğal |
 
 ### Adım 2: Üç Katmanlı Dönüşüm
@@ -141,7 +141,7 @@ Taslağı oluşturduktan sonra kullanıcıya sunmadan önce şu kontrolleri yap:
 - **Akademik / Hukuki Register Dışında `-DIr` ve `-mAktAdIr` Temizliği:**
   - **Makine:** *"Bu yöntem oldukça etkilidir ve geliştiricilere büyük kolaylık sağlamaktadır. Burası sistemin en kritik parçasıdır."*
   - **İnsan (Teknik):** *"Bu yöntem oldukça etkili, geliştiricilerin işini de kolaylaştırıyor. Burası sistemin en kritik parçası."*
-  - **İnsan (Akademik - Kalibre Edilmiş Doz):** 2015-2019 arası insan yazımı hakemli Türkçe makalelerde `-mAktAdIr` yoğunluğu 100 kelimede `0,4 - 2,3`, `-DIr` yoğunluğu ise `2,3 - 4,0` aralığındadır. Akademik metinlerde bile her cümleyi `-mektedir` ile bitirme, geniş zaman (`-Ir/-Ar`) ile nöbetleşe kullan.
+  - **İnsan (Akademik - Kalibre Edilmiş Doz):** Akademik metinde `-mAktAdIr` korunur, sorun ekin kendisi değil tekrarıdır. Başlangıç hedefi olarak 100 kelimede yaklaşık `0,5 - 2,5` kullan. Bu aralık bir korpus ölçümüne dayanmaz, dedektörün kalibre edilebilir varsayılan değeridir. Art arda üç cümleyi aynı ekle (`-mektedir`, `-mıştır`, `-dır`) bitirme, geniş zaman (`-Ir/-Ar`) ve `-mIştIr` ile nöbetleşe kullan.
 
 ## 4. Vurgu Yuvası (Pre-Verbal Focus) ve Devrik Cümle Ritmi
 
@@ -393,7 +393,7 @@ Kullanıcı özel bir yazar örneği (few-shot) vermediğinde aşağıdaki 5 pro
 | **Hitap** | Sen veya Siz (tutarlı) | Sen veya nötr 2. çoğul | Siz | 3. şahıs / nötr | Bağlama göre 1. veya 3. şahıs |
 | **Cümle Uzunluğu & Burstiness** | Yüksek dalgalanma (4 kelime ile 28 kelime bir arada) | Orta-Yüksek (Kısa net yargılar + ulaçlı açıklamalar) | Orta (10-20 kelime, net ve taranabilir) | Orta-Uzun (15-30 kelime, sola dallanan yan cümleler) | Çok yüksek dalgalanma (nefes ritmine odaklı) |
 | **Cümlecik Bağlama** | Ulaçlar (`-Ip, -IncA`) + nokta/virgül | Ulaçlar (`-Ip, -dIkçA, -ArAk`) + iki nokta | Ulaçlar + net sebep-sonuç bağlaçları | Sıfat-fiiller (`-An, -DIk`) + ulaçlar | Ulaçlar + ritmik tekrarlar ve virgül |
-| **Kip Dağılımı** | `-yor`, `-DI`, `-mIş` (delil), geniş zaman | Geniş zaman (`-Ir/-Ar` kurallar için), `-DI`, `-mIş` | Geniş zaman, `-yor`, `-DI` | Geniş zaman, `-mAktAdIr` (100 kelimede 0.4-2.3), `-DIr` | Tüm kipler serbest |
+| **Kip Dağılımı** | `-yor`, `-DI`, `-mIş` (delil), geniş zaman | Geniş zaman (`-Ir/-Ar` kurallar için), `-DI`, `-mIş` | Geniş zaman, `-yor`, `-DI` | Geniş zaman, `-mAktAdIr` (100 kelimede yaklaşık 0,5-2,5), `-DIr` | Tüm kipler serbest |
 | **Söylem Parçacıkları** | `işte, zaten, ise, hani, tabii, daha doğrusu` | `ise, aslında, daha doğrusu, örneğin` | `ise, özellikle, doğrudan` | Yalnızca `ise, nitekim, dolayısıyla` | Doğal akışa göre serbest |
 | **Devrik Cümle Oranı** | 400 kelimede 2-3 adet | Sıfır (0) | Sıfır (0) | Sıfır (0) | Anlatı ritmine göre doğal |
 | **Terim Tercihi** | Günlük karşılıklar veya okunuşa göre çekimli terim | Yerleşik İngilizce terim olduğu gibi (`endpoint'e`) | Sektör standardı, jargonsuz sade Türkçe | TDK ve alan terimleri (`veri tabanı, alanyazın`) | Türkçe duygu ve imge değeri yüksek sözcükler |
