@@ -1,6 +1,6 @@
 # turkish-anti-ai-skill
 
-**Türkçeyi çevrilmiş İngilizce gibi değil, insan eliyle yazılmış doğal Türkçe gibi yaz ve onar.**  
+**Türkçe metni okurun ilk okumada anlayacağı hale getirir.**  
 *An open-source Agent Skill & Turkish Humanizer that removes AI writing patterns ("Yapay Zeka Türkçesi" / Translationese) and rebuilds authentic Turkish sentence architecture.*
 
 [![Agent Skills Specification](https://img.shields.io/badge/Agent_Skills-v1.0-blue)](https://agentskills.io/specification)
@@ -98,7 +98,7 @@ Klasör yüklenemeyen web arayüzleri için tüm referans tablolarının tek dos
 
 Kurulumdan sonra ajanına doğal dilde seslenmen yeterlidir. Yetenek kendi açıklamasıyla (`description`) otomatik tetiklenir:
 
-- **Onarım (`rewrite`):** *"Şu blog yazısını insanlaştır ve AI kokusunu sil: `<metin>`"*
+- **Onarım (`rewrite`):** *"Şu blog yazısını insanileştir ve AI hissiyatını sil: `<metin>`"*
 - **Üretim (`write`):** *"Dağıtık sistemlerde cache invalidation konusunu teknik register'da, doğal Türkçeyle yaz."*
 - **Denetim (`audit`):** *"Bu kurumsal metni değiştirme, sadece içindeki AI-Türkçesi ve TDK hatalarını raporla (audit modu)."*
 
@@ -111,6 +111,8 @@ Kurulumdan sonra ajanına doğal dilde seslenmen yeterlidir. Yetenek kendi açı
 | **Katman 3: TDK ve Yüzey (P2)** | Noktalama, imla ve terimler (`references/tdk-ve-noktalama.md`) | Uzun çizgi (`—`), orta çizgi (`–`), `..., ama` virgülü, `"uç nokta"` gibi zorlama çeviriler, `"cache'ı, SQL'ı"` ek hataları | 5 mutlak noktalama yasağı, TDK birleşik/ayrı kelime kuralları, terimlerin Türkçe okunuşa göre çekimlenmesi (`cache'i, SQL'i`) |
 
 ## Deterministik CLI Dedektörü (`detect_tr_ai.py`)
+
+Dedektör metnin yazarını tespit etmez. İnsanların yazdığı resmi Türkçe de aynı kalıplara takılabilir, iyi yönlendirilmiş bir model hiçbirine takılmayabilir. Puan, düzenlemeye nereden başlanacağını gösterir. Asıl ölçüt, okurun metni ilk okumada doğru anlamasıdır.
 
 Repodaki Python betiği ile herhangi bir Markdown veya metin dosyasını terminalden ya da CI/CD (GitHub Actions) üzerinden tarayabilirsin:
 

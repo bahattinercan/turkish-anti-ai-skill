@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 """
-detect_tr_ai.py - Deterministik Türkçe AI Yazım İzi (AI Slop, Translationese & TDK) Tarayıcısı
+detect_tr_ai.py - Deterministik Türkçe Yazım Kalıbı Tarayıcısı (AI Türkçesi, çeviri kokusu ve TDK)
+Metnin yazarını (insan mı model mi) tespit etmez. Yalnızca düzenlenebilecek kalıpları ve ritmi ölçer.
 Kullanım: python3 scripts/detect_tr_ai.py <dosya_yolu.md> [--json]
 """
 
@@ -179,7 +180,7 @@ def analyze_text(text: str, register: str = None) -> dict:
 
 
 def main():
-    parser = argparse.ArgumentParser(description="Türkçe AI Yazım İzi (AI Slop) Tarayıcısı")
+    parser = argparse.ArgumentParser(description="Türkçe yazım kalıbı tarayıcısı (metnin yazarını tespit etmez)")
     parser.add_argument("file", help="Taranacak metin veya Markdown dosyası")
     parser.add_argument("--json", action="store_true", help="Çıktıyı JSON formatında ver")
     parser.add_argument("--register", help=f"Metin türü: {', '.join(REGISTER_PROFILES)}. Verilirse '-mAktAdIr' hedefi buna göre seçilir.")
@@ -198,15 +199,16 @@ def main():
     if args.json:
         print(json.dumps(report, ensure_ascii=False, indent=2))
     else:
-        print(f"=== Turkish Anti-AI Denetim Raporu: {path.name} ===")
+        print(f"=== Türkçe Kalıp Denetim Raporu: {path.name} ===")
+        print("Not: Bu rapor metni kimin yazdığını söylemez, yalnızca düzenlenebilecek kalıpları gösterir.")
         print(f"Kelime Sayısı: {report['word_count']} | Cümle Sayısı: {report['sentence_count']}")
-        print(f"Cümle Uzunluğu Değişim Katsayısı (Burstiness CoV): {report['sentence_length_cov']} (İnsan hedefi: >= 0.40)")
+        print(f"Cümle Uzunluğu Değişim Katsayısı (Burstiness CoV): {report['sentence_length_cov']} (Önerilen: >= 0.40)")
         lo, hi = report["mektedir_target_range"]
         print(f"Register: {report['register_label']}")
         print(f"'-mAktAdIr' Yoğunluğu (100 kelimede): {report['mektedir_per_100_words']} | Hedef: {lo}-{hi} | {'Uygun' if report['mektedir_in_range'] else 'Hedef dışı'}")
         run_note = f" ({report['repeated_ending_class']})" if report["repeated_ending_class"] else ""
         print(f"Art Arda Aynı Cümle Sonu (en uzun seri): {report['repeated_ending_max_run']}{run_note} | Sınır: {REPEATED_ENDING_LIMIT} altı | {'Uyarı' if report['repeated_ending_warning'] else 'Uygun'}")
-        print(f"Toplam Yakalanan AI/TDK Sinyali: {report['total_flags']}")
+        print(f"Toplam Kalıp Sinyali: {report['total_flags']}")
         for item in report["findings"]:
             print(f"  - [{item['rule']}] -> \"{item['match']}\"")
 

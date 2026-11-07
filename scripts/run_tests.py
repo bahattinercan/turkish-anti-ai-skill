@@ -151,7 +151,7 @@ def main():
         if not res["passed"]:
             all_passed = False
         print(f"  {status} | [{res['id']}] {res['title']}")
-        print(f"           -> AI Bayrakları (Önce -> Sonra): {res['before_flags']} -> {res['after_flags']}")
+        print(f"           -> Kalıp Sinyali (Önce -> Sonra): {res['before_flags']} -> {res['after_flags']}")
         lo, hi = res["target_range"]
         print(f"           -> '-mAktAdIr' Yoğunluğu (Önce -> Sonra): {res['before_mektedir']} -> {res['after_mektedir']} / 100 kelime (register hedefi: {lo}-{hi})")
         print(f"           -> Art Arda Aynı Cümle Sonu (Önce -> Sonra): {res['before_run']} -> {res['after_run']} (sınır: 3 altı)")
