@@ -8,7 +8,7 @@
     {
       "name": "turkish-anti-ai-skill",
       "source": "./",
-      "description": "Türkçe metinlerdeki yapay zeka izlerini (AI slop, translationese, çeviri kokan cümle mimarisi ve TDK hatalarını) temizleyen Agent Skill ve Humanizer paketi."
+      "description": "Türkçe metni insan eliyle yazılmış gibi doğal yazan veya onaran, çeviri kokusu ve TDK hatalarını denetleyen Agent Skill paketi."
     }
   ]
 }

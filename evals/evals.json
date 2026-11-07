@@ -55,7 +55,7 @@
     },
     {
       "id": "TC-04-akademik-resmi",
-      "title": "Akademik & Resmi Register (-mAktAdIr Korunur, Tekrarı Azaltılır, TDK Aralık/Ondalık Kuralları)",
+      "title": "Akademik & Resmî Register (-mAktAdIr Korunur, Tekrarı Azaltılır, TDK Aralık/Ondalık Kuralları)",
       "mode": "rewrite",
       "register": "akademik-resmi",
       "input_ai": "Türkiye'de 2020–2024 yılları arasında yenilenebilir enerji yatırımları sadece artış göstermekle kalmamakta, enerji arz güvenliğinde çığır açan bir dönüm noktası oluşturmaktadır. Enerji Bakanlığı tarafından paylaşılan verilere göre güneş enerjisi kurulu gücü %112.5 oranında büyük bir büyüme göstermektedir. Bu durum sektörün dinamik yapısının en büyük kanıtıdır ve yatırımcı ilgisini artırmaktadır. Belirtmek gerekir ki, bu doğrultuda şebeke altyapısının güçlendirilmesi hayati bir öneme sahip olmaktadır. Söz konusu güçlendirme, iletim kayıplarının azaltılmasında kritik bir rol oynamaktadır.",
@@ -72,7 +72,7 @@
     },
     {
       "id": "TC-05-edebi-anlati",
-      "title": "Edebi & Anlatı Register (Nefes Ritmi, Ulaç Akışı ve Tier-1 Süs Temizliği)",
+      "title": "Edebî & Anlatı Register (Nefes Ritmi, Ulaç Akışı ve Tier-1 Süs Temizliği)",
       "mode": "rewrite",
       "register": "edebi-anlati",
       "input_ai": "Kapadokya, Türkiye'nin en çok ziyaret edilen bölgelerinden biridir ve pek çok tarihi yapıya ev sahipliği yapmaktadır. Sabah saatlerinde gökyüzüne yükselen balonlar adeta görsel bir şölen sunmaktadır ve ziyaretçilere zengin bir doku yaşatmaktadır. Sonuç olarak, bu büyüleyici coğrafyada tek başına seyahat etmenin bireye kattığı derin etki yadsınamaz.",

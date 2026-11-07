@@ -2,7 +2,7 @@
 
 `turkish-anti-ai-skill` projesine katkıda bulunmak istediğin için teşekkürler! Bu projenin temel ilkesi, "bence bu kelime güzel değil" gibi öznel yargılar yerine, **Büyük Dil Modellerinin (LLM) Türkçe çıktılarında istatistiksel olarak aşırı temsil edilen kalıpları, İngilizce sözdizimsel kopyaları (calque/translationese) ve TDK Yazım Kılavuzu kurallarını** kanıta dayalı olarak belgelemektir.
 
-## 1. Yeni Bir "Yapay Zeka Türkçesi" Kalıbı Ekleme Kuralları
+## 1. Yeni Bir "Yapay Zekâ Türkçesi" Kalıbı Ekleme Kuralları
 
 Yeni bir kelime, bağlaç veya cümle yapısı için Pull Request (PR) veya Issue açarken lütfen aşağıdaki şablonu doldur:
 
@@ -14,7 +14,8 @@ Yeni bir kelime, bağlaç veya cümle yapısı için Pull Request (PR) veya Issu
   - `P2 / Tier-2 & TDK`: Yoğunlukta yapay duran bağlaçlar veya TDK noktalama/imla hataları.
 - **Önce (Makine Türkçesi Örneği):** Kalıbın gerçek bir LLM çıktısındaki doğal olmayan kullanımı.
 - **Sonra (İnsan Türkçesi Örneği):** Olgusal sadakati bozmadan onarılmış doğal Türkçe karşılığı.
-- **İstisna / Sınır Durumu (Do-Not-Flag):** Bu kuralın hangi register'da veya bağlamda **uygulanmaması** gerektiği (Örn: `-mAktAdIr` eki akademik/resmi register'da korunur).
+- **İstisna / Sınır Durumu (Do-Not-Flag):** Bu kuralın hangi register'da veya bağlamda **uygulanmaması** gerektiği (Örn: `-mAktAdIr` eki akademik/resmî register'da korunur).
+- **Kural Türü:** `[TDK]`, `[Dil bilgisi]` veya `[Üslup]`. Cümle yapısı kurallarında `[Dil bilgisi]` etiketi yalnızca uyulmadığında cümlenin bozulduğu ya da anlamın kaydığı durumlar içindir, dayanağını göster (bkz. `references/sentaks-ve-morfoloji.md` başındaki kaynaklar). Bir kuralı `[TDK]` diye etiketlemek için TDK Yazım Kılavuzu'ndaki ([yazim.tdk.gov.tr](https://yazim.tdk.gov.tr/index.html)) veya Güncel Türkçe Sözlük'teki ([sozluk.gov.tr](https://sozluk.gov.tr/)) ilgili maddeyi bağlantısıyla göster. Kılavuzda karşılığı olmayan kurallar `[Üslup]` olarak eklenir ve dedektörde "TDK hatası" diye raporlanmaz.
 
 ## 2. Paket Senkronizasyonu ve Doğrulama
 
@@ -30,4 +31,4 @@ python3 scripts/detect_tr_ai.py README.md
 
 ## 3. Olgusal Sadakat İlkemiz
 
-Test ve örnek (`evals/evals.json` ve `references/register-ve-ornekler.md`) eklerken "Sonra (After)" metinlerinde kaynak metinde bulunmayan hiçbir yeni sayı, tarih, özel isim veya kişisel anekdot eklenmediğinden emin ol.
+Test ve örnek (`evals/evals.json` ve `references/register-ve-ornekler.md`) eklerken "Sonra (After)" metinlerinde kaynak metinde bulunmayan hiçbir yeni sayı, tarih, özel isim veya kişisel anekdot eklenmediğinden emin ol. Miktar ve kesinlik de bilgidir: Kaynak "birçok" diyorsa "yüzlerce", "artırabilir" diyorsa "artırır" yazma. Klişeyi silince somut bilgi gerekiyorsa ve kaynakta yoksa `[somut veri: ...]` yer tutucusunu kullan.
