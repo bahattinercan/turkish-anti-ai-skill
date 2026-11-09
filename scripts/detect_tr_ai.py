@@ -12,6 +12,39 @@ import re
 import sys
 from pathlib import Path
 
+# Markdown yapıları bir metin dosyasında "cümle" değildir: kod bloğu, tablo satırı, başlık ve liste
+# işaretçisi ölçümden çıkarılır. Aksi hâlde kod içindeki em-dash TDK hatası, tablo hücreleri ise
+# cümle uzunluğu sapması gibi görünür.
+FENCE_RE = re.compile(r"```.*?```|~~~.*?~~~", re.DOTALL)
+HTML_COMMENT_RE = re.compile(r"<!--.*?-->", re.DOTALL)
+INLINE_CODE_RE = re.compile(r"`[^`\n]*`")
+MD_LINK_RE = re.compile(r"\[([^\]]*)\]\([^)]*\)")
+URL_RE = re.compile(r"https?://\S+")
+TABLE_ROW_RE = re.compile(r"(?m)^\s*\|.*\|\s*$")
+HEADING_RE = re.compile(r"(?m)^\s{0,3}#{1,6}\s+.*$")
+LIST_MARKER_RE = re.compile(r"(?m)^\s*(?:[-*+]|\d+[.)])\s+")
+BLOCKQUOTE_MARKER_RE = re.compile(r"(?m)^\s*>\s?")
+
+
+def strip_markdown(text: str) -> tuple:
+    """Metni (bayrak metni, düz yazı) olarak ikiye ayırır.
+
+    Bayrak metninde kod, HTML yorumu ve çıplak URL yoktur; başlık ve tablo metni kalır çünkü
+    oradaki klişeler gerçek sinyaldir. Düz yazıda ayrıca başlık, tablo satırı, liste işaretçisi ve
+    alıntı işaretçisi çıkarılır; bunlar cümle ritmi (CoV) ölçümünü bozar.
+    """
+    flags_text = FENCE_RE.sub(" ", text)
+    flags_text = HTML_COMMENT_RE.sub(" ", flags_text)
+    flags_text = INLINE_CODE_RE.sub(" ", flags_text)
+    flags_text = MD_LINK_RE.sub(r"\1", flags_text)
+    flags_text = URL_RE.sub(" ", flags_text)
+
+    prose = TABLE_ROW_RE.sub(" ", flags_text)
+    prose = HEADING_RE.sub(" ", prose)
+    prose = LIST_MARKER_RE.sub("", prose)
+    prose = BLOCKQUOTE_MARKER_RE.sub("", prose)
+    return flags_text, prose
+
 TIER1_PATTERNS = [
     (r"\byadsınamaz\b|\binkar\s+edilemez\b", "Tier-1 Klişe: 'yadsınamaz / inkar edilemez' (undeniable calque)"),
     (r"\b[aâ]deta\b", "Tier-1 Klişe: 'âdeta / adeta' (aşırı benzetme zarfı)"),
@@ -42,6 +75,18 @@ TIER2_AND_SYNTAX_PATTERNS = [
     (r"\b(?:uç\s+nokta(?:lar|larda|lara|ları)?|olay\s+güdümlü|ara\s+katman|çekme\s+isteği)\b", "P2 Terminoloji: Zorlama teknik terim çevirisi ('uç nokta / olay güdümlü / ara katman')"),
     (r"\bev\s+sahipliği\s+yapmakta|\bkatkıda\s+bulunmakta", "P1 Kof Fiil: '-mAktAdIr' ile şişirilmiş 'ev sahipliği yapmak / katkıda bulunmak'"),
 ]
+
+# Register'da yerleşik ve doğru olan kalıplar: raporda "bilgi" olarak görünür, puanı etkilemez.
+# Örnek: "Söz konusu taşınmaz" hukuki metinde standarttır, blog yazısında çeviri kokar.
+REGISTER_INFORMATIONAL = {
+    "akademik-resmi": {
+        r"\bbununla\s+birlikte\b|\böte\s+yandan\b",
+        r"\bbelirtmek\s+gerekir\s+ki\b|\bunutulmamalıdır\s+ki\b|\bvurgulamak\s+(?:gerekir|önemlidir)\s+ki\b",
+        r"\bsöz\s+konusu\b|\bbu\s+bağlamda\b|\bbu\s+doğrultuda\b|\bbahsi\s+geçen\b",
+        r"\bsonuç\s+olarak\b|\bözetlemek\s+gerekirse\b|\bson\s+tahlilde\b",
+        r"\btarafından\s+(?:gerçekleştiril|sağlan|icra\s+edil)|\b(?:ekibimiz|şirketimiz|kurumumuz|tarafımız)\s+tarafından\b",
+    },
+}
 
 PUNCTUATION_AND_TDK_PATTERNS = [
     (r"—", "P2 Noktalama: Uzun çizgi (em-dash '—') kullanımı (TDK diyalog dışında yasaklar)"),
@@ -95,6 +140,7 @@ def time_suffix_findings(text: str) -> list:
                 "rule": f"P2 TDK Saat Eki Hatası: Ek, saatin okunuşuna uymalı ('{m.group(1)}.{m.group(2)}'{expected}')",
                 "match": m.group(0),
                 "position": m.start(),
+                "severity": "sinyal",
             })
     return findings
 
@@ -116,6 +162,15 @@ REGISTER_ALIASES = {"blog": "blog-deneme", "deneme": "blog-deneme", "akademik": 
 # Art arda aynı cümle sonu: bu sayıda ve üstünde ardışık cümle aynı ek ailesiyle biterse uyarı ver.
 REPEATED_ENDING_LIMIT = 3
 
+# Cümle ritmi eşikleri. SKILL.md'deki hedef bu iki sayıyla aynı olmak zorundadır:
+# hedef >= COV_TARGET, COV_MECHANICAL altı mekanik kabul edilir. Aradaki bant "kabul edilebilir".
+COV_TARGET = 0.40
+COV_MECHANICAL = 0.35
+
+# Bu kelime sayısının altında '-mAktAdIr' yoğunluğu istatistiksel olarak anlamsızdır:
+# 12 kelimelik bir hukuki cümleyle 8/100 çıkıp "hedef dışı" denmesi yanlış alarm üretiyordu.
+MIN_SAMPLE_WORDS = 50
+
 
 def resolve_register(register):
     if not register:
@@ -126,12 +181,26 @@ def resolve_register(register):
     return key
 
 
+# "-DIr" ekini taklit eden ama ek olmayan süre belirteçleri: "yıllardır", "sabahtır", "bugündür"
+# doğal metinde sık geçer. Bunları bildirme eki saymak yanlış "art arda aynı ek" uyarısı üretiyordu.
+DIR_LOOKALIKE_WORDS = {
+    "yıllardır", "aylardır", "günlerdir", "haftalardır", "saatlerdir", "dakikalardır",
+    "asırlardır", "yüzyıllardır", "zamandır", "sabahtır", "akşamdır", "gecedir",
+    "bugündür", "dündendir",
+}
+DIR_LOOKALIKE_RE = re.compile(
+    r"(?:yıl|ay|gün|hafta|saat|dakika|asır|yüzyıl|sabah|akşam|gece|zaman|mevsim|dönem)(?:lar|ler)d[ıiuü]r$"
+)
+
+
 def sentence_ending_class(sentence: str) -> str:
     """Cümlenin son kelimesini koşulaç ailesine göre sınıflar."""
     words = re.findall(r"\w+", sentence)
     if not words:
         return "diger"
     last = words[-1].lower()
+    if last in DIR_LOOKALIKE_WORDS or DIR_LOOKALIKE_RE.search(last):
+        return "diger"
     if re.search(r"m[ae]kt[ae]d[ıi]r$", last):
         return "-mAktAdIr"
     if re.search(r"m[ıiuü]şt[ıiuü]r$", last):
@@ -165,34 +234,44 @@ def split_turkish_sentences(text: str) -> list:
     return [s.replace("<DOT>", ".").strip() for s in raw_sentences if len(s.strip().split()) > 1]
 
 
-def analyze_text(text: str, register: str = None) -> dict:
+def analyze_text(text: str, register: str = None, markdown: bool = True) -> dict:
     register_key = resolve_register(register)
     profile = REGISTER_PROFILES[register_key] if register_key else DEFAULT_PROFILE
+    flags_text, prose_text = strip_markdown(text) if markdown else (text, text)
+    exempt_patterns = REGISTER_INFORMATIONAL.get(register_key, set())
+
     findings = []
     for pattern, label in TIER1_PATTERNS + TIER2_AND_SYNTAX_PATTERNS + PUNCTUATION_AND_TDK_PATTERNS:
-        for match in re.finditer(pattern, text, flags=re.IGNORECASE):
+        severity = "bilgi" if pattern in exempt_patterns else "sinyal"
+        for match in re.finditer(pattern, flags_text, flags=re.IGNORECASE):
             findings.append({
                 "rule": label,
                 "match": match.group(0),
                 "position": match.start(),
+                "severity": severity,
             })
 
     for pattern, label in CASE_SENSITIVE_PATTERNS:
-        for match in re.finditer(pattern, text):
+        for match in re.finditer(pattern, flags_text):
             findings.append({
                 "rule": label,
                 "match": match.group(0),
                 "position": match.start(),
+                "severity": "sinyal",
             })
 
-    findings.extend(time_suffix_findings(text))
+    findings.extend(time_suffix_findings(flags_text))
 
-    words = re.findall(r"\b\w+\b", text)
-    word_count = max(len(words), 1)
-    mektedir_count = len(re.findall(r"\w+m[ae]kt[ae]d[ıi]r\b", text, flags=re.IGNORECASE))
-    mektedir_per_100 = round((mektedir_count / word_count) * 100, 2)
+    signal_count = sum(1 for f in findings if f.get("severity") == "sinyal")
+    informational_count = len(findings) - signal_count
 
-    sentences = split_turkish_sentences(text)
+    words = re.findall(r"\b\w+\b", flags_text)
+    word_count = len(words)
+    divisor = max(word_count, 1)
+    mektedir_count = len(re.findall(r"\w+m[ae]kt[ae]d[ıi]r\b", flags_text, flags=re.IGNORECASE))
+    mektedir_per_100 = round((mektedir_count / divisor) * 100, 2)
+
+    sentences = split_turkish_sentences(prose_text)
     sent_lengths = [len(s.split()) for s in sentences]
     if len(sent_lengths) >= 3:
         mean_len = sum(sent_lengths) / len(sent_lengths)
@@ -202,24 +281,32 @@ def analyze_text(text: str, register: str = None) -> dict:
         cov = 0.5
 
     run_len, run_class = max_repeated_ending_run(sentences)
+    small_sample = word_count < MIN_SAMPLE_WORDS
     mektedir_in_range = profile["mektedir_min"] <= mektedir_per_100 <= profile["mektedir_max"]
 
     return {
         "register": register_key,
         "register_label": profile["label"],
+        "markdown_stripped": markdown,
         "mektedir_target_range": [profile["mektedir_min"], profile["mektedir_max"]],
         "mektedir_in_range": mektedir_in_range,
         "repeated_ending_max_run": run_len,
         "repeated_ending_class": run_class,
         "repeated_ending_warning": run_len >= REPEATED_ENDING_LIMIT,
-        "word_count": len(words),
+        "word_count": word_count,
         "sentence_count": len(sentences),
         "sentence_lengths": sent_lengths,
         "sentence_length_cov": cov,
-        "low_burstiness_warning": cov < 0.35 and len(sentences) >= 3,
+        "cov_target": COV_TARGET,
+        "cov_mechanical": COV_MECHANICAL,
+        "low_burstiness_warning": cov < COV_MECHANICAL and len(sentences) >= 3,
+        "cov_below_target": cov < COV_TARGET and len(sentences) >= 3,
         "mektedir_per_100_words": mektedir_per_100,
-        "high_mektedir_warning": mektedir_per_100 > profile["mektedir_max"],
-        "total_flags": len(findings),
+        # Örneklem eşiğin altındaysa yoğunluk uyarısı verilmez, gerekçesi raporda görünür.
+        "mektedir_sample_sufficient": not small_sample,
+        "high_mektedir_warning": (not small_sample) and mektedir_per_100 > profile["mektedir_max"],
+        "total_flags": signal_count,
+        "informational_count": informational_count,
         "findings": findings,
     }
 
@@ -247,15 +334,19 @@ def main():
         print(f"=== Türkçe Kalıp Denetim Raporu: {path.name} ===")
         print("Not: Bu rapor metni kimin yazdığını söylemez, yalnızca düzenlenebilecek kalıpları gösterir.")
         print(f"Kelime Sayısı: {report['word_count']} | Cümle Sayısı: {report['sentence_count']}")
-        print(f"Cümle Uzunluğu Değişim Katsayısı (Burstiness CoV): {report['sentence_length_cov']} (Önerilen: >= 0.40)")
+        print(f"Cümle Uzunluğu Değişim Katsayısı (Burstiness CoV): {report['sentence_length_cov']} "
+              f"(Hedef: >= {COV_TARGET}, {COV_MECHANICAL} altı mekanik)")
         lo, hi = report["mektedir_target_range"]
         print(f"Register: {report['register_label']}")
-        print(f"'-mAktAdIr' Yoğunluğu (100 kelimede): {report['mektedir_per_100_words']} | Hedef: {lo}-{hi} | {'Uygun' if report['mektedir_in_range'] else 'Hedef dışı'}")
+        sample_note = "" if report["mektedir_sample_sufficient"] else f" | Uyarı yok: örneklem < {MIN_SAMPLE_WORDS} kelime"
+        print(f"'-mAktAdIr' Yoğunluğu (100 kelimede): {report['mektedir_per_100_words']} | Hedef: {lo}-{hi} | "
+              f"{'Uygun' if report['mektedir_in_range'] else 'Hedef dışı'}{sample_note}")
         run_note = f" ({report['repeated_ending_class']})" if report["repeated_ending_class"] else ""
         print(f"Art Arda Aynı Cümle Sonu (en uzun seri): {report['repeated_ending_max_run']}{run_note} | Sınır: {REPEATED_ENDING_LIMIT} altı | {'Uyarı' if report['repeated_ending_warning'] else 'Uygun'}")
-        print(f"Toplam Kalıp Sinyali: {report['total_flags']}")
+        print(f"Toplam Kalıp Sinyali: {report['total_flags']} | Register'da doğru olduğu için puanlanmayan: {report['informational_count']}")
         for item in report["findings"]:
-            print(f"  - [{item['rule']}] -> \"{item['match']}\"")
+            marker = "bilgi" if item.get("severity") == "bilgi" else "sinyal"
+            print(f"  - [{marker}] [{item['rule']}] -> \"{item['match']}\"")
 
 
 if __name__ == "__main__":

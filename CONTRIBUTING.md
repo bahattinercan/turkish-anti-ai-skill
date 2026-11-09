@@ -25,10 +25,16 @@ Yeni bir kelime, bağlaç veya cümle yapısı için Pull Request (PR) veya Issu
 # 1. Tek parça dist/ dosyasını ve skills/ alt paketini güncelle
 python3 scripts/build_dist.py
 
-# 2. Dedektör betiğinin sorunsuz çalıştığını doğrula
-python3 scripts/detect_tr_ai.py README.md
+# 2. Paket bütünlüğünü, dedektör kurallarını ve eval senaryolarını doğrula
+python3 scripts/run_tests.py
 ```
+
+`run_tests.py` üç bölüm koşar: paket bütünlüğü, dedektör kural testleri, `evals/evals.json` senaryoları. Raportu `docs/TEST_VE_DOGRULAMA_RAPORU.txt` dosyasına kendisi yazar; **rapor elle düzenlenmez**, bayatladığı için üretimi otomatikleştirildi. Aynı komut CI'da da koşar.
+
+Dedektör davranışını (yeni kalıp, register istisnası, eşik) değiştirdiğinde `scripts/run_tests.py` içindeki “Dedektör kural testleri” bölümüne o davranışı sabitleyen bir kontrol ekle. Kural gevşetip test eşiğini düşürerek yeşil elde etme: eşiği düşürdüysen nedenini PR açıklamasında yaz.
 
 ## 3. Olgusal Sadakat İlkemiz
 
 Test ve örnek (`evals/evals.json` ve `references/register-ve-ornekler.md`) eklerken "Sonra (After)" metinlerinde kaynak metinde bulunmayan hiçbir yeni sayı, tarih, özel isim veya kişisel anekdot eklenmediğinden emin ol. Miktar ve kesinlik de bilgidir: Kaynak "birçok" diyorsa "yüzlerce", "artırabilir" diyorsa "artırır" yazma. Klişeyi silince somut bilgi gerekiyorsa ve kaynakta yoksa `[somut veri: ...]` yer tutucusunu kullan.
+
+Bu kural artık denetleniyor: `run_tests.py`, her eval senaryosunun çıktısında kaynakta olmayan sayı, miktar/abartı sözü (`yüzlerce`, `binlerce`, `bütün`, `herkes`...) veya senaryoda `must_not_add` ile yasaklanmış ifade arar; `must_preserve_hedges` ile ihtiyat kiplerinin korunmasını ister. Yeni bir senaryo eklerken bu alanları doldur.

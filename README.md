@@ -126,6 +126,22 @@ python3 scripts/detect_tr_ai.py makale.md --register akademik-resmi
 
 `--register` değerleri: `blog-deneme`, `teknik`, `kurumsal`, `akademik-resmi`, `edebi-anlati`. Register verildiğinde dedektör `-mAktAdIr` yoğunluğunu o metin türünün hedef aralığıyla karşılaştırır. Akademik register'da ek korunur, hedef 100 kelimede yaklaşık 0,5-2,5'tir. Blog ve edebî metinde hedef sıfıra yakındır. Ayrıca art arda üç veya daha fazla cümlenin aynı ekle (`-mektedir`, `-mıştır`, `-dır`) bitip bitmediğini ölçer. Bu aralıklar korpusla kalibre edilmiş değerler değil, `scripts/detect_tr_ai.py` içinden değiştirilebilen başlangıç değerleridir.
 
+Dedektörün bilinçli davranışları:
+
+- **Markdown-farkında:** Kod bloğu, satır içi kod, HTML yorumu ve çıplak URL taranmaz. Başlık ve tablo metni taranır, ama cümle ritmi (CoV) ölçümüne girmez.
+- **Register'a duyarlı puanlama:** `söz konusu`, `bu bağlamda`, `sonuç olarak`, edilgen `tarafından` gibi kalıplar akademik/resmî register'da `[bilgi]` olarak listelenir ve `total_flags` puanına katılmaz; blog veya kurumsal metinde `[sinyal]` sayılır.
+- **Örneklem eşiği:** 50 kelimenin altındaki metinlerde `-mAktAdIr` yoğunluğu için "hedef dışı" uyarısı verilmez (`mektedir_sample_sufficient: false`).
+- **Cümle sonu sınıflandırması:** `yıllardır`, `aylardır`, `sabahtır`, `bugündür` gibi süre belirteçleri bildirme eki (`-DIr`) sayılmaz.
+- **CoV eşikleri:** `0.35` altı mekanik (uyarı), `0.40` ve üzeri hedef.
+
+Değişiklikten sonra doğrulama kapısı:
+
+```bash
+python3 scripts/run_tests.py
+```
+
+Üç bölümü çalıştırır: paket bütünlüğü, dedektör kural testleri ve `evals/evals.json` senaryoları (olgusal sadakat kilidi testi dahil). Raporu `docs/TEST_VE_DOGRULAMA_RAPORU.txt` dosyasına kendisi yazar (`--no-report` ile kapatılır). Aynı komut GitHub Actions üzerinde de her push ve pull request'te koşar (`.github/workflows/tests.yml`).
+
 Tek parça `dist/turkish-anti-ai-skill.full.md` dosyasını yeniden derlemek için:
 
 ```bash
@@ -139,7 +155,7 @@ Skill, modele verilen Markdown talimatlarından ve üç yerel Python betiğinden
 | Betik | Ne yapar | Dosya yazar mı |
 | :--- | :--- | :--- |
 | `scripts/detect_tr_ai.py` | Verilen metin dosyasını okur, raporu ekrana basar | Hayır |
-| `scripts/run_tests.py` | Repo dosyalarını ve `evals/evals.json` senaryolarını dedektörden geçirir | Hayır |
+| `scripts/run_tests.py` | Paket bütünlüğünü, dedektör kurallarını ve `evals/evals.json` senaryolarını denetler | Evet, yalnızca `docs/TEST_VE_DOGRULAMA_RAPORU.txt` raporunu |
 | `scripts/build_dist.py` | `dist/` dosyasını üretir, `skills/turkish-anti-ai-skill/` klasörünü kaynakla eşler | Evet, yalnızca repo içinde |
 
 `build_dist.py`, eşleme sırasında `skills/turkish-anti-ai-skill/references/` klasörünü silip yeniden kopyalar. Güvenlik tarayıcıları (Socket, Snyk) bu satırı dosya silme işlemi olarak işaretleyebilir. Silme bir kilitle korunur: hedef bu tek klasör değilse veya symlink ise betik durur, hiçbir şey silinmez.
@@ -155,6 +171,7 @@ turkish-anti-ai-skill/
 ├── AGENTS.md                          # Codex, Cursor, Windsurf, Copilot ortak adaptörü
 ├── CLAUDE.md                          # Claude Code proje rehberi
 ├── GEMINI.md                          # Gemini CLI adaptörü
+├── .github/workflows/tests.yml        # CI: dedektör ve eval testlerini her push/PR'da koşar
 ├── references/                        # Aşamalı yüklenen (Progressive Disclosure) Türkçe dilbilimi veritabanı
 │   ├── tdk-ve-noktalama.md            # [TDK]/[Üslup] etiketli noktalama kuralları, TDK imla ve fonetik ek tablosu
 │   ├── sentaks-ve-morfoloji.md        # Sola dallanma, ulaçlar, vurgu yuvası, -DIr/-mAktAdIr, pro-drop

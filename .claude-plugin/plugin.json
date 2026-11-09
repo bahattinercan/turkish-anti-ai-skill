@@ -1,6 +1,6 @@
 {
   "name": "turkish-anti-ai-skill",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "Türkçe metni insan eliyle yazılmış gibi doğal yazan veya onaran, çeviri kokusu ve TDK hatalarını denetleyen Agent Skill paketi.",
   "author": {
     "name": "Yüce Zerey",
