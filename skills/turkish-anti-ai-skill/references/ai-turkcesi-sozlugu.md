@@ -57,6 +57,8 @@ Web sitelerinde, uygulama arayüzlerinde (UI), kurumsal bültenlerde ve SaaS met
 | *No credit card required* | **Kredi kartı istenmez / Kart istemiyoruz** | Kredi kartı gerekmez |
 | *Send on WhatsApp / Share on X* | **WhatsApp'ta gönder / X üzerinde paylaş** | WhatsApp'tan gönder / X'te paylaş (Hâl eki uyumuna dikkat) |
 | *See who opened and edited* | **Kim açtı, kim düzenledi gör** | Kimin açtığını, kimin düzenlediğini gör |
+| *Update 2.4 / Version 2.0 / Patch 1.3* | **Güncelleme 2.4'ü / Sürüm 2.0 ile / Yama 1.3'te** | 2.4 Güncellemesini / 2.0 sürümüyle / 1.3 Yamasında (Sayı adın önüne geçer, ek adın sonuna gelir. Tarih bildiren *Son güncelleme 12.03.2025* doğaldır.) |
+| *Happy Thursday! / Happy Monday everyone!* | **Mutlu perşembeler! / Herkese mutlu pazartesiler!** | İyi perşembeler! / Herkese merhaba! |
 | *Let's dive in! / Here's the thing:* | **Hadi başlayalım! / Mesele şu ki: / İşin sırrı şurada:** | **Tamamen sil.** |
 
 ## 4. Sohbet ve Asistan Artıkları (Chat Residue - Anında Silinecekler)

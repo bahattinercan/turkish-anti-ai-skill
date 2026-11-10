@@ -139,6 +139,23 @@
       "expected_min_before_flags": 10,
       "max_after_mektedir": 0.0,
       "min_after_cov": 0.4
+    },
+    {
+      "id": "TC-09-surum-sirasi-ve-gun-selami",
+      "title": "Sürüm Numarası Sırası ve 'Happy Thursday' Selamı",
+      "mode": "rewrite",
+      "register": "blog-deneme",
+      "input_ai": "Herkese mutlu perşembeler! Hem Güncelleme 2.4'ü hem de yeni mobil uygulamayı hazırlarken çok çalıştık. Sürüm 2.5 ile ilgili ayrıntıları da yakında paylaşacağız.",
+      "output_human": "Herkese iyi perşembeler! Hem 2.4 Güncellemesini hem de yeni mobil uygulamayı hazırlarken çok çalıştık. 2.5 sürümüyle ilgili ayrıntıları da yakında paylaşacağız.",
+      "must_preserve_tokens": [
+        "2.4",
+        "2.5",
+        "mobil uygulamayı",
+        "yakında"
+      ],
+      "expected_min_before_flags": 3,
+      "max_after_mektedir": 0.0,
+      "min_after_cov": 0.4
     }
   ],
   "trigger_queries": {
