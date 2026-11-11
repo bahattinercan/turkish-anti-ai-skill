@@ -29,7 +29,7 @@ python3 scripts/build_dist.py
 python3 scripts/run_tests.py
 ```
 
-`run_tests.py` üç bölüm koşar: paket bütünlüğü, dedektör kural testleri, `evals/evals.json` senaryoları. Raportu `docs/TEST_VE_DOGRULAMA_RAPORU.txt` dosyasına kendisi yazar; **rapor elle düzenlenmez**, bayatladığı için üretimi otomatikleştirildi. Aynı komut CI'da da koşar.
+`run_tests.py` üç bölüm koşar: paket bütünlüğü, dedektör kural testleri, `evals/evals.json` senaryoları. Raporu `docs/TEST_VE_DOGRULAMA_RAPORU.txt` dosyasına kendisi yazar; **rapor elle düzenlenmez**, bayatladığı için üretimi otomatikleştirildi. Aynı komut CI'da da koşar ve depodaki rapor güncel değilse CI kırmızıya döner. Kodu değiştirdiysen raporu da commit et.
 
 Dedektör davranışını (yeni kalıp, register istisnası, eşik) değiştirdiğinde `scripts/run_tests.py` içindeki “Dedektör kural testleri” bölümüne o davranışı sabitleyen bir kontrol ekle. Kural gevşetip test eşiğini düşürerek yeşil elde etme: eşiği düşürdüysen nedenini PR açıklamasında yaz.
 

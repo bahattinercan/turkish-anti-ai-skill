@@ -15,8 +15,15 @@ jobs:
         with:
           python-version: "3.11"
 
-      - name: Dedektör, paket ve eval testleri
-        run: python scripts/run_tests.py --no-report
+      - name: Dedektör, paket ve eval testleri (rapor geçici dosyaya)
+        run: python scripts/run_tests.py --report "$RUNNER_TEMP/rapor.txt"
+
+      - name: Depodaki test raporu güncel mi (run_tests.py çalıştırılmadan commit edilmesin)
+        run: |
+          diff -u docs/TEST_VE_DOGRULAMA_RAPORU.txt "$RUNNER_TEMP/rapor.txt" || {
+            echo "docs/TEST_VE_DOGRULAMA_RAPORU.txt bayat. Yerelde 'python3 scripts/run_tests.py' çalıştırıp raporu commit et."
+            exit 1
+          }
 
       - name: dist/ ve skills/ senkronizasyonu (build_dist unutulmasın)
         run: |
