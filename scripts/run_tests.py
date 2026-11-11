@@ -4,6 +4,7 @@ run_tests.py - turkish-anti-ai-skill Kapsamlı Doğrulama ve Regresyon Test Koş
 Çalıştırma: python3 scripts/run_tests.py
 """
 
+import argparse
 import json
 import re
 import sys
@@ -12,6 +13,43 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(ROOT / "scripts"))
 from detect_tr_ai import analyze_text  # noqa: E402
+
+DIGIT_RE = re.compile(r"\d+")
+# Kaynakta olmayan miktar/abartı bildiren kelimeler: "birçok" -> "yüzlerce" dönüşümü uydurmadır.
+MAGNITUDE_RE = re.compile(
+    r"\b(?:yüzlerce|binlerce|milyonlarca|milyarlarca|onlarca|düzinelerce|bütün|tüm|herkes|hiçbiri)\w*",
+    re.IGNORECASE,
+)
+
+
+def fabrication_findings(case: dict) -> list:
+    """Olgusal sadakat kilidinin testi: çıktı, kaynakta olmayan bilgi eklememeli.
+
+    Kontrol edilenler: yeni sayı, yeni miktar/abartı kelimesi, senaryoda açıkça yasaklanan
+    ifadeler ve kaybolmaması gereken ihtiyat kipleri.
+    """
+    source = case["input_ai"]
+    output = case["output_human"]
+    problems = []
+
+    added_numbers = sorted(set(DIGIT_RE.findall(output)) - set(DIGIT_RE.findall(source)))
+    if added_numbers:
+        problems.append(f"kaynakta olmayan sayı: {', '.join(added_numbers)}")
+
+    src_magnitudes = {m.lower() for m in MAGNITUDE_RE.findall(source)}
+    added_magnitudes = sorted({m.lower() for m in MAGNITUDE_RE.findall(output)} - src_magnitudes)
+    if added_magnitudes:
+        problems.append(f"kaynakta olmayan miktar/abartı sözü: {', '.join(added_magnitudes)}")
+
+    forbidden = [token for token in case.get("must_not_add", []) if token.lower() in output.lower()]
+    if forbidden:
+        problems.append(f"yasaklı ekleme: {', '.join(forbidden)}")
+
+    missing_hedges = [token for token in case.get("must_preserve_hedges", []) if token.lower() not in output.lower()]
+    if missing_hedges:
+        problems.append(f"kaybolan ihtiyat kipl: {', '.join(missing_hedges)}")
+
+    return problems
 
 
 def test_package_integrity() -> list:
@@ -83,6 +121,73 @@ def test_package_integrity() -> list:
     return results
 
 
+def test_detector_rules() -> list:
+    """Dedektörün kural davranışī: düzeltilen yanlış pozitifler geri dönerse burada kırmızı olur."""
+    from detect_tr_ai import COV_MECHANICAL, COV_TARGET, analyze_text, expected_time_suffix, sentence_ending_class
+
+    results = []
+
+    def check(label, passed, detail):
+        results.append({"check": label, "passed": bool(passed), "detail": detail})
+
+    fenced = analyze_text("Örnek kod:\n\n```python\nx = a — b  # , ve\n```\n")
+    check("Dedektör: kod bloğu içeriği taranmaz (em-dash / virgül)", fenced["total_flags"] == 0,
+          f"kod bloğu bayrakları: {fenced['total_flags']} (beklenen: 0)")
+
+    inline = analyze_text("Şu `a — b` komutunu çalıştır.")
+    check("Dedektör: satır içi kod taranmaz", inline["total_flags"] == 0,
+          f"satır içi kod bayrakları: {inline['total_flags']} (beklenen: 0)")
+
+    prose = analyze_text("Bu bir deneme — ve devamı var.")
+    check("Dedektör: düz metindeki em-dash hâlâ yakalanır", prose["total_flags"] == 1,
+          f"düz metin bayrakları: {prose['total_flags']} (beklenen: 1)")
+
+    lookalike = [w for w in ("yıllardır", "aylardır", "sabahtır", "bugündür")
+                 if sentence_ending_class(w) != "diger"]
+    check("Dedektör: '-DIr' görünümlü süre belirteçleri bildirme eki sayılmaz", not lookalike,
+          f"yanlış sınıflananlar: {lookalike or 'yok'}")
+
+    real_dir = analyze_text("Kitap masadadır. Hava soğuktur. Kural açıktır. Sonra her şey değişti.")
+    check("Dedektör: gerçek '-DIr' zinciri uyarıyı üretmeye devam eder", real_dir["repeated_ending_warning"],
+          f"seri: {real_dir['repeated_ending_max_run']} ({real_dir['repeated_ending_class']})")
+
+    legal = analyze_text("Söz konusu taşınmaz üzerinde ipotek bulunmamaktadır. Bu bağlamda tapu kaydı esas alınır. "
+                         "Sonuç olarak işlem tamamdır.", "akademik-resmi")
+    check("Dedektör: akademik/hukuki register'da yerleşik kalıplar puanlanmaz",
+          legal["total_flags"] == 0 and legal["informational_count"] >= 3,
+          f"sinyal: {legal['total_flags']} | bilgi: {legal['informational_count']} (beklenen: 0 sinyal, >=3 bilgi)")
+
+    blog = analyze_text("Söz konusu taşınmaz üzerinde ipotek bulunmamaktadır.", "blog-deneme")
+    check("Dedektör: aynı kalıp blog register'ında sinyal kalır", blog["total_flags"] == 1,
+          f"blog sinyali: {blog['total_flags']} (beklenen: 1)")
+
+    small = analyze_text("Söz konusu taşınmaz üzerinde ipotek bulunmamaktadır.")
+    check("Dedektör: küçük örneklemde '-mAktAdIr' yoğunluk uyarısı verilmez",
+          small["high_mektedir_warning"] is False and small["mektedir_sample_sufficient"] is False,
+          f"örneklem yeterli: {small['mektedir_sample_sufficient']} | uyarı: {small['high_mektedir_warning']}")
+
+    check("Dedektör: saat eki okunuşa göre hesaplanır",
+          expected_time_suffix(14, 30, False) == "da" and expected_time_suffix(11, 0, False) == "de"
+          and expected_time_suffix(9, 15, False) == "te",
+          f"14.30 -> {expected_time_suffix(14, 30, False)}, 11.00 -> {expected_time_suffix(11, 0, False)}, "
+          f"09.15 -> {expected_time_suffix(9, 15, False)}")
+
+    check("Dedektör: CoV eşikleri tek kaynaktan ve SKILL.md ile aynı",
+          COV_MECHANICAL < COV_TARGET and COV_TARGET == 0.40 and COV_MECHANICAL == 0.35,
+          f"mekanik: {COV_MECHANICAL} < hedef: {COV_TARGET}")
+
+    dirty = fabrication_findings({
+        "input_ai": "Birçok ekip bunu yapıyor.",
+        "output_human": "Yüzlerce ekip 2027'de bunu yaptı ve kesinti yaşanmadı.",
+    })
+    clean = fabrication_findings({"input_ai": "Birçok ekip bunu yapıyor.", "output_human": "Birçok ekip bunu yapıyor."})
+    check("Sadakat kilidi: eklenen sayı, miktar sözü ve yasaklı ifade yakalanır",
+          len(dirty) >= 2 and not clean,
+          f"kirli metinde: {len(dirty)} problem | temiz metinde: {len(clean)} problem")
+
+    return results
+
+
 def test_eval_scenarios() -> list:
     evals_data = json.loads((ROOT / "evals" / "evals.json").read_text(encoding="utf-8"))
     scenario_results = []
@@ -103,10 +208,13 @@ def test_eval_scenarios() -> list:
             fidelity_ok = len(missing_tokens) == 0
             register_dose_ok = after_stats["mektedir_in_range"]
             no_repeated_endings = not after_stats["repeated_ending_warning"]
+            # Bu satır eskiden yalnızca "token var mı" bakıyordu; eklenen bilgiyi yakalamıyordu.
+            fabrication_problems = fabrication_findings(case)
             passed = (flags_caught and after_clean and mektedir_ok and cov_ok and fidelity_ok
-                      and register_dose_ok and no_repeated_endings)
+                      and register_dose_ok and no_repeated_endings and not fabrication_problems)
 
         missing_tokens = [tok for tok in case["must_preserve_tokens"] if tok not in case["output_human"]]
+        fabrication_problems = fabrication_findings(case)
         scenario_results.append({
             "id": case["id"],
             "title": case["title"],
@@ -123,6 +231,7 @@ def test_eval_scenarios() -> list:
             "after_cov": after_stats["sentence_length_cov"],
             "fidelity_preserved": len(missing_tokens) == 0,
             "missing_tokens": missing_tokens,
+            "fabrication_problems": fabrication_problems,
             "passed": passed,
             "caught_examples": [f["match"] for f in before_stats["findings"][:6]],
         })
@@ -131,40 +240,71 @@ def test_eval_scenarios() -> list:
 
 
 def main():
-    print("=" * 78)
-    print("TURKISH-ANTI-AI-SKILL KAPSAMLI TEST VE DOĞRULAMA PAKETİ")
-    print("=" * 78)
+    parser = argparse.ArgumentParser(description="turkish-anti-ai-skill doğrulama ve regresyon testleri")
+    parser.add_argument("--report", default=str(ROOT / "docs" / "TEST_VE_DOGRULAMA_RAPORU.txt"),
+                        help="Rapor dosyası yolu (varsayılan: docs/TEST_VE_DOGRULAMA_RAPORU.txt)")
+    parser.add_argument("--no-report", action="store_true", help="Rapor dosyasını yazma")
+    args = parser.parse_args()
+
+    lines = []
+
+    def emit(line=""):
+        print(line)
+        lines.append(line)
+
+    emit("=" * 78)
+    emit("TURKISH-ANTI-AI-SKILL KAPSAMLI TEST VE DOĞRULAMA PAKETİ")
+    emit("=" * 78)
+
+    all_passed = True
+
+    def emit_section(title, items, detail_fn):
+        nonlocal all_passed
+        emit(f"\n{title}")
+        for item in items:
+            status = "[GEÇTİ]" if item["passed"] else "[KALDI]"
+            if not item["passed"]:
+                all_passed = False
+            emit(f"  {status} | {item['check']}")
+            for detail in detail_fn(item):
+                emit(f"           -> {detail}")
 
     pkg_results = test_package_integrity()
-    print("\n[BÖLÜM 1] PAKET VE MİMARİ BÜTÜNLÜK TESTLERİ")
-    all_passed = True
-    for item in pkg_results:
-        status = "[GEÇTİ]" if item["passed"] else "[KALDI]"
-        if not item["passed"]:
-            all_passed = False
-        print(f"  {status} | {item['check']}\n           -> {item['detail']}")
+    emit_section("[BÖLÜM 1] PAKET VE MİMARİ BÜTÜNLÜK TESTLERİ", pkg_results, lambda item: [item["detail"]])
+
+    detector_results = test_detector_rules()
+    emit_section("[BÖLÜM 2] DEDEKTÖR KURAL TESTLERİ (yanlış pozitif ve register davranışī)",
+                 detector_results, lambda item: [item["detail"]])
 
     eval_results = test_eval_scenarios()
-    print("\n[BÖLÜM 2] 5 REGISTER + YANLIŞ POZİTİF & OLGUSAL SADAKAT TESTLERİ")
+    emit("\n[BÖLÜM 3] 5 REGISTER + YANLIŞ POZİTİF & OLGUSAL SADAKAT TESTLERİ")
     for res in eval_results:
         status = "[GEÇTİ]" if res["passed"] else "[KALDI]"
         if not res["passed"]:
             all_passed = False
-        print(f"  {status} | [{res['id']}] {res['title']}")
-        print(f"           -> Kalıp Sinyali (Önce -> Sonra): {res['before_flags']} -> {res['after_flags']}")
         lo, hi = res["target_range"]
-        print(f"           -> '-mAktAdIr' Yoğunluğu (Önce -> Sonra): {res['before_mektedir']} -> {res['after_mektedir']} / 100 kelime (register hedefi: {lo}-{hi})")
-        print(f"           -> Art Arda Aynı Cümle Sonu (Önce -> Sonra): {res['before_run']} -> {res['after_run']} (sınır: 3 altı)")
-        print(f"           -> Cümle Ritmi / Burstiness CoV (Önce -> Sonra): {res['before_cov']} -> {res['after_cov']}")
-        print(f"           -> Olgusal Sadakat (Sayı/Terim Korunumu): {'%100 Korundu' if res['fidelity_preserved'] else res['missing_tokens']}")
+        emit(f"  {status} | [{res['id']}] {res['title']}")
+        emit(f"           -> Kalıp Sinyali (Önce -> Sonra): {res['before_flags']} -> {res['after_flags']}")
+        emit(f"           -> '-mAktAdIr' Yoğunluğu (Önce -> Sonra): {res['before_mektedir']} -> {res['after_mektedir']} / 100 kelime (register hedefi: {lo}-{hi})")
+        emit(f"           -> Art Arda Aynı Cümle Sonu (Önce -> Sonra): {res['before_run']} -> {res['after_run']} (sınır: 3 altı)")
+        emit(f"           -> Cümle Ritmi / Burstiness CoV (Önce -> Sonra): {res['before_cov']} -> {res['after_cov']}")
+        emit(f"           -> Olgusal Sadakat (token korunumu): {'%100 Korundu' if res['fidelity_preserved'] else res['missing_tokens']}")
+        emit(f"           -> Olgusal Sadakat (ekleme yok): {'Uygun' if not res['fabrication_problems'] else res['fabrication_problems']}")
         if res["caught_examples"]:
-            print(f"           -> Yakalanan Örnek Sinyaller: {', '.join(repr(x) for x in res['caught_examples'])}")
+            emit(f"           -> Yakalanan Örnek Sinyaller: {', '.join(repr(x) for x in res['caught_examples'])}")
 
-    total_checks = len(pkg_results) + len(eval_results)
-    passed_checks = sum(1 for x in pkg_results if x["passed"]) + sum(1 for x in eval_results if x["passed"])
-    print("\n" + "=" * 78)
-    print(f"GENEL SONUÇ: {passed_checks}/{total_checks} TEST BAŞARIYLA GEÇTİ ({'SORUNSUZ' if all_passed else 'HATALI'})")
-    print("=" * 78)
+    total_checks = len(pkg_results) + len(detector_results) + len(eval_results)
+    passed_checks = sum(1 for group in (pkg_results, detector_results, eval_results) for x in group if x["passed"])
+    emit("\n" + "=" * 78)
+    emit(f"GENEL SONUÇ: {passed_checks}/{total_checks} TEST BAŞARIYLA GEÇTİ ({'SORUNSUZ' if all_passed else 'HATALI'})")
+    emit("=" * 78)
+
+    # Rapor her koşuda yeniden yazılır: elle alınan anlık görüntü bayatlıyordu.
+    if not args.no_report:
+        report_path = Path(args.report)
+        report_path.parent.mkdir(parents=True, exist_ok=True)
+        report_path.write_text("\n".join(lines) + "\n", encoding="utf-8")
+        print(f"Rapor yazıldı: {report_path}")
 
     if not all_passed:
         sys.exit(1)

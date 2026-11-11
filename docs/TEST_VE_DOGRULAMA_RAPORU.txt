@@ -4,63 +4,103 @@ TURKISH-ANTI-AI-SKILL KAPSAMLI TEST VE DOĞRULAMA PAKETİ
 
 [BÖLÜM 1] PAKET VE MİMARİ BÜTÜNLÜK TESTLERİ
   [GEÇTİ] | SKILL.md Agent Skills v1.0 Spesifikasyon Uyumu (<500 satır, YAML, tire yasağı)
-           -> 104 satır | Frontmatter: True | Em/En-Dash: Yok
+           -> 107 satır | Frontmatter: True | Em/En-Dash: Yok
   [GEÇTİ] | Progressive Disclosure Referans Dosyaları (references/*.md) Bütünlüğü
            -> 4/4 referans dosyası mevcut ve SKILL.md içinden bağlı
   [GEÇTİ] | Single-Source-of-Truth Senkronizasyonu (dist/ ve skills/ Zero-Drift)
-           -> dist boyutu: 51510 byte | skills/ senkron: True
+           -> dist boyutu: 72227 byte | SKILL.md + references/ (4 dosya) skills/ ile birebir: True
   [GEÇTİ] | Çoklu Ajan Adaptörleri (Cursor .mdc, Claude plugin.json, AGENTS.md, CLAUDE.md)
            -> Cursor .mdc: True | Claude plugin.json: True | AGENTS.md: True
 
-[BÖLÜM 2] 5 REGISTER + YANLIŞ POZİTİF & OLGUSAL SADAKAT TESTLERİ
+[BÖLÜM 2] DEDEKTÖR KURAL TESTLERİ (yanlış pozitif ve register davranışī)
+  [GEÇTİ] | Dedektör: kod bloğu içeriği taranmaz (em-dash / virgül)
+           -> kod bloğu bayrakları: 0 (beklenen: 0)
+  [GEÇTİ] | Dedektör: satır içi kod taranmaz
+           -> satır içi kod bayrakları: 0 (beklenen: 0)
+  [GEÇTİ] | Dedektör: düz metindeki em-dash hâlâ yakalanır
+           -> düz metin bayrakları: 1 (beklenen: 1)
+  [GEÇTİ] | Dedektör: '-DIr' görünümlü süre belirteçleri bildirme eki sayılmaz
+           -> yanlış sınıflananlar: yok
+  [GEÇTİ] | Dedektör: gerçek '-DIr' zinciri uyarıyı üretmeye devam eder
+           -> seri: 3 (-DIr)
+  [GEÇTİ] | Dedektör: akademik/hukuki register'da yerleşik kalıplar puanlanmaz
+           -> sinyal: 0 | bilgi: 3 (beklenen: 0 sinyal, >=3 bilgi)
+  [GEÇTİ] | Dedektör: aynı kalıp blog register'ında sinyal kalır
+           -> blog sinyali: 1 (beklenen: 1)
+  [GEÇTİ] | Dedektör: küçük örneklemde '-mAktAdIr' yoğunluk uyarısı verilmez
+           -> örneklem yeterli: False | uyarı: False
+  [GEÇTİ] | Dedektör: saat eki okunuşa göre hesaplanır
+           -> 14.30 -> da, 11.00 -> de, 09.15 -> te
+  [GEÇTİ] | Dedektör: CoV eşikleri tek kaynaktan ve SKILL.md ile aynı
+           -> mekanik: 0.35 < hedef: 0.4
+  [GEÇTİ] | Sadakat kilidi: eklenen sayı, miktar sözü ve yasaklı ifade yakalanır
+           -> kirli metinde: 2 problem | temiz metinde: 0 problem
+
+[BÖLÜM 3] 5 REGISTER + YANLIŞ POZİTİF & OLGUSAL SADAKAT TESTLERİ
   [GEÇTİ] | [TC-01-blog-deneme] Blog & Deneme Register (Sahneleme, Negatif Paralellik, Em-Dash ve Edilgen Çatı)
-           -> AI Bayrakları (Önce -> Sonra): 10 -> 0
-           -> '-mAktAdIr' Yoğunluğu (Önce -> Sonra): 3.03 -> 0.0 / 100 kelime
-           -> Cümle Ritmi / Burstiness CoV (Önce -> Sonra): 0.44 -> 0.74
-           -> Olgusal Sadakat (Sayı/Terim Korunumu): %100 Korundu
+           -> Kalıp Sinyali (Önce -> Sonra): 11 -> 0
+           -> '-mAktAdIr' Yoğunluğu (Önce -> Sonra): 3.03 -> 0.0 / 100 kelime (register hedefi: 0.0-0.5)
+           -> Art Arda Aynı Cümle Sonu (Önce -> Sonra): 2 -> 0 (sınır: 3 altı)
+           -> Cümle Ritmi / Burstiness CoV (Önce -> Sonra): 0.44 -> 0.42
+           -> Olgusal Sadakat (token korunumu): %100 Korundu
+           -> Olgusal Sadakat (ekleme yok): Uygun
            -> Yakalanan Örnek Sinyaller: 'yadsınamaz', 'kritik bir rol oyna', 'sadece geçici bir trend değil, aynı zamanda', 'Günümüzün hızla değişen', 'Bununla birlikte', 'bütüncül bir yaklaşım'
   [GEÇTİ] | [TC-02-teknik-muhendislik] Teknik & Mühendislik Register (Fonetik Ek Uyumu, Zorlama Çeviri ve Noktalama)
-           -> AI Bayrakları (Önce -> Sonra): 11 -> 0
-           -> '-mAktAdIr' Yoğunluğu (Önce -> Sonra): 1.56 -> 0.0 / 100 kelime
-           -> Cümle Ritmi / Burstiness CoV (Önce -> Sonra): 0.39 -> 0.57
-           -> Olgusal Sadakat (Sayı/Terim Korunumu): %100 Korundu
+           -> Kalıp Sinyali (Önce -> Sonra): 11 -> 0
+           -> '-mAktAdIr' Yoğunluğu (Önce -> Sonra): 1.56 -> 0.0 / 100 kelime (register hedefi: 0.0-1.0)
+           -> Art Arda Aynı Cümle Sonu (Önce -> Sonra): 1 -> 1 (sınır: 3 altı)
+           -> Cümle Ritmi / Burstiness CoV (Önce -> Sonra): 0.39 -> 0.45
+           -> Olgusal Sadakat (token korunumu): %100 Korundu
+           -> Olgusal Sadakat (ekleme yok): Uygun
            -> Yakalanan Örnek Sinyaller: 'adeta', 'kritik bir öneme sahip', 'kusursuz bir şekilde', 'Öte yandan', 'uç noktalarda', ', ama'
   [GEÇTİ] | [TC-03-kurumsal-saas] Kurumsal & SaaS Ürün Metni (Lokalizasyon Calque'ları, Kof Fiiller ve Sayı Sadakati)
-           -> AI Bayrakları (Önce -> Sonra): 10 -> 0
-           -> '-mAktAdIr' Yoğunluğu (Önce -> Sonra): 1.79 -> 0.0 / 100 kelime
+           -> Kalıp Sinyali (Önce -> Sonra): 9 -> 0
+           -> '-mAktAdIr' Yoğunluğu (Önce -> Sonra): 1.79 -> 0.0 / 100 kelime (register hedefi: 0.0-1.0)
+           -> Art Arda Aynı Cümle Sonu (Önce -> Sonra): 1 -> 1 (sınır: 3 altı)
            -> Cümle Ritmi / Burstiness CoV (Önce -> Sonra): 0.5 -> 0.48
-           -> Olgusal Sadakat (Sayı/Terim Korunumu): %100 Korundu
-           -> Yakalanan Örnek Sinyaller: 'geniş bir yelpaze', 'potansiyelini ortaya çıkar', 'bir üst seviyeye taşı', 'Bu bağlamda', 'söz konusu', 'tarafından geliştiril'
-  [GEÇTİ] | [TC-04-akademik-resmi] Akademik & Resmi Register (Kalibre Edilmiş -mAktAdIr Dozajı ve TDK Aralık/Ondalık Kuralları)
-           -> AI Bayrakları (Önce -> Sonra): 12 -> 0
-           -> '-mAktAdIr' Yoğunluğu (Önce -> Sonra): 0.0 -> 2.38 / 100 kelime
-           -> Cümle Ritmi / Burstiness CoV (Önce -> Sonra): 0.3 -> 0.76
-           -> Olgusal Sadakat (Sayı/Terim Korunumu): %100 Korundu
-           -> Yakalanan Örnek Sinyaller: 'hayati bir öneme sahip', 'sadece artış göstermekle kalma', 'çığır açan', 'dönüm noktası', 'en büyük kanıtıdır', 'Belirtmek gerekir ki'
-  [GEÇTİ] | [TC-05-edebi-anlati] Edebi & Anlatı Register (Nefes Ritmi, Ulaç Akışı ve Tier-1 Süs Temizliği)
-           -> AI Bayrakları (Önce -> Sonra): 5 -> 0
-           -> '-mAktAdIr' Yoğunluğu (Önce -> Sonra): 6.38 -> 0.0 / 100 kelime
-           -> Cümle Ritmi / Burstiness CoV (Önce -> Sonra): 0.06 -> 0.51
-           -> Olgusal Sadakat (Sayı/Terim Korunumu): %100 Korundu
+           -> Olgusal Sadakat (token korunumu): %100 Korundu
+           -> Olgusal Sadakat (ekleme yok): Uygun
+           -> Yakalanan Örnek Sinyaller: 'geniş bir yelpaze', 'potansiyelini ortaya çıkar', 'bir üst seviyeye taşı', 'Bu bağlamda', 'söz konusu', 'ekibimiz tarafından'
+  [GEÇTİ] | [TC-04-akademik-resmi] Akademik & Resmî Register (-mAktAdIr Korunur, Tekrarı Azaltılır, TDK Aralık/Ondalık Kuralları)
+           -> Kalıp Sinyali (Önce -> Sonra): 9 -> 0
+           -> '-mAktAdIr' Yoğunluğu (Önce -> Sonra): 6.76 -> 1.96 / 100 kelime (register hedefi: 0.5-2.5)
+           -> Art Arda Aynı Cümle Sonu (Önce -> Sonra): 5 -> 1 (sınır: 3 altı)
+           -> Cümle Ritmi / Burstiness CoV (Önce -> Sonra): 0.25 -> 0.64
+           -> Olgusal Sadakat (token korunumu): %100 Korundu
+           -> Olgusal Sadakat (ekleme yok): Uygun
+           -> Yakalanan Örnek Sinyaller: 'hayati bir öneme sahip', 'kritik bir rol oyna', 'sadece artış göstermekle kalma', 'çığır açan', 'dönüm noktası', 'en büyük kanıtıdır'
+  [GEÇTİ] | [TC-05-edebi-anlati] Edebî & Anlatı Register (Nefes Ritmi, Ulaç Akışı ve Tier-1 Süs Temizliği)
+           -> Kalıp Sinyali (Önce -> Sonra): 5 -> 0
+           -> '-mAktAdIr' Yoğunluğu (Önce -> Sonra): 6.38 -> 0.0 / 100 kelime (register hedefi: 0.0-0.5)
+           -> Art Arda Aynı Cümle Sonu (Önce -> Sonra): 2 -> 0 (sınır: 3 altı)
+           -> Cümle Ritmi / Burstiness CoV (Önce -> Sonra): 0.06 -> 0.4
+           -> Olgusal Sadakat (token korunumu): %100 Korundu
+           -> Olgusal Sadakat (ekleme yok): Uygun
            -> Yakalanan Örnek Sinyaller: 'yadsınamaz', 'adeta', 'zengin bir doku', 'Sonuç olarak', 'ev sahipliği yapmakta'
   [GEÇTİ] | [TC-06-false-positive-guard] Yanlış Pozitif (False-Positive) ve Aşırı Düzeltme Koruması Kontrolü
-           -> AI Bayrakları (Önce -> Sonra): 0 -> 0
-           -> '-mAktAdIr' Yoğunluğu (Önce -> Sonra): 0.0 -> 0.0 / 100 kelime
+           -> Kalıp Sinyali (Önce -> Sonra): 0 -> 0
+           -> '-mAktAdIr' Yoğunluğu (Önce -> Sonra): 0.0 -> 0.0 / 100 kelime (register hedefi: 0.0-1.0)
+           -> Art Arda Aynı Cümle Sonu (Önce -> Sonra): 0 -> 0 (sınır: 3 altı)
            -> Cümle Ritmi / Burstiness CoV (Önce -> Sonra): 0.3 -> 0.3
-           -> Olgusal Sadakat (Sayı/Terim Korunumu): %100 Korundu
+           -> Olgusal Sadakat (token korunumu): %100 Korundu
+           -> Olgusal Sadakat (ekleme yok): Uygun
   [GEÇTİ] | [TC-07-write-mode-sifirdan] Üretim Modu (Write Mode - Sıfırdan Türkçe Cümle Mimarisi ile Yazım)
-           -> AI Bayrakları (Önce -> Sonra): 5 -> 0
-           -> '-mAktAdIr' Yoğunluğu (Önce -> Sonra): 4.26 -> 0.0 / 100 kelime
+           -> Kalıp Sinyali (Önce -> Sonra): 6 -> 0
+           -> '-mAktAdIr' Yoğunluğu (Önce -> Sonra): 4.26 -> 0.0 / 100 kelime (register hedefi: 0.0-1.0)
+           -> Art Arda Aynı Cümle Sonu (Önce -> Sonra): 1 -> 1 (sınır: 3 altı)
            -> Cümle Ritmi / Burstiness CoV (Önce -> Sonra): 0.5 -> 0.42
-           -> Olgusal Sadakat (Sayı/Terim Korunumu): %100 Korundu
-           -> Yakalanan Örnek Sinyaller: 'kritik bir rol oyna', 'kusursuz bir şekilde', 'Bununla birlikte', '—', ', ama'
+           -> Olgusal Sadakat (token korunumu): %100 Korundu
+           -> Olgusal Sadakat (ekleme yok): Uygun
+           -> Yakalanan Örnek Sinyaller: 'kritik bir rol oyna', 'kusursuz bir şekilde', 'Bununla birlikte', 'kritik bir rol oyna', '—', ', ama'
   [GEÇTİ] | [TC-08-tdk-imla-stres-testi] TDK İmla, Birleşik/Ayrı Kelimeler ve Noktalama Stres Testi
-           -> AI Bayrakları (Önce -> Sonra): 10 -> 0
-           -> '-mAktAdIr' Yoğunluğu (Önce -> Sonra): 0.0 -> 0.0 / 100 kelime
+           -> Kalıp Sinyali (Önce -> Sonra): 10 -> 0
+           -> '-mAktAdIr' Yoğunluğu (Önce -> Sonra): 0.0 -> 0.0 / 100 kelime (register hedefi: 0.0-1.0)
+           -> Art Arda Aynı Cümle Sonu (Önce -> Sonra): 0 -> 0 (sınır: 3 altı)
            -> Cümle Ritmi / Burstiness CoV (Önce -> Sonra): 0.5 -> 0.66
-           -> Olgusal Sadakat (Sayı/Terim Korunumu): %100 Korundu
+           -> Olgusal Sadakat (token korunumu): %100 Korundu
+           -> Olgusal Sadakat (ekleme yok): Uygun
            -> Yakalanan Örnek Sinyaller: '—', '09:30', 'ard arda', 'bir çok', 'yanısıra', 'önyargı'
 
 ==============================================================================
-GENEL SONUÇ: 12/12 TEST BAŞARIYLA GEÇTİ (SORUNSUZ)
+GENEL SONUÇ: 23/23 TEST BAŞARIYLA GEÇTİ (SORUNSUZ)
 ==============================================================================

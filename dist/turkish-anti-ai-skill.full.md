@@ -4,7 +4,7 @@ description: Türkçe metni insan eliyle yazılmış gibi doğal yazar veya onar
 license: MIT
 metadata:
   author: yucezerey
-  version: "1.0.0"
+  version: "1.1.0"
 ---
 
 # Turkish Anti-AI Skill (Doğal Türkçe ve Anti-Slop Mimari Kılavuzu)
@@ -87,7 +87,8 @@ Detaylı kurallar için `references/tdk-ve-noktalama.md` dosyasını oku:
 
 Taslağı oluşturduktan sonra kullanıcıya sunmadan önce şu kontrolleri yap:
 
-- **Cümle Uzunluğu Varyasyonu (Burstiness CoV >= 0.40):** Arka arkaya gelen tüm cümleler 15-22 kelime bandında toplanmışsa ritim mekanikleşmiştir (CoV < 0.35). 3 veya daha fazla cümleli her paragrafta en az bir kısa/vurucu cümle (3-6 kelime) ile en az bir ulaçlı/sola dallanan uzun cümleyi (18-28 kelime) bir arada kullanarak değişim katsayısını (CoV) >= 0.40 seviyesinde tut.
+- **Cümle Uzunluğu Varyasyonu (Burstiness CoV >= 0.40):** Arka arkaya gelen tüm cümleler 15-22 kelime bandında toplanmışsa ritim mekanikleşmiştir. Dedektör iki eşik kullanır: `0.35` altı mekanik (uyarı), `0.40` ve üzeri hedef, arası kabul edilebilir. 3 veya daha fazla cümleli her paragrafta en az bir kısa/vurucu cümle (3-6 kelime) ile en az bir ulaçlı/sola dallanan uzun cümleyi (18-28 kelime) bir arada kullanarak CoV'u `0.40` seviyesinin altına düşürme. Dedektör bu ölçümü yalnızca düz yazı üzerinde yapar; kod bloğu, başlık, tablo satırı ve liste işaretçisi ölçüme girmez. CoV ayrıca kelime sayısı düşük metinlerde (3 cümleden az) güvenilir değildir, tek başına karar ölçütü sayma.
+- **Register'da Yerleşik Kalıpları Kusur Sayma:** `söz konusu`, `bu bağlamda`, `sonuç olarak`, `tarafından` + kof eylem gibi kalıplar akademik/resmî/hukuki metinde standarttır. Dedektör bunları o register'da **bilgi** olarak listeler ve puana katmaz; aynı kalıp blog veya kurumsal metinde **sinyal** sayılır. Raporda bir kalemin `[bilgi]` mi `[sinyal]` mi olduğuna bak.
 - **Tier-1 Yasaklı Kelime Taraması:** Metinde `âdeta` (`adeta`), `yadsınamaz`, `kritik bir rol oynamaktadır`, `derinlemesine`, `yelpaze`, `dönüm noktası`, `bununla birlikte`, `öte yandan`, `söz konusu`, `bu bağlamda` kalıplarının kalmadığından emin ol (`references/ai-turkcesi-sozlugu.md`).
 - **Olgusal Sadakat Kontrolü:** Kaynak metindeki tüm sayılar, tarihler, teknik terimler ve iddialar korundu mu? Kaynakta olmayan bir sayı, yer adı, kişi, sıfat veya abartı eklendi mi? Artış/azalış yönü, olumsuzluk ve ihtiyat (`-ebilir`, `görünüyor`) aynı kaldı mı? Ritim hedefini tutturmak için kaynakta olmayan kısa bir cümle eklendiyse sil.
 
