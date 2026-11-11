@@ -122,7 +122,7 @@ def test_package_integrity() -> list:
 
 
 def test_detector_rules() -> list:
-    """Dedektörün kural davranışī: düzeltilen yanlış pozitifler geri dönerse burada kırmızı olur."""
+    """Dedektörün kural davranışı: düzeltilen yanlış pozitifler geri dönerse burada kırmızı olur."""
     from detect_tr_ai import COV_MECHANICAL, COV_TARGET, analyze_text, expected_time_suffix, sentence_ending_class
 
     results = []
@@ -285,7 +285,7 @@ def main():
     emit_section("[BÖLÜM 1] PAKET VE MİMARİ BÜTÜNLÜK TESTLERİ", pkg_results, lambda item: [item["detail"]])
 
     detector_results = test_detector_rules()
-    emit_section("[BÖLÜM 2] DEDEKTÖR KURAL TESTLERİ (yanlış pozitif ve register davranışī)",
+    emit_section("[BÖLÜM 2] DEDEKTÖR KURAL TESTLERİ (yanlış pozitif ve register davranışı)",
                  detector_results, lambda item: [item["detail"]])
 
     eval_results = test_eval_scenarios()

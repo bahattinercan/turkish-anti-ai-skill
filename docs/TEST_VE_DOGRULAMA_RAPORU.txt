@@ -12,7 +12,7 @@ TURKISH-ANTI-AI-SKILL KAPSAMLI TEST VE DOĞRULAMA PAKETİ
   [GEÇTİ] | Çoklu Ajan Adaptörleri (Cursor .mdc, Claude plugin.json, AGENTS.md, CLAUDE.md)
            -> Cursor .mdc: True | Claude plugin.json: True | AGENTS.md: True
 
-[BÖLÜM 2] DEDEKTÖR KURAL TESTLERİ (yanlış pozitif ve register davranışī)
+[BÖLÜM 2] DEDEKTÖR KURAL TESTLERİ (yanlış pozitif ve register davranışı)
   [GEÇTİ] | Dedektör: kod bloğu içeriği taranmaz (em-dash / virgül)
            -> kod bloğu bayrakları: 0 (beklenen: 0)
   [GEÇTİ] | Dedektör: satır içi kod taranmaz

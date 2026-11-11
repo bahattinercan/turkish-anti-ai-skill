@@ -351,9 +351,13 @@ def main():
               f"(Hedef: >= {COV_TARGET:.2f}, {COV_MECHANICAL:.2f} altı mekanik)")
         lo, hi = report["mektedir_target_range"]
         print(f"Register: {report['register_label']}")
-        sample_note = "" if report["mektedir_sample_sufficient"] else f" | Uyarı yok: örneklem < {MIN_SAMPLE_WORDS} kelime"
+        if report["mektedir_sample_sufficient"]:
+            dose_state = "Uygun" if report["mektedir_in_range"] else "Hedef dışı"
+        else:
+            # Küçük örneklemde yoğunluk anlamsızdır: "Hedef dışı" demek uyarı vermemekle çelişir.
+            dose_state = f"Değerlendirilmedi (örneklem {MIN_SAMPLE_WORDS} kelimenin altında)"
         print(f"'-mAktAdIr' Yoğunluğu (100 kelimede): {report['mektedir_per_100_words']} | Hedef: {lo}-{hi} | "
-              f"{'Uygun' if report['mektedir_in_range'] else 'Hedef dışı'}{sample_note}")
+              f"{dose_state}")
         run_note = f" ({report['repeated_ending_class']})" if report["repeated_ending_class"] else ""
         print(f"Art Arda Aynı Cümle Sonu (en uzun seri): {report['repeated_ending_max_run']}{run_note} | Sınır: {REPEATED_ENDING_LIMIT} altı | {'Uyarı' if report['repeated_ending_warning'] else 'Uygun'}")
         print(f"Toplam Kalıp Sinyali: {report['total_flags']} | Register'da doğru olduğu için puanlanmayan: {report['informational_count']}")
