@@ -74,6 +74,9 @@ TIER2_AND_SYNTAX_PATTERNS = [
     (r"\b(?:büyük|yüksek|kritik|ciddi|önemli|hayati)\s+bir\s+(?:önem\s+taşı|artış\s+göster|rol\s+oyna|ivme\s+kazan|önem\s+arz)", "P1 Sentaks: Kalıplaşmış birleşik eylemde gereksiz 'bir' (a/an calque)"),
     (r"\b(?:uç\s+nokta(?:lar|larda|lara|ları)?|olay\s+güdümlü|ara\s+katman|çekme\s+isteği)\b", "P2 Terminoloji: Zorlama teknik terim çevirisi ('uç nokta / olay güdümlü / ara katman')"),
     (r"\bev\s+sahipliği\s+yapmakta|\bkatkıda\s+bulunmakta", "P1 Kof Fiil: '-mAktAdIr' ile şişirilmiş 'ev sahipliği yapmak / katkıda bulunmak'"),
+    # İngilizce 'Update 2.4 / Version 2.0' sırası. Tarihler ("Son güncelleme 12.03.2025") bayraklanmaz.
+    (r"\b(?:güncelleme|sürüm|versiyon|yama)\s+\d+(?:\.\d+){1,3}(?![.\d])(?<!\.\d{4})", "P1 Sentaks: Sürüm numarası adın arkasında ('Güncelleme 2.4'ü' -> '2.4 Güncellemesini', Update/Version X calque)"),
+    (r"\bmutlu\s+(?:pazartesi|salı|çarşamba|perşembe|cuma|cumartesi|pazar)(?:ler|lar)\b", "Tier-3 Lokalizasyon: 'Mutlu perşembeler' ('Happy Thursday' calque, Türkçesi 'İyi perşembeler')"),
 ]
 
 # Register'da yerleşik ve doğru olan kalıplar: raporda "bilgi" olarak görünür, puanı etkilemez.
