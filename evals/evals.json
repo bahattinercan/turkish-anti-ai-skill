@@ -13,8 +13,7 @@
         "2026"
       ],
       "expected_min_before_flags": 8,
-      "max_after_mektedir": 0.0,
-      "min_after_cov": 0.4
+      "max_after_mektedir": 0.0
     },
     {
       "id": "TC-02-teknik-muhendislik",
@@ -34,7 +33,6 @@
       ],
       "expected_min_before_flags": 10,
       "max_after_mektedir": 0.0,
-      "min_after_cov": 0.4,
       "must_not_add": [
         "yüzlerce",
         "kesinti",
@@ -56,8 +54,7 @@
         "38,4"
       ],
       "expected_min_before_flags": 8,
-      "max_after_mektedir": 0.0,
-      "min_after_cov": 0.4
+      "max_after_mektedir": 0.0
     },
     {
       "id": "TC-04-akademik-resmi",
@@ -73,8 +70,7 @@
         "112,5"
       ],
       "expected_min_before_flags": 8,
-      "max_after_mektedir": 2.5,
-      "min_after_cov": 0.4
+      "max_after_mektedir": 2.5
     },
     {
       "id": "TC-05-edebi-anlati",
@@ -89,7 +85,6 @@
       ],
       "expected_min_before_flags": 5,
       "max_after_mektedir": 0.0,
-      "min_after_cov": 0.4,
       "must_not_add": [
         "işkence",
         "uykusuzluk",
@@ -128,8 +123,7 @@
         "veritabanında"
       ],
       "expected_min_before_flags": 5,
-      "max_after_mektedir": 0.0,
-      "min_after_cov": 0.4
+      "max_after_mektedir": 0.0
     },
     {
       "id": "TC-08-tdk-imla-stres-testi",
@@ -150,8 +144,7 @@
         "Her şey"
       ],
       "expected_min_before_flags": 10,
-      "max_after_mektedir": 0.0,
-      "min_after_cov": 0.4
+      "max_after_mektedir": 0.0
     }
   ],
   "trigger_queries": {

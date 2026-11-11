@@ -8,7 +8,7 @@ TURKISH-ANTI-AI-SKILL KAPSAMLI TEST VE DOĞRULAMA PAKETİ
   [GEÇTİ] | Progressive Disclosure Referans Dosyaları (references/*.md) Bütünlüğü
            -> 4/4 referans dosyası mevcut ve SKILL.md içinden bağlı
   [GEÇTİ] | Single-Source-of-Truth Senkronizasyonu (dist/ ve skills/ Zero-Drift)
-           -> dist boyutu: 72227 byte | SKILL.md + references/ (4 dosya) skills/ ile birebir: True
+           -> dist boyutu: 71640 byte | SKILL.md + references/ (4 dosya) skills/ ile birebir: True
   [GEÇTİ] | Çoklu Ajan Adaptörleri (Cursor .mdc, Claude plugin.json, AGENTS.md, CLAUDE.md)
            -> Cursor .mdc: True | Claude plugin.json: True | AGENTS.md: True
 
@@ -32,7 +32,9 @@ TURKISH-ANTI-AI-SKILL KAPSAMLI TEST VE DOĞRULAMA PAKETİ
   [GEÇTİ] | Dedektör: saat eki okunuşa göre hesaplanır
            -> 14.30 -> da, 11.00 -> de, 09.15 -> te
   [GEÇTİ] | Dedektör: CoV eşikleri tek kaynaktan ve SKILL.md ile aynı
-           -> mekanik: 0.35 < hedef: 0.4
+           -> mekanik: 0.35 < hedef: 0.40 | SKILL.md'de ikisi de var: True | evals'te elle yazılmış eşik: 0
+  [GEÇTİ] | Dedektör: 3 cümleden kısa metinde CoV uydurulmaz
+           -> CoV: None
   [GEÇTİ] | Sadakat kilidi: eklenen sayı, miktar sözü ve yasaklı ifade yakalanır
            -> kirli metinde: 2 problem | temiz metinde: 0 problem
 
@@ -57,7 +59,7 @@ TURKISH-ANTI-AI-SKILL KAPSAMLI TEST VE DOĞRULAMA PAKETİ
            -> Kalıp Sinyali (Önce -> Sonra): 9 -> 0
            -> '-mAktAdIr' Yoğunluğu (Önce -> Sonra): 1.79 -> 0.0 / 100 kelime (register hedefi: 0.0-1.0)
            -> Art Arda Aynı Cümle Sonu (Önce -> Sonra): 1 -> 1 (sınır: 3 altı)
-           -> Cümle Ritmi / Burstiness CoV (Önce -> Sonra): 0.5 -> 0.48
+           -> Cümle Ritmi / Burstiness CoV (Önce -> Sonra): None -> 0.48
            -> Olgusal Sadakat (token korunumu): %100 Korundu
            -> Olgusal Sadakat (ekleme yok): Uygun
            -> Yakalanan Örnek Sinyaller: 'geniş bir yelpaze', 'potansiyelini ortaya çıkar', 'bir üst seviyeye taşı', 'Bu bağlamda', 'söz konusu', 'ekibimiz tarafından'
@@ -88,7 +90,7 @@ TURKISH-ANTI-AI-SKILL KAPSAMLI TEST VE DOĞRULAMA PAKETİ
            -> Kalıp Sinyali (Önce -> Sonra): 6 -> 0
            -> '-mAktAdIr' Yoğunluğu (Önce -> Sonra): 4.26 -> 0.0 / 100 kelime (register hedefi: 0.0-1.0)
            -> Art Arda Aynı Cümle Sonu (Önce -> Sonra): 1 -> 1 (sınır: 3 altı)
-           -> Cümle Ritmi / Burstiness CoV (Önce -> Sonra): 0.5 -> 0.42
+           -> Cümle Ritmi / Burstiness CoV (Önce -> Sonra): None -> 0.42
            -> Olgusal Sadakat (token korunumu): %100 Korundu
            -> Olgusal Sadakat (ekleme yok): Uygun
            -> Yakalanan Örnek Sinyaller: 'kritik bir rol oyna', 'kusursuz bir şekilde', 'Bununla birlikte', 'kritik bir rol oyna', '—', ', ama'
@@ -96,11 +98,11 @@ TURKISH-ANTI-AI-SKILL KAPSAMLI TEST VE DOĞRULAMA PAKETİ
            -> Kalıp Sinyali (Önce -> Sonra): 10 -> 0
            -> '-mAktAdIr' Yoğunluğu (Önce -> Sonra): 0.0 -> 0.0 / 100 kelime (register hedefi: 0.0-1.0)
            -> Art Arda Aynı Cümle Sonu (Önce -> Sonra): 0 -> 0 (sınır: 3 altı)
-           -> Cümle Ritmi / Burstiness CoV (Önce -> Sonra): 0.5 -> 0.66
+           -> Cümle Ritmi / Burstiness CoV (Önce -> Sonra): None -> 0.66
            -> Olgusal Sadakat (token korunumu): %100 Korundu
            -> Olgusal Sadakat (ekleme yok): Uygun
            -> Yakalanan Örnek Sinyaller: '—', '09:30', 'ard arda', 'bir çok', 'yanısıra', 'önyargı'
 
 ==============================================================================
-GENEL SONUÇ: 23/23 TEST BAŞARIYLA GEÇTİ (SORUNSUZ)
+GENEL SONUÇ: 24/24 TEST BAŞARIYLA GEÇTİ (SORUNSUZ)
 ==============================================================================

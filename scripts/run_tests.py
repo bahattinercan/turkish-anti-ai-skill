@@ -12,7 +12,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(ROOT / "scripts"))
-from detect_tr_ai import analyze_text  # noqa: E402
+from detect_tr_ai import COV_TARGET, analyze_text  # noqa: E402
 
 DIGIT_RE = re.compile(r"\d+")
 # Kaynakta olmayan miktar/abartı bildiren kelimeler: "birçok" -> "yüzlerce" dönüşümü uydurmadır.
@@ -172,9 +172,18 @@ def test_detector_rules() -> list:
           f"14.30 -> {expected_time_suffix(14, 30, False)}, 11.00 -> {expected_time_suffix(11, 0, False)}, "
           f"09.15 -> {expected_time_suffix(9, 15, False)}")
 
+    skill_body = (ROOT / "SKILL.md").read_text(encoding="utf-8")
+    target_s, mech_s = f"{COV_TARGET:.2f}", f"{COV_MECHANICAL:.2f}"
+    evals_cov = [c.get("min_after_cov") for c in json.loads((ROOT / "evals" / "evals.json").read_text(encoding="utf-8"))["test_cases"]
+                 if c.get("mode") != "control" and "min_after_cov" in c]
     check("Dedektör: CoV eşikleri tek kaynaktan ve SKILL.md ile aynı",
-          COV_MECHANICAL < COV_TARGET and COV_TARGET == 0.40 and COV_MECHANICAL == 0.35,
-          f"mekanik: {COV_MECHANICAL} < hedef: {COV_TARGET}")
+          COV_MECHANICAL < COV_TARGET and target_s in skill_body and mech_s in skill_body and not evals_cov,
+          f"mekanik: {mech_s} < hedef: {target_s} | SKILL.md'de ikisi de var: {target_s in skill_body and mech_s in skill_body}"
+          f" | evals'te elle yazılmış eşik: {len(evals_cov)}")
+    short = analyze_text("Kısa bir metin. İki cümle.")
+    check("Dedektör: 3 cümleden kısa metinde CoV uydurulmaz",
+          short["sentence_length_cov"] is None and not short["low_burstiness_warning"] and not short["cov_below_target"],
+          f"CoV: {short['sentence_length_cov']}")
 
     dirty = fabrication_findings({
         "input_ai": "Birçok ekip bunu yapıyor.",
@@ -203,7 +212,10 @@ def test_eval_scenarios() -> list:
             flags_caught = before_stats["total_flags"] >= case["expected_min_before_flags"]
             after_clean = after_stats["total_flags"] == 0
             mektedir_ok = after_stats["mektedir_per_100_words"] <= case["max_after_mektedir"]
-            cov_ok = after_stats["sentence_length_cov"] >= case["min_after_cov"]
+            # Eşik verilmemişse dedektördeki tek kaynak (COV_TARGET) kullanılır.
+            min_cov = case.get("min_after_cov", COV_TARGET)
+            after_cov = after_stats["sentence_length_cov"]
+            cov_ok = after_cov is not None and after_cov >= min_cov
             missing_tokens = [tok for tok in case["must_preserve_tokens"] if tok not in case["output_human"]]
             fidelity_ok = len(missing_tokens) == 0
             register_dose_ok = after_stats["mektedir_in_range"]

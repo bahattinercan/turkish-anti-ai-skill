@@ -278,7 +278,8 @@ def analyze_text(text: str, register: str = None, markdown: bool = True) -> dict
         variance = sum((x - mean_len) ** 2 for x in sent_lengths) / len(sent_lengths)
         cov = round(math.sqrt(variance) / mean_len, 2) if mean_len > 0 else 0.0
     else:
-        cov = 0.5
+        # 3 cümleden kısa metinde değişim katsayısı anlamlı değildir: uydurma bir değer yazma, ölçülemedi de.
+        cov = None
 
     run_len, run_class = max_repeated_ending_run(sentences)
     small_sample = word_count < MIN_SAMPLE_WORDS
@@ -299,8 +300,8 @@ def analyze_text(text: str, register: str = None, markdown: bool = True) -> dict
         "sentence_length_cov": cov,
         "cov_target": COV_TARGET,
         "cov_mechanical": COV_MECHANICAL,
-        "low_burstiness_warning": cov < COV_MECHANICAL and len(sentences) >= 3,
-        "cov_below_target": cov < COV_TARGET and len(sentences) >= 3,
+        "low_burstiness_warning": cov is not None and cov < COV_MECHANICAL,
+        "cov_below_target": cov is not None and cov < COV_TARGET,
         "mektedir_per_100_words": mektedir_per_100,
         # Örneklem eşiğin altındaysa yoğunluk uyarısı verilmez, gerekçesi raporda görünür.
         "mektedir_sample_sufficient": not small_sample,
@@ -334,8 +335,17 @@ def main():
         print(f"=== Türkçe Kalıp Denetim Raporu: {path.name} ===")
         print("Not: Bu rapor metni kimin yazdığını söylemez, yalnızca düzenlenebilecek kalıpları gösterir.")
         print(f"Kelime Sayısı: {report['word_count']} | Cümle Sayısı: {report['sentence_count']}")
-        print(f"Cümle Uzunluğu Değişim Katsayısı (Burstiness CoV): {report['sentence_length_cov']} "
-              f"(Hedef: >= {COV_TARGET}, {COV_MECHANICAL} altı mekanik)")
+        cov_val = report["sentence_length_cov"]
+        if cov_val is None:
+            cov_state = "ölçülemedi (3 cümleden az)"
+        elif cov_val < COV_MECHANICAL:
+            cov_state = f"{cov_val} | Mekanik"
+        elif cov_val < COV_TARGET:
+            cov_state = f"{cov_val} | Kabul edilebilir"
+        else:
+            cov_state = f"{cov_val} | Hedefte"
+        print(f"Cümle Uzunluğu Değişim Katsayısı (Burstiness CoV): {cov_state} "
+              f"(Hedef: >= {COV_TARGET:.2f}, {COV_MECHANICAL:.2f} altı mekanik)")
         lo, hi = report["mektedir_target_range"]
         print(f"Register: {report['register_label']}")
         sample_note = "" if report["mektedir_sample_sufficient"] else f" | Uyarı yok: örneklem < {MIN_SAMPLE_WORDS} kelime"
