@@ -4,15 +4,15 @@ TURKISH-ANTI-AI-SKILL KAPSAMLI TEST VE DOĞRULAMA PAKETİ
 
 [BÖLÜM 1] PAKET VE MİMARİ BÜTÜNLÜK TESTLERİ
   [GEÇTİ] | SKILL.md Agent Skills v1.0 Spesifikasyon Uyumu (<500 satır, YAML, tire yasağı)
-           -> 107 satır | Frontmatter: True | Em/En-Dash: Yok
+           -> 136 satır | Frontmatter: True | Em/En-Dash: Yok
   [GEÇTİ] | Progressive Disclosure Referans Dosyaları (references/*.md) Bütünlüğü
-           -> 4/4 referans dosyası mevcut ve SKILL.md içinden bağlı
+           -> 5/5 referans dosyası mevcut ve SKILL.md içinden bağlı
   [GEÇTİ] | Single-Source-of-Truth Senkronizasyonu (dist/ ve skills/ Zero-Drift)
-           -> dist boyutu: 72227 byte | SKILL.md + references/ (4 dosya) skills/ ile birebir: True
+           -> dist boyutu: 88757 byte | SKILL.md + references/ (5 dosya) skills/ ile birebir: True
   [GEÇTİ] | Çoklu Ajan Adaptörleri (Cursor .mdc, Claude plugin.json, AGENTS.md, CLAUDE.md)
            -> Cursor .mdc: True | Claude plugin.json: True | AGENTS.md: True
 
-[BÖLÜM 2] DEDEKTÖR KURAL TESTLERİ (yanlış pozitif ve register davranışī)
+[BÖLÜM 2] DEDEKTÖR KURAL TESTLERİ (yanlış pozitif ve register davranışı)
   [GEÇTİ] | Dedektör: kod bloğu içeriği taranmaz (em-dash / virgül)
            -> kod bloğu bayrakları: 0 (beklenen: 0)
   [GEÇTİ] | Dedektör: satır içi kod taranmaz
@@ -36,7 +36,61 @@ TURKISH-ANTI-AI-SKILL KAPSAMLI TEST VE DOĞRULAMA PAKETİ
   [GEÇTİ] | Sadakat kilidi: eklenen sayı, miktar sözü ve yasaklı ifade yakalanır
            -> kirli metinde: 2 problem | temiz metinde: 0 problem
 
-[BÖLÜM 3] 5 REGISTER + YANLIŞ POZİTİF & OLGUSAL SADAKAT TESTLERİ
+[BÖLÜM 3] POST KAPISI TESTLERİ (sosyal medya yayın denetimi)
+  [GEÇTİ] | Post kapısı: temiz post hata üretmez
+           -> hata: 0 | uyarı: 2 | kodlar: []
+  [GEÇTİ] | Post kapısı: AI kalıbı, hashtag, gizlilik ve uydurma sayı kapıyı kapatır
+           -> sonuç: KALDI | eksik kodlar: []
+  [GEÇTİ] | Post kapısı: platform karakter sınırı uygulanır
+           -> 3814 karakter / sınır 3000
+  [GEÇTİ] | Post kapısı: alıntı içindeki sayı hata değil uyarı olur
+           -> hata: 0 | kodlar: ['P-SAYI-ALINTI', 'P-IDDIA-IZI', 'P-KELIME-AZ']
+  [GEÇTİ] | Post kapısı: platform takma adları çözülür (ig -> instagram)
+           -> ig -> instagram
+  [GEÇTİ] | Carousel: sağlam post hata üretmez (6 slayt, TR+EN)
+           -> hata: 0 | kodlar: []
+  [GEÇTİ] | Carousel: eksik slayt hata verir (K2)
+           -> kodlar: ['P-CTA-GOMULU', 'P-SLAYT-EKSIK', 'P-DOGRULUK-NOTU-YOK', 'P-KELIME-AZ']
+  [GEÇTİ] | Carousel: eksik EN satırı hata verir (K2)
+           -> kodlar: ['P-CTA-GOMULU', 'P-SLAYT-EN-YOK', 'P-DOGRULUK-NOTU-YOK', 'P-KELIME-AZ']
+  [GEÇTİ] | Carousel: kapak uzunluğu uyarı verir (K3)
+           -> kodlar: ['P-CTA-GOMULU', 'P-SLAYT-UZUN', 'P-DOGRULUK-NOTU-YOK', 'P-KELIME-AZ']
+  [GEÇTİ] | Carousel: EN satırda Türkçe harf uyarı verir (K4)
+           -> kodlar: ['P-CTA-GOMULU', 'P-SLAYT-EN-TR', 'P-DOGRULUK-NOTU-YOK', 'P-KELIME-AZ']
+  [GEÇTİ] | Proje iddiaları: temiz A tipi post hata üretmez
+           -> kodlar: ['P-IDDIA-IZI', 'P-KELIME-AZ']
+  [GEÇTİ] | Proje iddiaları: A tipi postta kaynak linki yoksa hata (K5)
+           -> kodlar: ['P-LINK-YOK', 'P-KELIME-AZ']
+  [GEÇTİ] | Proje iddiaları: fork postunda da repo linki aranır (K5)
+           -> kodlar: ['P-LINK-YOK', 'P-FORK-NOT', 'P-KELIME-AZ']
+  [GEÇTİ] | Proje iddiaları: fork postunda beyan yoksa uyarı (K6)
+           -> kodlar: ['P-LINK-YOK', 'P-FORK-NOT', 'P-KELIME-AZ']
+  [GEÇTİ] | Proje iddiaları: private postta kurulum komutu hata (K8)
+           -> kodlar: ['P-KURULUM-SIZINTI', 'P-GIZLILIK', 'P-KELIME-AZ']
+  [GEÇTİ] | Proje iddiaları: token sızıntısı hata (K9)
+           -> kodlar: ['P-SIR', 'P-KELIME-AZ']
+  [GEÇTİ] | Proje iddiaları: notta olmayan teknoloji iddiası uyarı (K7)
+           -> kodlar: ['P-IDDIA-IZI', 'P-KELIME-AZ']
+  [GEÇTİ] | Yazım: teknoloji adı yazımı uyarı verir (K10)
+           -> Github -> GitHub
+  [GEÇTİ] | Yazım: 4+ ardışık madde özellik yığını uyarısı (K11)
+           -> 4 madde
+  [GEÇTİ] | Yazım: iç jargon uyarısı (K12)
+           -> Faz 3
+  [GEÇTİ] | Yazım: bozuk kodlama hata verir (K13)
+           -> mojibake
+  [GEÇTİ] | Yazım: sürüm iddiası notta yoksa uyarı (K14)
+           -> v2.1
+  [GEÇTİ] | Kural ezme: K12 bilgi seviyesine iner, kapı kapanmaz
+           -> K12 seviyeleri: ['bilgi']
+  [GEÇTİ] | Takvim: aynı açılış iki postta uyarı (K15)
+           -> bulgu: 1
+  [GEÇTİ] | Takvim: içerik sütunu dengesi raporlanır (K16)
+           -> İçerik sütunu dağılımı: tanitim 2 (toplam 2) · hedef: eğitic
+  [GEÇTİ] | Canlı link: ulaşılamayan adres sessizce geçilmez (K17)
+           -> [('hata', 'Link yoklanamadı, ağ hatası: http://127.0.0.1:9/ (<urlopen error [WinError 10061] Hedef makine etkin olarak reddettiğinden bağlantı kurulamadı>)')]
+
+[BÖLÜM 4] 5 REGISTER + YANLIŞ POZİTİF & OLGUSAL SADAKAT TESTLERİ
   [GEÇTİ] | [TC-01-blog-deneme] Blog & Deneme Register (Sahneleme, Negatif Paralellik, Em-Dash ve Edilgen Çatı)
            -> Kalıp Sinyali (Önce -> Sonra): 11 -> 0
            -> '-mAktAdIr' Yoğunluğu (Önce -> Sonra): 3.03 -> 0.0 / 100 kelime (register hedefi: 0.0-0.5)
@@ -102,5 +156,5 @@ TURKISH-ANTI-AI-SKILL KAPSAMLI TEST VE DOĞRULAMA PAKETİ
            -> Yakalanan Örnek Sinyaller: '—', '09:30', 'ard arda', 'bir çok', 'yanısıra', 'önyargı'
 
 ==============================================================================
-GENEL SONUÇ: 23/23 TEST BAŞARIYLA GEÇTİ (SORUNSUZ)
+GENEL SONUÇ: 49/49 TEST BAŞARIYLA GEÇTİ (SORUNSUZ)
 ==============================================================================

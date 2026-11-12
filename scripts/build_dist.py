@@ -13,6 +13,7 @@ REF_ORDER = [
     "ai-turkcesi-sozlugu.md",
     "tdk-ve-noktalama.md",
     "register-ve-ornekler.md",
+    "sosyal-medya.md",
 ]
 
 

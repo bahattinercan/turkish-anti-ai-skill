@@ -17,6 +17,7 @@ Detaylı dilbilimi kuralları ve sözlük tabloları için bu dizindeki referans
 - `references/ai-turkcesi-sozlugu.md`: Tier-1 (kesin AI ifşaları), Tier-2 (bürokratik bağlaçlar) ve Tier-3 (SaaS/pazarlama çeviri kalıpları) sözlüğü.
 - `references/tdk-ve-noktalama.md`: 5 mutlak noktalama yasağı, TDK birleşik/ayrı kelimeler ve yabancı teknik terimlerin Türkçe okunuşa göre ek uyumu.
 - `references/register-ve-ornekler.md`: 5 register × 9 üslup boyutu matrisi ve uçtan uca Before/After dönüşüm çiftleri.
+- `references/sosyal-medya.md`: LinkedIn, Instagram ve X post register'ı: hook geometrisi, platform karakter/hashtag bütçeleri, emoji ve CTA kuralları, posta özgü AI kalıpları ve yayın kapısı.
 
 ## Temel İlkeler
 
@@ -32,6 +33,7 @@ Kullanıcı isteğine göre aşağıdaki üç moddan birini seç:
 - **Onarım Modu (`rewrite` - Varsayılan):** Mevcut bir Türkçe metni veya çeviriyi alır, olgusal sadakati %100 koruyarak AI kalıplarını temizler ve cümle mimarisini Türkçeleştirir.
 - **Üretim Modu (`write`):** Verilen bir konu veya taslaktan sıfırdan Türkçe metin üretir. Kompozisyon ve cümle kararlarını ilk cümleden itibaren İngilizce düşünmeden, doğrudan Türkçe kurar.
 - **Denetim Modu (`audit`):** Metni yeniden yazmaz. Metindeki P0 (Kesin AI İfşası), P1 (Yapısal Çeviri Kokusu) ve P2 (Ritim/Noktalama Kusuru) sinyallerini alıntılayarak raporlar.
+- **Post Modu (`post`):** LinkedIn, Instagram veya X için post yazar ya da mevcut postu onarır. Post register'ı ayrı dosyadadır (`references/sosyal-medya.md`); cümle sayısı az olduğu için ritim ölçümü yerine hook, karakter bütçesi, hashtag, tek CTA ve uydurulmuş sayı kuralları geçerlidir. Yayından önce `scripts/denetle_post.py` kapısı zorunludur.
 
 ## Adım Adım İş Akışı (Mark -> Draft -> Audit -> Deletion Test)
 
@@ -96,6 +98,33 @@ Taslağı oluşturduktan sonra kullanıcıya sunmadan önce şu kontrolleri yap:
 
 - Metne eklediğin her söylem parçacığını (`işte`, `zaten`, `tabii`), devrik cümleyi veya bağlacı test et: Kaldırdığında anlamdan veya tondan hiçbir şey eksilmiyorsa o ögeyi sil.
 - Kullanıcı özellikle değişiklik raporu istemediyse ("neleri değiştirdin?" veya `audit` modu dışında) **yalnızca temizlenmiş/yazılmış metni** döndür ve başına "Elbette, metnin doğal Türkçeye çevrilmiş hâli aşağıdadır:" gibi sohbet artıkları ekleme.
+
+## Sosyal Medya Postu ve Yayın Kapısı
+
+Post yazarken `references/sosyal-medya.md` dosyasını oku. Kısaltılmış kural seti:
+
+1. İlk satır somut olgu, 12 kelimeyi geçmez; "Bu yazıda", "Gururla duyuruyoruz" ve "Günümüzün hızla değişen" ile başlamaz.
+2. Paragraf başına 1 ile 3 cümle. Beş cümlelik blok, okuru kaydırır.
+3. Emoji 0 ile 3 arası ve satır başında madde imi olarak kullanılmaz. Kalın etiketli liste (`**Neden?** ...`) düz cümleye çevrilir.
+4. Hashtag sonda: LinkedIn 2 ile 5, Instagram 3 ile 10, X 0 ile 2. Gövde içine etiket serpiştirilmez.
+5. Tek CTA, tek fiil. "Yorumlarda buluşalım" ve "beğenin, kaydedin, paylaşın" üçlüsü kullanılmaz.
+6. Her sayı `# Teknik doğruluk notu` içinde karşılığını bulur. Notta olmayan sayı uydurulmuş sayıdır. Teknoloji, lisans ve ölçüm iddiaları (`Flutter`, `Apache-2.0`, `sunucu yok`) de aynı notta geçer.
+7. `tip: B` ise `gizlilik: kontrol edildi` yazılır; `kaynak: private` ise metinde link ya da kurulum komutu olmaz. `tip: A` ise repo linki gövdede geçer.
+8. Fork reposu kendi ürünün gibi anlatılmaz: upstream adı doğruluk notunda, cümle "uyarladım" çerçevesinde kurulur.
+9. Instagram postu 6 slayttır; her slaytta `TR:` ve `EN:` satırı olur. Slayt metni de bu kurallara tabidir, çünkü görsele basılan cümle caption'dan çok okunur.
+10. Postta e-posta, telefon, IBAN, token, IP ve yerel dosya yolu olmaz; `Github`, `Javascript` gibi yazımlar ve `Faz 3 / W46 / sprint` jargonu düzeltilir.
+
+Yazdıktan sonra kapıyı çalıştır ve hatasız hâle getir:
+
+```
+python3 scripts/denetle_post.py <post-dosyasi>      # çıkış 0 = yayına uygun
+python3 scripts/denetle_post.py <takvim-dizini>     # bütün postlar
+python3 scripts/denetle_post.py --takvim <dizin>    # postlar arası tekrar + denge
+python3 scripts/denetle_post.py <post.md> --canli   # kaynak/demo linklerini yokla
+python3 scripts/denetle_post.py <post.md> --json --katı
+```
+
+Kapı hata veriyorsa metni düzelt; kuralı esnetme, dedektörü atlama. İstisna gerçekten gerekiyorsa `--kural-kapat K12` ya da `post-kapisi.json` ile seviye ez ve gerekçesini yaz. Uyarılar yayını engellemez ama ilk 210 karakter, hashtag bütçesi ve iddia izi gibi okunma kararını etkileyen kalemlerdir.
 
 ## Sık Yapılan Hatalar (Gotchas)
 
