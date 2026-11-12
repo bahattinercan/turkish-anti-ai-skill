@@ -101,6 +101,7 @@ Kurulumdan sonra ajanına doğal dilde seslenmen yeterlidir. Yetenek kendi açı
 - **Onarım (`rewrite`):** *"Şu blog yazısını insanileştir ve AI hissiyatını sil: `<metin>`"*
 - **Üretim (`write`):** *"Dağıtık sistemlerde cache invalidation konusunu teknik register'da, doğal Türkçeyle yaz."*
 - **Denetim (`audit`):** *"Bu kurumsal metni değiştirme, sadece içindeki AI-Türkçesi ve TDK hatalarını raporla (audit modu)."*
+- **Post (`post`):** *"Bu projeyi LinkedIn'de tanıtan bir post yaz; hook, hashtag ve CTA dahil."* Post register'ı `references/sosyal-medya.md` dosyasında; yayından önce kapı zorunlu.
 
 ## Üç Katmanlı Mimari Özeti
 
@@ -109,6 +110,50 @@ Kurulumdan sonra ajanına doğal dilde seslenmen yeterlidir. Yetenek kendi açı
 | **Katman 1: Kompozisyon (P0)** | Giriş, kapanış, retorik şablonlar | *"Günümüzün hızla değişen..."*, *"Sadece X değil, aynı zamanda Y"*, *"Sonuç olarak..."*, üçlü sıfat listeleri | Sahne veya doğrudan tez ile açılış, negatif paralelliklerin kaldırılması, vaaz veren kapanışların kesilmesi |
 | **Katman 2: Cümle Mimarisi (P1)** | Sentaks ve morfoloji (`references/sentaks-ve-morfoloji.md`) | Sağa dallanan yan cümleler, Hint-Avrupa `ki` bağlacı, refleks `ve`, `-DIr / -mAktAdIr` şişmesi, gereksiz `"bir"` ve `"tarafından"` | Sıfat-fiille sola dallanma, ulaç sistemi (`-Ip, -IncA, -dIkçA`), yüklem önü vurgu yuvası, zamir düşürme (pro-drop), delil kipi (`-mIş`) |
 | **Katman 3: TDK ve Yüzey (P2)** | Noktalama, imla ve terimler (`references/tdk-ve-noktalama.md`) | Uzun çizgi (`—`), orta çizgi (`–`), `ve/veya` çevresinde virgül, noktalı virgül köprüsü, `"uç nokta"` gibi zorlama çeviriler, `"cache'ı, SQL'ı"` ek hataları | Kaynağı gösterilmiş `[TDK]` kuralları ile `[Üslup]` tercihlerinin ayrımı, TDK birleşik/ayrı kelime kuralları, terimlerin Türkçe okunuşa göre çekimlenmesi (`cache'i, SQL'i`) |
+
+## Post Kapısı (`denetle_post.py`)
+
+Blog ve makale denetimi post için yetmez: postun ilk 210 karakteri okunur, hashtag bütçesi ve karakter sınırı vardır, gövdesi üç ile on iki cümle arasındadır. `scripts/denetle_post.py` yayınlanacak metni (gövde + CTA + hashtag ya da caption + hashtag) yeniden kurup hem dil hem platform hem proje iddiası kurallarını ölçer:
+
+```bash
+python3 scripts/denetle_post.py post.md                 # tek post
+python3 scripts/denetle_post.py takvim-dizini/          # bütün postlar
+python3 scripts/denetle_post.py --takvim takvim-dizini/ # postlar arası tekrar + denge (K15/K16)
+python3 scripts/denetle_post.py post.md --canli         # kaynak/demo URL'lerini yokla (K17)
+python3 scripts/denetle_post.py post.md --json          # makine okunur çıktı (surum: 2)
+python3 scripts/denetle_post.py post.md --katı          # uyarılar da kapıyı kapatır
+python3 scripts/denetle_post.py post.md --kural-kapat K12,K14
+python3 scripts/denetle_post.py post.md --config post-kapisi.json
+```
+
+Kural kataloğu (ayrıntı: `references/sosyal-medya.md`, tasarım: `docs/DENETLE_POST_GELISTIRME_PLANI.md`):
+
+| Kural | Ne ölçer | Varsayılan |
+| :--- | :--- | :--- |
+| K0 | Platform bütçesi, hook, hashtag, paragraf, emoji, CTA, tekrar | hata / uyarı |
+| K1 | Zorunlu bölümler | hata / uyarı |
+| K2 | Carousel: 6 slayt, TR + EN eşliği | hata |
+| K3 | Slayt uzunluğu (kapak 10, slayt 14 kelime) | uyarı |
+| K4 | EN satırda Türkçe harf, eksik çeviri | uyarı |
+| K5 | A tipi repo linki metinde | hata (LinkedIn) |
+| K6 | Fork beyanı | uyarı |
+| K7 | Teknoloji/lisans iddiası ve sayı doğruluk notunda | hata / uyarı |
+| K8 | Private sızıntısı (kurulum komutu, link, gizlilik beyanı) | hata |
+| K9 | E-posta, telefon, IBAN, token, IP, yerel yol | hata |
+| K10 | Teknoloji adı yazımı (`Github` -> `GitHub`) | uyarı |
+| K11 | Özellik yığını (4+ madde, 6+ ögeli cümle) | uyarı |
+| K12 | İç jargon (`Faz 3`, `W46`, `sprint`) | uyarı |
+| K13 | Bozuk kodlama (mojibake) | hata |
+| K14 | Sürüm/durum iddiası notta | uyarı |
+| K15 | Postlar arası tekrar, üst üste tanıtım | uyarı / hata |
+| K16 | İçerik sütunu dengesi | bilgi |
+| K17 | Canlı link sağlığı (`--canli`) | hata / uyarı |
+
+`hata` yayını engeller (çıkış kodu 1), `uyarı` engellemez (çıkış kodu 0), `bilgi` yalnızca kayıt düşer. `post-kapisi.json` kural bazında seviye ezer (`{"K12": "bilgi"}`); `--kural-kapat` tek seferlik istisna bırakır ve raporda görünür.
+
+Post dosyası biçimi için `references/sosyal-medya.md`, kurallar için aynı dosyanın kontrol listesi geçerlidir.
+
+## Deterministik CLI Dedektörü (`detect_tr_ai.py`)
 
 ## Deterministik CLI Dedektörü (`detect_tr_ai.py`)
 
@@ -140,7 +185,7 @@ Değişiklikten sonra doğrulama kapısı:
 python3 scripts/run_tests.py
 ```
 
-Üç bölümü çalıştırır: paket bütünlüğü, dedektör kural testleri ve `evals/evals.json` senaryoları (olgusal sadakat kilidi testi dahil). Raporu `docs/TEST_VE_DOGRULAMA_RAPORU.txt` dosyasına kendisi yazar (`--no-report` ile kapatılır). Aynı komut GitHub Actions üzerinde de her push ve pull request'te koşar (`.github/workflows/tests.yml`).
+Üç bölümü çalıştırır: paket bütünlüğü, dedektör kural testleri, post kapısı testleri ve `evals/evals.json` senaryoları (olgusal sadakat kilidi testi dahil). Raporu `docs/TEST_VE_DOGRULAMA_RAPORU.txt` dosyasına kendisi yazar (`--no-report` ile kapatılır). Aynı komut GitHub Actions üzerinde de her push ve pull request'te koşar (`.github/workflows/tests.yml`).
 
 Tek parça `dist/turkish-anti-ai-skill.full.md` dosyasını yeniden derlemek için:
 
@@ -176,9 +221,11 @@ turkish-anti-ai-skill/
 │   ├── tdk-ve-noktalama.md            # [TDK]/[Üslup] etiketli noktalama kuralları, TDK imla ve fonetik ek tablosu
 │   ├── sentaks-ve-morfoloji.md        # Sola dallanma, ulaçlar, vurgu yuvası, -DIr/-mAktAdIr, pro-drop
 │   ├── ai-turkcesi-sozlugu.md         # Tier-1, Tier-2 ve Tier-3 Yapay Zekâ Türkçesi sözlüğü (60+ kalıp)
-│   └── register-ve-ornekler.md        # 5 register x 9 boyut matrisi ve uçtan uca Before/After örnekleri
+│   ├── register-ve-ornekler.md        # 5 register x 9 boyut matrisi ve uçtan uca Before/After örnekleri
+│   └── sosyal-medya.md                # LinkedIn/Instagram/X post register'ı, hook, hashtag, CTA ve kapı kuralları
 ├── scripts/
 │   ├── detect_tr_ai.py                # Deterministik Türkçe AI-slop, TDK ve Burstiness (CoV) tarayıcı CLI
+│   ├── denetle_post.py                # Sosyal medya postu yayın kapısı (platform bütçesi, hook, hashtag, uydurma sayı)
 │   └── build_dist.py                  # SKILL.md + references/* dosyalarını dist/ içine derler
 ├── .cursor/rules/
 │   └── turkish-anti-ai-skill.mdc      # Cursor yerel kural adaptörü (.mdc)
