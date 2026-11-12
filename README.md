@@ -1,80 +1,96 @@
 # turkish-anti-ai-skill
 
-**Türkçe metni okurun ilk okumada anlayacağı hâle getirir.**  
-*An open-source Agent Skill & Turkish Humanizer that removes AI writing patterns ("Yapay Zekâ Türkçesi" / Translationese) and rebuilds authentic Turkish sentence architecture.*
+**Türkçe metni, ilk okumada anlaşılan insan Türkçesine çevirir.**
 
-[![Agent Skills Specification](https://img.shields.io/badge/Agent_Skills-v1.0-blue)](https://agentskills.io/specification)
+Modellerin "kelimeleri Türkçe, cümle iskeleti İngilizce" çıktısını temizler. Yapay zekâ Türkçesi denen mekanik metni alır, cümle mimarisini, TDK yazımını ve nefes ritmini yeniden kurar.
+
+[![Agent Skills](https://img.shields.io/badge/Agent_Skills-v1.0-blue)](https://agentskills.io/specification)
+[![Version](https://img.shields.io/badge/version-1.1.0-informational)](SKILL.md)
+[![Tests](https://img.shields.io/badge/tests-49%2F49-success)](docs/TEST_VE_DOGRULAMA_RAPORU.txt)
+[![TDK](https://img.shields.io/badge/TDK-Yaz%C4%B1m_K%C4%B1lavuzu-red)](https://sozluk.gov.tr/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
-[![TDK Uyumlu](https://img.shields.io/badge/TDK-Yaz%C4%B1m_K%C4%B1lavuzu-red)](https://sozluk.gov.tr/)
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](CONTRIBUTING.md)
 
-**Kurulum** · **Öncesi / Sonrası Demo** · **Neden Sadece Bir Prompt Değil?** · **3 Katmanlı Mimari** · **Register Matrisi** · **CLI Dedektörü**
+**Türkçe** · [English](README.en.md)
 
-## Sorun Nedir?
+|  |  |
+| :--- | :--- |
+| **Ne yapar** | Türkçe metni onarır, sıfırdan yazar, denetler, sosyal medya postu üretir |
+| **Nasıl çalışır** | Bir talimat dosyası (`SKILL.md`), beş referans dosyası, üç yerel Python betiği |
+| **Nereye kurulur** | Claude Code, Cursor, Codex, Gemini CLI, Windsurf, OpenCode, Custom GPT |
+| **Bağımlılık** | Yok. Python 3 dışında bir şey kurmaz, ağa çıkmaz |
 
-Büyük Dil Modelleri (LLM) ağırlıklı olarak İngilizce veriyle eğitildiği ve RLHF aşamasında İngilizce retorik kalıplarıyla ödüllendirildiği için, Türkçe metin üretirken **"kelimeleri Türkçe ama cümle iskeleti İngilizce"** olan mekanik bir dil (*Translationese / Yapay Zekâ Türkçesi*) üretir.
+**İçindekiler:** [Sorun](#sorun) · [Öncesi ve Sonrası](#öncesi-ve-sonrası) · [Kurulum](#kurulum) · [Kullanım](#kullanım) · [Mimari](#mimari) · [Register](#register-kalibrasyonu) · [CLI Araçları](#komut-satırı-araçları) · [Güvenlik](#güvenlik) · [Depo Yapısı](#depo-yapısı) · [Katkı](#katkı)
 
-Piyasadaki İngilizce *humanizer* araçları yalnızca yüzeydeki kelimeleri değiştirir. Oysa Türkçede sorun sadece *"yadsınamaz"*, *"âdeta"* veya *"kritik bir rol oynamaktadır"* kelimeleri değildir. Asıl sorun **niteleyicilerin baş ismin arkasına takılması (sağa dallanma), ulaç (`-Ip, -IncA, -dIkçA`) gereken yere mekanik `ve` bağlacının girmesi, her cümlenin `-DIr / -mAktAdIr` ile bitmesi ve tüm cümlelerin 18-22 kelimelik tekdüze bir banda sıkışmasıdır.**
+## Sorun
 
-`turkish-anti-ai-skill`, kelimelerin altındaki **Türkçe cümle mimarisini**, **TDK Yazım Kılavuzu kurallarını** ve **insan nefes ritmini (burstiness)** yeniden kurar.
+Büyük dil modelleri ağırlıklı olarak İngilizce veriyle eğitiliyor ve İngilizce retorik kalıplarıyla ödüllendiriliyor. Türkçe yazarken de o iskeleti taşıyorlar. Cümle sağa dallanıyor, sıralı eylemler `ve` ile bağlanıyor, her yüklem `-DIr` ya da `-mAktAdIr` ile kapanıyor, bütün cümleler 18-22 kelimelik tek bir banda sıkışıyor.
 
-## Hızlı Demo (Öncesi / Sonrası)
+İngilizce humanizer araçları yüzeydeki kelimeleri değiştirir: *"yadsınamaz"*, *"âdeta"*, *"kritik bir rol oynamaktadır"*. Oysa sorun sözlükte değil, cümlenin kuruluşunda. `turkish-anti-ai-skill` kelime listesiyle yetinmez; Türkçenin sondan eklemeli ve sola dallanan yapısını geri getirir, TDK Yazım Kılavuzu'na uyar, insan ritmini kurar.
 
-### Girdi (Tipik Yapay Zekâ Türkçesi)
+## Öncesi ve Sonrası
+
+**Girdi: tipik yapay zekâ Türkçesi**
+
 > Günümüzün hızla değişen iş dünyasında, uzaktan çalışma modeli sadece geçici bir trend değil, aynı zamanda kurumsal kültürün temel bir yapı taşı haline gelmiştir — ve bu durumun önemi yadsınamaz. Şirketler tarafından gerçekleştirilen araştırmalar göstermektedir ki, çalışanlara esneklik sağlamak verimlilik üzerinde kritik bir rol oynamaktadır. Bununla birlikte, iletişim kopukluklarını önlemek adına bütüncül bir yaklaşım benimsenmelidir. Sonuç olarak, geleceğin çalışma dünyasında başarılı olmak isteyen kurumlar bu dönüşüme ayak uydurmak zorundadır.
 
-### Çıktı (`turkish-anti-ai-skill` Onarım Modu · *Blog/Deneme Register*)
+**Çıktı: onarım modu, blog/deneme register'ı**
+
 > Uzaktan çalışma artık şirket kültürünün kalıcı bir parçası. Araştırmalar da aynı şeyi söylüyor: Çalışanlara esneklik tanıdığınızda verimlilik artıyor. İşin zor kısmı, ekip aynı ofisi paylaşmazken iletişimi koparmamak. Kalıcı çözüm ise çalışma düzenini baştan sona bu yeni ritme göre kurmak.
 
-**Neleri Yakaladı ve Onardı?**
-1. **Sahneleme Girişi (P0):** *"Günümüzün hızla değişen iş dünyasında"* boş girişi silindi, doğrudan konuya girildi.
-2. **Negatif Paralellik (P0):** *"sadece X değil, aynı zamanda Y"* kalıbı tamamen silindi, yerine tek bir olumlu yargı geldi (*"şirket kültürünün kalıcı bir parçası"*).
-3. **Noktalama & Tier-1 Klişe (P0/P2):** TDK'da diyalog dışında bulunmayan uzun çizgi (`—`) ve *"önemi yadsınamaz"* klişesi kaldırıldı.
-4. **Edilgen Çatı & Hint-Avrupa `ki` Bağlacı (P1):** *"Şirketler tarafından gerçekleştirilen araştırmalar göstermektedir ki"* yapısı etken ve doğrudan cümleye çevrildi.
-5. **Kof Yardımcı Fiil & `-mAktAdIr` Salgını (P1):** *"esneklik sağlamak ... kritik bir rol oynamaktadır"* yerine *"esneklik tanıdığınızda verimlilik artıyor"* kuruldu.
-6. **Vaaz Veren Kapanış (P0):** *"Sonuç olarak ... ayak uydurmak zorundadır"* ders verme cümlesi tamamen kesildi.
-7. **Olgusal Sadakat Kilidi:** Kaynak metinde olmayan hiçbir istatistik, tarih veya uydurma kişisel anekdot eklenmedi.
+<details>
+<summary><b>Neler onarıldı? (7 kalem)</b></summary>
 
-## Neden Sadece Bir Prompt Değil de Bir Skill?
+1. **Sahneleme girişi (P0):** *"Günümüzün hızla değişen iş dünyasında"* silindi, konuya doğrudan girildi.
+2. **Negatif paralellik (P0):** *"sadece X değil, aynı zamanda Y"* kalıbı tek bir olumlu yargıya döndü.
+3. **Uzun çizgi ve Tier-1 klişe (P0/P2):** TDK'da diyalog dışında yeri olmayan `—` ile *"önemi yadsınamaz"* kaldırıldı.
+4. **Edilgen çatı ve `ki` bağlacı (P1):** *"Şirketler tarafından gerçekleştirilen araştırmalar göstermektedir ki"* etken ve doğrudan cümleye çevrildi.
+5. **Kof fiil ve `-mAktAdIr` (P1):** *"esneklik sağlamak... kritik bir rol oynamaktadır"* yerine *"esneklik tanıdığınızda verimlilik artıyor"* kuruldu.
+6. **Vaaz veren kapanış (P0):** *"Sonuç olarak... ayak uydurmak zorundadır"* cümlesi kesildi.
+7. **Olgusal sadakat:** Kaynakta olmayan hiçbir sayı, tarih veya anekdot eklenmedi.
 
-Tek satırlık *"Bunu insani ve doğal bir Türkçeyle yaz"* komutu yalnızca en bariz birkaç kelimeyi değiştirir ve çoğu zaman modelin "insan gibi görünmek" adına **kaynakta olmayan veriler/anekdotlar uydurmasına** yol açar. `turkish-anti-ai-skill` ise modele kurallı bir çalışma düzeni verir. Yeniden yazımı model `SKILL.md` ve referans dosyalarındaki kurallara göre yapar. Deterministik olan tek parça ise bu çıktıyı denetleyen CLI dedektörüdür:
+</details>
 
-- **3 Çalışma Modu (`rewrite`, `write`, `audit`):** Mevcut metni olgusal sadakatle onarır (`rewrite`), sıfırdan Türkçe düşünerek metin kurar (`write`) veya metne dokunmadan AI/TDK kusurlarını raporlar (`audit`).
-- **Olgusal Sadakat Kilidi (Anti-Fabrication Lock):** Onarım modunda kaynakta bulunmayan hiçbir sayı, tarih, isim, iddia veya nedensellik bağı eklenemez.
-- **5 Register × 9 Üslup Boyutu Kalibrasyonu:** KVKK metnine devrik cümle sokmaz, blog yazısına `-mAktAdIr` eki dayatmaz (*Blog/Deneme, Teknik/Mühendislik, Kurumsal/SaaS, Akademik/Resmî, Edebî/Anlatı*).
-- **60+ Kalıplık 3 Katmanlı "Yapay Zekâ Türkçesi" Sözlüğü:** Tier-1 (kesin ifşalar), Tier-2 (bürokratik bağlaçlar) ve Tier-3 (SaaS/pazarlama çeviri kokuları) tabloları.
-- **TDK Yazım Kılavuzu ve Fonetik Ek Denetimi:** Yabancı teknik terimleri (`endpoint`, `deploy`, `middleware`, `queue`) *"uç nokta, ara katman"* diye zorla çevirmez. Ekleri kelimenin yazılışına göre değil **Türkçe okunuşuna (fonetiğine)** göre getirir (`cache'i`, `queue'yu`, `SQL'i`, `JSON'ı`).
-- **Deterministik Python CLI Dedektörü (`scripts/detect_tr_ai.py`):** Harici kütüphane gerektirmeden Türkçe metinlerdeki AI klişelerini, TDK hatalarını, `-mAktAdIr` yoğunluğunu ve cümle uzunluğu varyasyonunu (**Burstiness CoV**) ölçer. Regex ve basit istatistikle çalışır, yalnızca yüzeydeki izleri yakalar. Sola dallanma, ulaç kullanımı veya register uyumu gibi cümle mimarisi kararlarını ölçmez, bunlar modelin işidir.
+Bu metinler `evals/evals.json` içindeki regresyon senaryolarından geliyor; her push'ta otomatik doğrulanıyor.
 
-## Kurulum (Installation)
+## Kurulum
 
-### 1. Evrensel Agent Skills CLI (`npx skills` & `gh skill`)
-Claude Code, Cursor, OpenAI Codex, Gemini CLI, Windsurf ve OpenCode için tek komutla kurulum:
+| Ortam | Yol |
+| :--- | :--- |
+| Evrensel (`npx skills`, `gh skill`) | `~/.agents/skills/` altına tek komut |
+| Claude Code, Cowork | Plugin marketplace ya da `~/.claude/skills/` |
+| Cursor | `.cursor/rules/turkish-anti-ai-skill.mdc` |
+| Codex, Gemini CLI, Windsurf, OpenCode | `~/.agents/skills/` ya da `~/.gemini/skills/` |
+| Custom GPT, Claude Projects, AI Studio | `dist/turkish-anti-ai-skill.full.md` tek dosya |
+
+### 1. Evrensel Agent Skills CLI
 
 ```bash
 npx skills add yucezerey/turkish-anti-ai-skill
 ```
 
-GitHub CLI (v2.90+) kullanıyorsan:
+GitHub CLI kullanıyorsan (v2.90+):
 
 ```bash
 gh skill install yucezerey/turkish-anti-ai-skill
 ```
 
-### 2. Claude Code & Claude Cowork
-**Seçenek A: Plugin Marketplace olarak kurulum (Önerilen):**
+### 2. Claude Code ve Claude Cowork
+
+Plugin olarak (önerilen):
+
 ```text
 /plugin marketplace add yucezerey/turkish-anti-ai-skill
 /plugin install turkish-anti-ai-skill@yucezerey
 ```
 
-**Seçenek B: Doğrudan `~/.claude/skills/` dizinine klonlama:**
+Ya da doğrudan klonla:
+
 ```bash
 git clone https://github.com/yucezerey/turkish-anti-ai-skill.git ~/.claude/skills/turkish-anti-ai-skill
 ```
 
-### 3. Cursor (`.cursor/rules/*.mdc` veya Agent Skills)
-Projenin kök dizininde Cursor kuralını aktif etmek için:
+### 3. Cursor
 
 ```bash
 mkdir -p .cursor/rules
@@ -82,51 +98,114 @@ curl -sL https://raw.githubusercontent.com/yucezerey/turkish-anti-ai-skill/main/
   -o .cursor/rules/turkish-anti-ai-skill.mdc
 ```
 
-### 4. OpenAI Codex, Gemini CLI ve Windsurf
+### 4. Codex, Gemini CLI, Windsurf
+
 ```bash
-# Evrensel .agents/skills/ dizini (Codex, Gemini CLI, Cursor, Windsurf destekler)
+# Ortak .agents/skills/ dizini
 git clone https://github.com/yucezerey/turkish-anti-ai-skill.git ~/.agents/skills/turkish-anti-ai-skill
 
-# Veya doğrudan Gemini CLI dizinine:
+# Yalnızca Gemini CLI için:
 git clone https://github.com/yucezerey/turkish-anti-ai-skill.git ~/.gemini/skills/turkish-anti-ai-skill
 ```
 
-### 5. ChatGPT (Custom GPT), Claude Projects ve Google AI Studio (Web)
-Klasör yüklenemeyen web arayüzleri için tüm referans tablolarının tek dosyada birleştirildiği `dist/turkish-anti-ai-skill.full.md` dosyasını kopyalayıp **Project Instructions / System Prompt** veya **Knowledge** alanına yapıştırabilirsin.
+### 5. Web arayüzleri (klasör yüklenemeyenler)
+
+`dist/turkish-anti-ai-skill.full.md` bütün referans tablolarını tek dosyada birleştirir. İçeriği Custom GPT'nin **Instructions** alanına, Claude Projects'in **Project knowledge** alanına ya da AI Studio'nun system prompt'una yapıştır.
+
+> `npx skills` ve `gh skill` yalnızca `skills/turkish-anti-ai-skill/` klasörünü indirir: `SKILL.md` ve `references/`. Betikler bu pakette yok.
 
 ## Kullanım
 
-Kurulumdan sonra ajanına doğal dilde seslenmen yeterlidir. Yetenek kendi açıklamasıyla (`description`) otomatik tetiklenir:
+Kurulumdan sonra ayrı bir komut ezberlemek gerekmiyor. Skill, kendi `description` alanıyla tetiklenir:
 
-- **Onarım (`rewrite`):** *"Şu blog yazısını insanileştir ve AI hissiyatını sil: `<metin>`"*
-- **Üretim (`write`):** *"Dağıtık sistemlerde cache invalidation konusunu teknik register'da, doğal Türkçeyle yaz."*
-- **Denetim (`audit`):** *"Bu kurumsal metni değiştirme, sadece içindeki AI-Türkçesi ve TDK hatalarını raporla (audit modu)."*
-- **Post (`post`):** *"Bu projeyi LinkedIn'de tanıtan bir post yaz; hook, hashtag ve CTA dahil."* Post register'ı `references/sosyal-medya.md` dosyasında; yayından önce kapı zorunlu.
+| Mod | Ne zaman | Örnek istem |
+| :--- | :--- | :--- |
+| `rewrite` (varsayılan) | Elde bir metin var, onarılacak | *"Şu blog yazısını insanileştir ve AI hissiyatını sil: `<metin>`"* |
+| `write` | Sıfırdan Türkçe yazılacak | *"Dağıtık sistemlerde cache invalidation konusunu teknik register'da yaz."* |
+| `audit` | Metne dokunmadan rapor isteniyor | *"Bu kurumsal metni değiştirme, sadece AI Türkçesi ve TDK hatalarını raporla."* |
+| `post` | LinkedIn, Instagram, X postu | *"Bu projeyi LinkedIn'de tanıtan bir post yaz; hook, hashtag ve CTA dahil."* |
 
-## Üç Katmanlı Mimari Özeti
+Mod adını söylemek zorunda değilsin. İstemden çıkarılır. `audit` modunda metin değişmez, yalnızca P0/P1/P2 sinyalleri alıntılanır.
 
-| Katman | Odak Noktası | Yakalanan Yapay Zekâ İzi (Makine Türkçesi) | Uygulanan Doğal Türkçe Dönüşümü |
+## Mimari
+
+Her kural üç katmandan birine düşer. Katman, müdahalenin sertliğini belirler.
+
+| Katman | Neye bakar | Yakaladığı iz | Yaptığı dönüşüm |
 | :--- | :--- | :--- | :--- |
-| **Katman 1: Kompozisyon (P0)** | Giriş, kapanış, retorik şablonlar | *"Günümüzün hızla değişen..."*, *"Sadece X değil, aynı zamanda Y"*, *"Sonuç olarak..."*, üçlü sıfat listeleri | Sahne veya doğrudan tez ile açılış, negatif paralelliklerin kaldırılması, vaaz veren kapanışların kesilmesi |
-| **Katman 2: Cümle Mimarisi (P1)** | Sentaks ve morfoloji (`references/sentaks-ve-morfoloji.md`) | Sağa dallanan yan cümleler, Hint-Avrupa `ki` bağlacı, refleks `ve`, `-DIr / -mAktAdIr` şişmesi, gereksiz `"bir"` ve `"tarafından"` | Sıfat-fiille sola dallanma, ulaç sistemi (`-Ip, -IncA, -dIkçA`), yüklem önü vurgu yuvası, zamir düşürme (pro-drop), delil kipi (`-mIş`) |
-| **Katman 3: TDK ve Yüzey (P2)** | Noktalama, imla ve terimler (`references/tdk-ve-noktalama.md`) | Uzun çizgi (`—`), orta çizgi (`–`), `ve/veya` çevresinde virgül, noktalı virgül köprüsü, `"uç nokta"` gibi zorlama çeviriler, `"cache'ı, SQL'ı"` ek hataları | Kaynağı gösterilmiş `[TDK]` kuralları ile `[Üslup]` tercihlerinin ayrımı, TDK birleşik/ayrı kelime kuralları, terimlerin Türkçe okunuşa göre çekimlenmesi (`cache'i, SQL'i`) |
+| **1. Kompozisyon (P0)** | Giriş, kapanış, retorik | *"Günümüzün hızla değişen..."*, *"X değil, Y"*, *"Sonuç olarak..."*, üçlü sıfat listeleri | Sahne ya da doğrudan tez ile açılış, negatif paralelliğin kaldırılması, ders veren kapanışın kesilmesi |
+| **2. Cümle mimarisi (P1)** | Sentaks ve morfoloji | Sağa dallanan yan cümleler, Hint-Avrupa `ki`, refleks `ve`, `-DIr / -mAktAdIr` şişmesi, gereksiz `bir` ve `tarafından` | Sıfat-fiille sola dallanma, ulaç sistemi (`-Ip, -IncA, -dIkçA`), yüklem önü vurgu yuvası, zamir düşürme, kanıtsallık kipi (`-mIş`) |
+| **3. TDK ve yüzey (P2)** | Noktalama, imla, terim | Uzun çizgi, orta çizgi, `ve/veya` çevresinde virgül, noktalı virgül köprüsü, zorlama çeviri (*"uç nokta"*), ek hatası (*"cache'ı", "SQL'ı"*) | `[TDK]` ve `[Üslup]` etiketlerinin ayrılması, birleşik/ayrı kelime kuralları, terimlerin Türkçe okunuşa göre çekimlenmesi (`cache'i, SQL'i`) |
 
-## Post Kapısı (`denetle_post.py`)
+Kuralların ayrıntısı `references/` altında; `SKILL.md` yalnızca iş akışını ve karar noktalarını taşır (136 satır). Model dosyaları ihtiyaç anında okur.
 
-Blog ve makale denetimi post için yetmez: postun ilk 210 karakteri okunur, hashtag bütçesi ve karakter sınırı vardır, gövdesi üç ile on iki cümle arasındadır. `scripts/denetle_post.py` yayınlanacak metni (gövde + CTA + hashtag ya da caption + hashtag) yeniden kurup hem dil hem platform hem proje iddiası kurallarını ölçer:
+| Dosya | İçerik |
+| :--- | :--- |
+| [`references/sentaks-ve-morfoloji.md`](references/sentaks-ve-morfoloji.md) | Cümlenin geometrisi, sola dallanma, ulaçlar, vurgu yuvası, `-DIr`/`-mAktAdIr`, pro-drop, kof fiiller |
+| [`references/ai-turkcesi-sozlugu.md`](references/ai-turkcesi-sozlugu.md) | 60+ kalıplık üç kademeli sözlük: Tier-1, Tier-2, Tier-3 ve sohbet artıkları |
+| [`references/tdk-ve-noktalama.md`](references/tdk-ve-noktalama.md) | Beş mutlak noktalama yasağı, TDK birleşik/ayrı kelimeler, fonetik ek tablosu |
+| [`references/register-ve-ornekler.md`](references/register-ve-ornekler.md) | 5 register × 9 boyut matrisi ve uçtan uca Before/After çiftleri |
+| [`references/sosyal-medya.md`](references/sosyal-medya.md) | LinkedIn, Instagram, X register'ı: hook geometrisi, bütçeler, emoji, CTA, yayın kapısı |
+
+## Register Kalibrasyonu
+
+Doğal Türkçe tek bir tondan oluşmaz. Sözleşmedeki devrik cümle özensizlik, blog yazısındaki `-mAktAdIr` ise robotluk üretir. Skill işe başlamadan önce metni beş profilden birine oturtur.
+
+| Register | `-mAktAdIr` (100 kelimede) | Devrik cümle | Kompozisyon müdahalesi |
+| :--- | :--- | :--- | :--- |
+| Blog / Deneme / Sosyal Medya | 0,0 - 0,5 | 400 kelimede 2-3 | Tam |
+| Teknik / Mühendislik | 0,0 - 1,0 | Yok | Orta |
+| Kurumsal / SaaS / İş İletişimi | 0,0 - 1,0 | Yok | Orta |
+| Akademik / Resmî / Hukuki | 0,5 - 2,5 | Yasak | Kapalı (belge iskeleti korunur) |
+| Edebî / Anlatı | 0,0 - 0,5 | Ritme göre | Tam |
+
+Aralıklar korpus ölçümüyle kalibre edilmedi; `scripts/detect_tr_ai.py` içindeki başlangıç değerleridir. Kullanıcı kendi yazısından örnek verdiyse (few-shot), o örnek en üst kural sayılır.
+
+## Komut Satırı Araçları
+
+Üç betik var, hiçbiri harici kütüphane kullanmaz.
+
+### `detect_tr_ai.py`: deterministik tarayıcı
+
+Metnin yazarını tespit etmez. İnsan eliyle yazılmış resmî Türkçe de aynı kalıplara takılabilir, iyi yönlendirilmiş bir model hiçbirine takılmayabilir. Verdiği şey, düzenlemeye nereden başlanacağını gösteren bir puan ve kalem kalem döküm.
 
 ```bash
-python3 scripts/denetle_post.py post.md                 # tek post
-python3 scripts/denetle_post.py takvim-dizini/          # bütün postlar
-python3 scripts/denetle_post.py --takvim takvim-dizini/ # postlar arası tekrar + denge (K15/K16)
-python3 scripts/denetle_post.py post.md --canli         # kaynak/demo URL'lerini yokla (K17)
-python3 scripts/denetle_post.py post.md --json          # makine okunur çıktı (surum: 2)
-python3 scripts/denetle_post.py post.md --katı          # uyarılar da kapıyı kapatır
+python3 scripts/detect_tr_ai.py metin.md                 # okunur rapor
+python3 scripts/detect_tr_ai.py metin.md --json          # makine okunur çıktı
+python3 scripts/detect_tr_ai.py makale.md --register akademik-resmi
+```
+
+`--register` değerleri: `blog-deneme`, `teknik`, `kurumsal`, `akademik-resmi`, `edebi-anlati`. Register verilince `-mAktAdIr` yoğunluğu o metin türünün hedef aralığıyla karşılaştırılır.
+
+Ölçtükleri:
+
+- AI klişeleri (Tier-1/2/3) ve TDK tabanlı yüzey hataları
+- `-mAktAdIr` yoğunluğu, art arda üç cümlede aynı ekle bitiş
+- Cümle uzunluğu varyasyonu (Burstiness CoV): 0,40 ve üzeri hedef, 0,35 altı mekanik
+
+Bilinçli davranışlar: kod bloğu, satır içi kod, HTML yorumu ve çıplak URL taranmaz. Akademik/resmî register'da `söz konusu`, `bu bağlamda` gibi kalıplar uyarı değil bilgi olarak listelenir. 50 kelimenin altında `-mAktAdIr` için "hedef dışı" uyarısı verilmez. `yıllardır`, `bugündür` gibi süre belirteçleri bildirme eki sayılmaz.
+
+Sınırı: regex ve basit istatistikle yalnızca yüzeydeki izleri yakalar. Sola dallanma, ulaç seçimi, register uyumu gibi cümle mimarisi kararlarını ölçmez; onlar modelin ve gözün işi.
+
+### `denetle_post.py`: yayın kapısı
+
+Sosyal medya postu blog denetiminden geçmez: ilk 210 karakter için ayrı bir bütçe, hashtag sınırı, tek CTA ve uydurulmuş sayı yasağı vardır. Bu betik postu yayına çıkmadan önce ölçer ve `hata` varsa kapıyı kapatır.
+
+```bash
+python3 scripts/denetle_post.py post.md                    # tek post
+python3 scripts/denetle_post.py takvim/                    # bütün postlar
+python3 scripts/denetle_post.py --takvim takvim/           # postlar arası tekrar ve denge
+python3 scripts/denetle_post.py post.md --canli            # link sağlığı (K17)
+python3 scripts/denetle_post.py post.md --json             # makine okunur çıktı
+python3 scripts/denetle_post.py post.md --katı             # uyarılar da kapıyı kapatır
 python3 scripts/denetle_post.py post.md --kural-kapat K12,K14
 python3 scripts/denetle_post.py post.md --config post-kapisi.json
 ```
 
-Kural kataloğu (ayrıntı: `references/sosyal-medya.md`, tasarım: `docs/DENETLE_POST_GELISTIRME_PLANI.md`):
+`--platform linkedin|instagram|x`, `--tur tanitim|teknik|ipucu|carousel` ve `--metin` (dosya yerine doğrudan metin) seçenekleri de var.
+
+<details>
+<summary><b>Kural kataloğu (K0-K17)</b></summary>
 
 | Kural | Ne ölçer | Varsayılan |
 | :--- | :--- | :--- |
@@ -137,114 +216,89 @@ Kural kataloğu (ayrıntı: `references/sosyal-medya.md`, tasarım: `docs/DENETL
 | K4 | EN satırda Türkçe harf, eksik çeviri | uyarı |
 | K5 | A tipi repo linki metinde | hata (LinkedIn) |
 | K6 | Fork beyanı | uyarı |
-| K7 | Teknoloji/lisans iddiası ve sayı doğruluk notunda | hata / uyarı |
+| K7 | Teknoloji ve lisans iddiası | hata / uyarı |
 | K8 | Private sızıntısı (kurulum komutu, link, gizlilik beyanı) | hata |
 | K9 | E-posta, telefon, IBAN, token, IP, yerel yol | hata |
-| K10 | Teknoloji adı yazımı (`Github` -> `GitHub`) | uyarı |
+| K10 | Teknoloji adı yazımı (`Github` → `GitHub`) | uyarı |
 | K11 | Özellik yığını (4+ madde, 6+ ögeli cümle) | uyarı |
 | K12 | İç jargon (`Faz 3`, `W46`, `sprint`) | uyarı |
 | K13 | Bozuk kodlama (mojibake) | hata |
-| K14 | Sürüm/durum iddiası notta | uyarı |
-| K15 | Postlar arası tekrar, üst üste tanıtım | uyarı / hata |
+| K14 | Sürüm ve durum iddiası notu | uyarı |
+| K15 | Postlar arası tekrar | uyarı / hata |
 | K16 | İçerik sütunu dengesi | bilgi |
 | K17 | Canlı link sağlığı (`--canli`) | hata / uyarı |
 
-`hata` yayını engeller (çıkış kodu 1), `uyarı` engellemez (çıkış kodu 0), `bilgi` yalnızca kayıt düşer. `post-kapisi.json` kural bazında seviye ezer (`{"K12": "bilgi"}`); `--kural-kapat` tek seferlik istisna bırakır ve raporda görünür.
+`hata` yayını engeller (çıkış kodu 1), `uyarı` engellemez, `bilgi` yalnızca kayıt düşer. `post-kapisi.json` kural bazında seviye ezer: `{"K12": "bilgi"}`. `--kural-kapat` tek seferlik istisna bırakır ve raporda görünür.
 
-Post dosyası biçimi için `references/sosyal-medya.md`, kurallar için aynı dosyanın kontrol listesi geçerlidir.
+</details>
 
-## Deterministik CLI Dedektörü (`detect_tr_ai.py`)
-
-## Deterministik CLI Dedektörü (`detect_tr_ai.py`)
-
-Dedektör metnin yazarını tespit etmez. İnsanların yazdığı resmî Türkçe de aynı kalıplara takılabilir, iyi yönlendirilmiş bir model hiçbirine takılmayabilir. Puan, düzenlemeye nereden başlanacağını gösterir. Asıl ölçüt, okurun metni ilk okumada doğru anlamasıdır.
-
-Repodaki Python betiği ile herhangi bir Markdown veya metin dosyasını terminalden ya da CI/CD (GitHub Actions) üzerinden tarayabilirsin:
+### `run_tests.py` ve `build_dist.py`
 
 ```bash
-python3 scripts/detect_tr_ai.py ornek-metin.md
-# JSON çıktısı için:
-python3 scripts/detect_tr_ai.py ornek-metin.md --json
-# Register'a göre '-mAktAdIr' hedefiyle denetim için:
-python3 scripts/detect_tr_ai.py makale.md --register akademik-resmi
+python3 scripts/run_tests.py      # 49 test: paket bütünlüğü, dedektör, post kapısı, evaller
+python3 scripts/build_dist.py     # dist/ dosyasını derle, skills/ ile eşle
 ```
 
-`--register` değerleri: `blog-deneme`, `teknik`, `kurumsal`, `akademik-resmi`, `edebi-anlati`. Register verildiğinde dedektör `-mAktAdIr` yoğunluğunu o metin türünün hedef aralığıyla karşılaştırır. Akademik register'da ek korunur, hedef 100 kelimede yaklaşık 0,5-2,5'tir. Blog ve edebî metinde hedef sıfıra yakındır. Ayrıca art arda üç veya daha fazla cümlenin aynı ekle (`-mektedir`, `-mıştır`, `-dır`) bitip bitmediğini ölçer. Bu aralıklar korpusla kalibre edilmiş değerler değil, `scripts/detect_tr_ai.py` içinden değiştirilebilen başlangıç değerleridir.
-
-Dedektörün bilinçli davranışları:
-
-- **Markdown-farkında:** Kod bloğu, satır içi kod, HTML yorumu ve çıplak URL taranmaz. Başlık ve tablo metni taranır, ama cümle ritmi (CoV) ölçümüne girmez.
-- **Register'a duyarlı puanlama:** `söz konusu`, `bu bağlamda`, `sonuç olarak`, edilgen `tarafından` gibi kalıplar akademik/resmî register'da `[bilgi]` olarak listelenir ve `total_flags` puanına katılmaz; blog veya kurumsal metinde `[sinyal]` sayılır.
-- **Örneklem eşiği:** 50 kelimenin altındaki metinlerde `-mAktAdIr` yoğunluğu için "hedef dışı" uyarısı verilmez (`mektedir_sample_sufficient: false`).
-- **Cümle sonu sınıflandırması:** `yıllardır`, `aylardır`, `sabahtır`, `bugündür` gibi süre belirteçleri bildirme eki (`-DIr`) sayılmaz.
-- **CoV eşikleri:** `0.35` altı mekanik (uyarı), `0.40` ve üzeri hedef.
-
-Değişiklikten sonra doğrulama kapısı:
-
-```bash
-python3 scripts/run_tests.py
-```
-
-Üç bölümü çalıştırır: paket bütünlüğü, dedektör kural testleri, post kapısı testleri ve `evals/evals.json` senaryoları (olgusal sadakat kilidi testi dahil). Raporu `docs/TEST_VE_DOGRULAMA_RAPORU.txt` dosyasına kendisi yazar (`--no-report` ile kapatılır). Aynı komut GitHub Actions üzerinde de her push ve pull request'te koşar (`.github/workflows/tests.yml`).
-
-Tek parça `dist/turkish-anti-ai-skill.full.md` dosyasını yeniden derlemek için:
-
-```bash
-python3 scripts/build_dist.py
-```
+`run_tests.py` raporu `docs/TEST_VE_DOGRULAMA_RAPORU.txt` dosyasına kendisi yazar (`--no-report` ile kapatılır). Rapor elle düzenlenmez; bayatlamasın diye üretimi otomatikleştirildi. Aynı komut GitHub Actions üzerinde her push ve pull request'te koşar, ardından `build_dist.py` sonrası `git diff --exit-code` ile `dist/` senkronu denetlenir.
 
 ## Güvenlik
 
-Skill, modele verilen Markdown talimatlarından ve üç yerel Python betiğinden oluşur. Betikler ağa çıkmaz, komut çalıştırmaz, harici kütüphane kullanmaz.
+Paket, modele verilen Markdown talimatlarından ve üç yerel Python betiğinden oluşur. Betikler ağa çıkmaz, komut çalıştırmaz, harici kütüphane kullanmaz.
 
 | Betik | Ne yapar | Dosya yazar mı |
 | :--- | :--- | :--- |
-| `scripts/detect_tr_ai.py` | Verilen metin dosyasını okur, raporu ekrana basar | Hayır |
-| `scripts/run_tests.py` | Paket bütünlüğünü, dedektör kurallarını ve `evals/evals.json` senaryolarını denetler | Evet, yalnızca `docs/TEST_VE_DOGRULAMA_RAPORU.txt` raporunu |
-| `scripts/build_dist.py` | `dist/` dosyasını üretir, `skills/turkish-anti-ai-skill/` klasörünü kaynakla eşler | Evet, yalnızca repo içinde |
+| `scripts/detect_tr_ai.py` | Metni okur, raporu ekrana basar | Hayır |
+| `scripts/denetle_post.py` | Postu ve takvimi denetler; `--canli` verilirse URL'lere HTTP isteği atar | Hayır |
+| `scripts/run_tests.py` | Paket, dedektör ve eval senaryolarını denetler | Yalnızca `docs/TEST_VE_DOGRULAMA_RAPORU.txt` |
+| `scripts/build_dist.py` | `dist/` üretir, `skills/turkish-anti-ai-skill/` klasörünü eşler | Yalnızca depo içinde |
 
-`build_dist.py`, eşleme sırasında `skills/turkish-anti-ai-skill/references/` klasörünü silip yeniden kopyalar. Güvenlik tarayıcıları (Socket, Snyk) bu satırı dosya silme işlemi olarak işaretleyebilir. Silme bir kilitle korunur: hedef bu tek klasör değilse veya symlink ise betik durur, hiçbir şey silinmez.
+`build_dist.py` eşleme sırasında `skills/turkish-anti-ai-skill/references/` klasörünü silip yeniden kopyalar. Güvenlik tarayıcıları (Socket, Snyk) bu satırı dosya silme olarak işaretleyebilir. Silme kilitle korunuyor: hedef bu tek klasör değilse ya da symlink ise betik hiçbir şey silmeden durur. `--canli` dışında hiçbir betik dışarıya istek atmaz.
 
-`npx skills` veya `gh skill` ile kurulumda yalnızca `skills/turkish-anti-ai-skill/` klasörü iner. Bu klasörde betik yoktur, yalnızca `SKILL.md` ve `references/` vardır.
-
-## Repo Klasör Yapısı
+## Depo Yapısı
 
 ```text
 turkish-anti-ai-skill/
-├── SKILL.md                           # Ana orkestratör (<500 satır, YAML frontmatter + 4 adımlı iş akışı)
-├── skills/turkish-anti-ai-skill/      # npx skills CLI ve plugin paketleyici uyumluluk dizini
-├── AGENTS.md                          # Codex, Cursor, Windsurf, Copilot ortak adaptörü
-├── CLAUDE.md                          # Claude Code proje rehberi
-├── GEMINI.md                          # Gemini CLI adaptörü
-├── .github/workflows/tests.yml        # CI: dedektör ve eval testlerini her push/PR'da koşar
-├── references/                        # Aşamalı yüklenen (Progressive Disclosure) Türkçe dilbilimi veritabanı
-│   ├── tdk-ve-noktalama.md            # [TDK]/[Üslup] etiketli noktalama kuralları, TDK imla ve fonetik ek tablosu
-│   ├── sentaks-ve-morfoloji.md        # Sola dallanma, ulaçlar, vurgu yuvası, -DIr/-mAktAdIr, pro-drop
-│   ├── ai-turkcesi-sozlugu.md         # Tier-1, Tier-2 ve Tier-3 Yapay Zekâ Türkçesi sözlüğü (60+ kalıp)
-│   ├── register-ve-ornekler.md        # 5 register x 9 boyut matrisi ve uçtan uca Before/After örnekleri
-│   └── sosyal-medya.md                # LinkedIn/Instagram/X post register'ı, hook, hashtag, CTA ve kapı kuralları
+├── SKILL.md                           # Ana orkestratör: YAML frontmatter + 4 adımlı iş akışı
+├── skills/turkish-anti-ai-skill/      # npx skills ve plugin paketleyici için uyum dizini
+├── references/                        # İhtiyaç anında okunan dilbilimi veritabanı
+│   ├── sentaks-ve-morfoloji.md        # Sola dallanma, ulaçlar, vurgu, -DIr/-mAktAdIr, pro-drop
+│   ├── ai-turkcesi-sozlugu.md         # Tier-1/2/3 sözlük (60+ kalıp) ve sohbet artıkları
+│   ├── tdk-ve-noktalama.md            # [TDK]/[Üslup] kuralları, imla, fonetik ek tablosu
+│   ├── register-ve-ornekler.md        # 5 register × 9 boyut matrisi, Before/After örnekleri
+│   └── sosyal-medya.md                # Post register'ı, hook, bütçe, CTA, kapı kuralları
 ├── scripts/
-│   ├── detect_tr_ai.py                # Deterministik Türkçe AI-slop, TDK ve Burstiness (CoV) tarayıcı CLI
-│   ├── denetle_post.py                # Sosyal medya postu yayın kapısı (platform bütçesi, hook, hashtag, uydurma sayı)
-│   └── build_dist.py                  # SKILL.md + references/* dosyalarını dist/ içine derler
-├── .cursor/rules/
-│   └── turkish-anti-ai-skill.mdc      # Cursor yerel kural adaptörü (.mdc)
-├── .claude-plugin/
-│   └── plugin.json                    # Claude Code / Cowork plugin manifestosu
-├── dist/
-│   └── turkish-anti-ai-skill.full.md  # Web arayüzleri (Custom GPT / Claude Projects) için tekil dosya
-├── evals/
-│   └── evals.json                     # Olgusal sadakat ve anti-slop regresyon test senaryoları
+│   ├── detect_tr_ai.py                # Deterministik AI-slop, TDK ve CoV tarayıcısı
+│   ├── denetle_post.py                # Sosyal medya postu yayın kapısı (K0-K17)
+│   ├── run_tests.py                   # Paket + dedektör + post kapısı + eval testleri
+│   └── build_dist.py                  # dist/ ve skills/ derlemesi
+├── evals/evals.json                   # Olgusal sadakat ve anti-slop regresyon senaryoları
+├── dist/turkish-anti-ai-skill.full.md # Web arayüzleri için tek dosya
 ├── docs/
-│   └── ARASTIRMA_VE_MIMARI_RAPORU.md  # Kapsamlı Türkçe dilbilimi ve anti-AI mimari araştırma raporu
-├── CONTRIBUTING.md                    # Kanıta dayalı yeni kalıp ekleme kuralları
-└── LICENSE                            # MIT Lisansı
+│   ├── ARASTIRMA_VE_MIMARI_RAPORU.md  # Dilbilimi ve anti-AI mimari araştırması
+│   ├── DENETLE_POST_GELISTIRME_PLANI.md
+│   └── TEST_VE_DOGRULAMA_RAPORU.txt   # run_tests.py üretir, elle düzenlenmez
+├── .cursor/rules/turkish-anti-ai-skill.mdc
+├── .claude-plugin/plugin.json         # Claude Code / Cowork manifestosu
+├── .github/workflows/tests.yml        # CI: testler + dist senkronu
+├── AGENTS.md · CLAUDE.md · GEMINI.md  # Ajan adaptörleri
+├── CONTRIBUTING.md
+└── LICENSE                            # MIT
 ```
 
-## Katkıda Bulunma (Contributing)
+## Katkı
 
-Yeni bir "Yapay Zekâ Türkçesi" kalıbı, çeviri kokan SaaS ifadesi veya TDK sınır durumu fark ettiysen Issue veya Pull Request açabilirsin. Kurallar ve şablon için [CONTRIBUTING.md](CONTRIBUTING.md) dosyasına göz at.
+Yeni bir yapay zekâ Türkçesi kalıbı, çeviri kokan bir SaaS ifadesi veya TDK sınır durumu fark ettiysen Issue ya da Pull Request açabilirsin.
+
+Kurala dayanak gerekir. `[TDK]` etiketi için kılavuzdan madde bağlantısı, `[Dil bilgisi]` için kuralın bozulduğunda anlamı kaydıran örnek, `[Üslup]` için register istisnası istenir. Öznel beğeni tek başına yeterli değil. Şablon ve doğrulama adımları [`CONTRIBUTING.md`](CONTRIBUTING.md) dosyasında.
+
+Değişiklikten sonra:
+
+```bash
+python3 scripts/build_dist.py && python3 scripts/run_tests.py
+```
 
 ## Lisans
 
-Bu proje [MIT Lisansı](LICENSE) altında açık kaynak olarak sunulmaktadır.
+[MIT](LICENSE). Kullan, değiştir, dağıt.
+
+Yazar: [Yüce Zerey](https://github.com/yucezerey) · Agent Skills Specification v1.0
